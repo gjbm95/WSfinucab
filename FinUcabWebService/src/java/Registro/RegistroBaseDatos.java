@@ -5,13 +5,16 @@
  */
 package Registro;
 
+import Seguridad.Seguridad;
+
 /**
  *
  * @author Junior
  */
 public class RegistroBaseDatos {
-    public static String nombreDB ="postgres";
-    public static String contrasenaDB = "desarrollo123";
-    public static String url = "jdbc:postgresql://localhost/postgres";
+    private static final Seguridad seguridad = Seguridad.obtenerInstancia();
+    public static String nombreDB =seguridad.obtenerUsuarioDB();
+    public static String contrasenaDB = seguridad.obtenerContrasenaDB();
+    public static String url = seguridad.obtenerServerDB();
 
 }

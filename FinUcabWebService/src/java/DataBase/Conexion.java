@@ -31,14 +31,7 @@ public class Conexion {
         {
             //llamo al driver de Postgre 
             //(el primer import que muestro en el video)
-            Class.forName("org.postgresql.Driver");
-            //el string de conexion de la db el formato es el siguiente:
-            //jdbc:postgresql://HOST//NOMBRE_DE_LA_DB
-            String url = "jdbc:postgresql://localhost/postgres";
-            //parametros de la conexion que basicamente es el usuario en 
-            //mi caso es postgres y la clave es root
-            // NO DEBEN DEJAR ESTO ASI POR DEFECTO
-           
+            Class.forName("org.postgresql.Driver");      
             conn = DriverManager.getConnection(RegistroBaseDatos.url
                     ,RegistroBaseDatos.nombreDB
                     ,RegistroBaseDatos.contrasenaDB);

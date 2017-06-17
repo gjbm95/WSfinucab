@@ -79,7 +79,7 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/pruebaDB")
     public String getPruebaDataBase() {
-        //TODO return proper representation object
+        //TODO return proper representation object 
         String respuesta = "";
         try {
 
