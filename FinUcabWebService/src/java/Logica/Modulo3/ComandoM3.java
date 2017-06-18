@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica;
+package Logica.Modulo3;
+
+import Logica.Modulo1.*;
 
 /**
  *
  * @author Junior
  */
-public class ComandoModulo6 extends Comando{
+public class ComandoM3 {
     
 }
