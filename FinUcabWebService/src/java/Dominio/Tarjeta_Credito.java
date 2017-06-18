@@ -11,6 +11,12 @@ public class Tarjeta_Credito {
     private String numero;
     private float saldo;
 
+    
+    public static Tarjeta_Credito crearTarjetaCredito(){
+        return new Tarjeta_Credito();
+   }
+    
+    
     public float getSaldo() {
         return saldo;
     }

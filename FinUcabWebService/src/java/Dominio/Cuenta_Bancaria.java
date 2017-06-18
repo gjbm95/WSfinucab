@@ -15,6 +15,12 @@ public class Cuenta_Bancaria {
     private ArrayList<Tarjeta_Credito> tarjetas = new ArrayList<Tarjeta_Credito>();
     private ArrayList<Pago> transacciones = new ArrayList<Pago>();
 
+    
+    public static Cuenta_Bancaria crearCuentaBancaria(){
+        return new Cuenta_Bancaria();
+    }
+    
+    
     public Cuenta_Bancaria(int idCuenta, String nombreBanco, String numcuenta,
                            float saldoActual,String tipoCuenta) {
         this.saldoActual = saldoActual;
@@ -22,6 +28,9 @@ public class Cuenta_Bancaria {
         this.numcuenta = numcuenta;
         this.idCuenta = idCuenta;
         this.tipoCuenta = tipoCuenta;
+    }
+
+    private Cuenta_Bancaria() {
     }
 
     public int getIdCuenta() {

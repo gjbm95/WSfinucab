@@ -25,9 +25,9 @@ public class    Usuario {
     private ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
 
    //Contructor por defecto:
-    public Usuario()
+    public static Usuario crearUsuario()
     {
-
+        return new Usuario();
     }
     //Contructor
     public Usuario(int idusuario, String nombre, String apellido, String correo, String usuario, String contrasena, String pregunta, String respuesta, ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
@@ -41,6 +41,10 @@ public class    Usuario {
         this.respuesta = respuesta;
         this.cuentas = cuentas;
         this.planes = planes;
+    }
+
+    private Usuario() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
      //Getter and Setter:
