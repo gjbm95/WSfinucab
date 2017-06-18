@@ -1,4 +1,4 @@
-package com.ucab.fin.finucab.domain;
+package Dominio;
 
 /**
  * Created by Junior on 03/05/2017.

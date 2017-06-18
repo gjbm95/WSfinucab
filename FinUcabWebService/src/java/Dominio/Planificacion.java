@@ -1,4 +1,4 @@
-package com.ucab.fin.finucab.domain;
+package Dominio;
 
 import java.io.Serializable;
 import java.util.Date;

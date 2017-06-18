@@ -1,4 +1,4 @@
-package com.ucab.fin.finucab.domain;
+package Dominio;
 
 /**Modulo 3 - Modulo de Presupuestos
  *Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido
