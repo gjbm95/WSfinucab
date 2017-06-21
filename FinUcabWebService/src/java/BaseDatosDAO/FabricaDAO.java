@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica;
+package BaseDatosDAO;
 
 /**
  *
- * @author Junior
+ * @author Oswaldo
  */
-public class Comando {
+public class FabricaDAO {
     
-    public void ejecutar(){
-        
-        
+    public static Modulo1DAO instanciarModulo1Dao(){
+        return new Modulo1DAO();
     }
 }

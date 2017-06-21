@@ -1,8 +1,16 @@
 package Services;
 
 import DataBase.Conexion;
+import Dominio.Usuario;
+import Logica.FabricaComando;
+import Logica.Modulo1.ComandoActualizarClave;
+import Logica.Modulo1.ComandoIniciarSesion;
+import Logica.Modulo1.ComandoRecuperarClave;
+import Logica.Modulo1.ComandoRegistrarUsuario;
+import Logica.Modulo1.ComandoVerificarUsuario;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,11 +50,12 @@ public class Modulo1sResource {
     @Context
     private UriInfo context;
     private boolean suiche;
+    public static String resultado;
 
     /**
      * Creates a new instance of Modulo1sResource
      */
-    public Modulo1sResource() {
+    public Modulo1sResource(){
     }
 
     /**
@@ -95,7 +104,6 @@ public class Modulo1sResource {
                 usuarioBuilder.add("Usuario", rs.getString(2));
                 JsonObject usuarioJsonObject = usuarioBuilder.build();
                 respuesta = usuarioJsonObject.toString();
-
             }
             rs.close();
             st.close();
@@ -124,30 +132,15 @@ public class Modulo1sResource {
     public String registrarUsuario(@QueryParam("datosUsuario") String datosCuenta) {
 
         String decodifico = URLDecoder.decode(datosCuenta);
-
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            JsonObject usuarioJSON = this.stringToJSON(decodifico);
-            String query = "INSERT INTO usuario ( u_usuario , u_nombre , u_apellido , u_correo , u_pregunta , u_respuesta , u_password ) "
-                    + "VALUES ( '" + usuarioJSON.getString("u_usuario") + "' , '" + usuarioJSON.getString("u_nombre") + "' , "
-                    + "'" + usuarioJSON.getString("u_apellido") + "' , '" + usuarioJSON.getString("u_correo") + "' , "
-                    + "'" + usuarioJSON.getString("u_pregunta") + "' , '" + usuarioJSON.getString("u_respuesta") + "' , "
-                    + "'" + usuarioJSON.getString("u_password") + "' );";
-
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Registro exitoso";
-            } else {
-                st.close();
-                return "No se pudo registrar";
-            }
-
-        } catch (Exception e) {
-
-            return e.getMessage();
-
-        }
+        JsonObject usuarioJSON = this.stringToJSON(decodifico);
+        Usuario usuario = new Usuario(0,usuarioJSON.getString("u_nombre"),usuarioJSON.getString("u_apellido"),
+        usuarioJSON.getString("u_correo"),usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"),
+        usuarioJSON.getString("u_pregunta"),usuarioJSON.getString("u_respuesta"),null,null);
+        
+        ComandoRegistrarUsuario cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
+        cru.ejecutar();
+                
+        return resultado;
     }
 
     /**
@@ -161,27 +154,9 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
     public String verificarUsuario(@QueryParam("nombreUsuario") String usuario) {
-        int cantidadExistente = 0;
-
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-          
-            String query = "SELECT * from Usuario WHERE u_usuario ='" + usuario + "';";
-            ResultSet rs = st.executeQuery(query);
-            
-
-            while(rs.next()){
-                return "No Disponible";
-            }            
-               return "Usuario Disponible";
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return null;
+        ComandoVerificarUsuario cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
+        cvu.ejecutar();
+        return resultado;
     }
 
     /**
@@ -197,35 +172,11 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/iniciarSesion")
     public String iniciarSesion(@QueryParam("datosUsuario") String usuario) {
-
-//        String decodifico = "{ \"u_usuario\" : \"AleNegrin\" , \"u_password\" : \"123456\" }";
-         String decodifico = URLDecoder.decode(usuario);
- 
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-
-            JsonObject usuarioJSON = this.stringToJSON(decodifico);
-
-            String query = "SELECT * from Usuario WHERE u_usuario ='" + usuarioJSON.getString("u_usuario")
-                    + "' AND u_password ='" + usuarioJSON.getString("u_password")+ "';";
-            
-            ResultSet rs = st.executeQuery(query);
-            while (rs.next()) {
-                JsonObject usuarioJsonObject = this.crearUsuarioJson(rs);
-
-                
-                    return usuarioJsonObject.toString()+":-:iniciosesion";
-                
-            }
-
-            return "DATOSMAL";
-        } catch (SQLException ex) {
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception e) {
-            return "ERROR";
-        }
-        return null;
+        String decodifico = URLDecoder.decode(usuario);
+        JsonObject usuarioJSON = this.stringToJSON(decodifico);
+        ComandoIniciarSesion cis = FabricaComando.instanciarComandoIniciarSesion(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
+        cis.ejecutar();
+        return resultado;
     }
 
     /**
@@ -252,14 +203,14 @@ public class Modulo1sResource {
     private JsonObject crearUsuarioJson(ResultSet rs) {
         try {
             JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-            usuarioBuilder.add("u_id", rs.getString("u_id"));
-            usuarioBuilder.add("u_usuario", rs.getString("u_usuario"));
-            usuarioBuilder.add("u_nombre", rs.getString("u_nombre"));
-            usuarioBuilder.add("u_apellido", rs.getString("u_apellido"));
-            usuarioBuilder.add("u_correo", rs.getString("u_correo"));
-            usuarioBuilder.add("u_pregunta", rs.getString("u_pregunta"));
-            usuarioBuilder.add("u_respuesta", rs.getString("u_respuesta"));
-            usuarioBuilder.add("u_password", rs.getString("u_password"));
+            usuarioBuilder.add("u_id", rs.getString("id"));
+            usuarioBuilder.add("u_usuario", rs.getString("usuario"));
+            usuarioBuilder.add("u_nombre", rs.getString("nombre"));
+            usuarioBuilder.add("u_apellido", rs.getString("apellido"));
+            usuarioBuilder.add("u_correo", rs.getString("correo"));
+            usuarioBuilder.add("u_pregunta", rs.getString("pregunta"));
+            usuarioBuilder.add("u_respuesta", rs.getString("respuesta"));
+            usuarioBuilder.add("u_password", rs.getString("password"));
             return usuarioBuilder.build();
         } catch (SQLException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,20 +232,9 @@ public class Modulo1sResource {
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
 
-//        String usuario = "AleNegrin";
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            String query = "SELECT * from Usuario WHERE u_usuario ='" + usuario + "';";
-            ResultSet rs = st.executeQuery(query);
-            while (rs.next()) {
-                JsonObject usuarioJsonObject = this.crearUsuarioJson(rs);
-                return usuarioJsonObject.toString()+":-:recuperarclave";
-            }
-            return "ERROR";
-        } catch (Exception e) {
-            return e.getMessage();
-        }
+        ComandoRecuperarClave crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
+        crc.ejecutar();
+        return resultado;
     }
     
     
@@ -311,32 +251,11 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarClave")
     public String actualizarClave(@QueryParam("datosUsuario") String datosUsuario) {
-        
-//            String decodifico = "{ \"u_usuario\" : \"jojo\" , \"u_password\" : \"elwebomio\" }";
-       String decodifico = URLDecoder.decode(datosUsuario);
-
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            JsonObject usuarioJSON = this.stringToJSON(decodifico);
-            String query = "UPDATE usuario SET "
-                    + "u_password = '" + usuarioJSON.getString("u_password") + 
-                    "' WHERE "
-                    + "u_usuario = '" + usuarioJSON.getString("u_usuario") + "';";
-
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Clave Modificada";
-            } else {
-                st.close();
-                return "Error";
-            }
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Error";
-
-        }
+        String decodifico = URLDecoder.decode(datosUsuario);
+        JsonObject usuarioJSON = this.stringToJSON(decodifico);
+        ComandoActualizarClave cis = FabricaComando.instanciarComandoActualizarClave(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
+        cis.ejecutar();
+        return resultado;
     }
 
     /**
