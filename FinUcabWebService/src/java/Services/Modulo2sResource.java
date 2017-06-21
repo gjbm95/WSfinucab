@@ -6,12 +6,15 @@
 package Services;
 
 import DataBase.Conexion;
+import java.io.StringReader;
+import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -20,6 +23,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -40,73 +44,53 @@ public class Modulo2sResource {
     public Modulo2sResource() {
     }
 
-    /**
-     * Retrieves representation of an instance of Services.Modulo2sResource
-     * @return an instance of javax.json.Json
-     */
-   @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/prueba")
-    public String getPruebaJson() {
-        //TODO return proper representation object
-        JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-        usuarioBuilder.add("Nombre","Jose");
-        usuarioBuilder.add("Apellido","Rodriguez");
-        usuarioBuilder.add("Usuario","jose123");
-        JsonObject usuarioJsonObject = usuarioBuilder.build();
-       return usuarioJsonObject.toString();
-    }
-    
-        @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/pruebaDB")
-    public String getPruebaDataBase() {
-        //TODO return proper representation object
-        String respuesta ="";
-        try{
+ 
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/actualizarDatosUsuario")
+    public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
+
+        String decodifico = URLDecoder.decode(datosCuenta);
+        
+        try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Usuario;");
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                 usuarioBuilder.add("Nombre",rs.getString(3));
-                 usuarioBuilder.add("Apellido",rs.getString(4));
-                 usuarioBuilder.add("Usuario",rs.getString(2));
-                 JsonObject usuarioJsonObject = usuarioBuilder.build();  
-                 respuesta = usuarioJsonObject.toString();
+            JsonObject usuarioJSON = this.stringToJSON(decodifico);
+            String query = "NSERT INTO usuario ( u_usuario , u_nombre , u_apellido , u_correo , u_pregunta , u_respuesta , u_password ) "
+                    + "VALUES ( '" + usuarioJSON.getString("u_usuario") + "' , '" + usuarioJSON.getString("u_nombre") + "' , "
+                    + "'" + usuarioJSON.getString("u_apellido") + "' , '" + usuarioJSON.getString("u_correo") + "' , "
+                    + "'" + usuarioJSON.getString("u_pregunta") + "' , '" + usuarioJSON.getString("u_respuesta") + "' , "
+                    + "'" + usuarioJSON.getString("u_password") + "' );";
+            
+            query = "UPDATE usuario set ";
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return "Registro exitoso";
+            } else {
+                st.close();
+                return "No se pudo registrar";
             }
-            rs.close();
-            st.close();
 
-            return respuesta;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
+
             return e.getMessage();
+
         }
     }
 
-    /**
-     * POST method for creating an instance of Modulo2Resource
-     * @param content representation for the new resource
-     * @return an HTTP response with content of the created resource
+    
+        /**
+     * Funcion que convierte un string con estructura JSON en JsonObject
+     *
+     * @param decodifico String con estructura json
+     * @return JsonObject del string
      */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postJson(Json content) {
-        //TODO
-        return Response.created(context.getAbsolutePath()).build();
+    private JsonObject stringToJSON(String decodifico) {
+        JsonReader reader = Json.createReader(new StringReader(decodifico));
+        JsonObject jsonObj = reader.readObject();
+        reader.close();
+        return jsonObj;
     }
 
-    /**
-     * Sub-resource locator method for {id}
-     */
-    @Path("{id}")
-    public Modulo2Resource getModulo2Resource(@PathParam("id") String id) {
-        return Modulo2Resource.getInstance(id);
-    }
 }

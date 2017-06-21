@@ -12,5 +12,7 @@ import Logica.Modulo1.*;
  * @author Junior
  */
 public class ComandoM2 {
+   
+
     
 }

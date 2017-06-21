@@ -16,10 +16,6 @@ public class Cuenta_Bancaria {
     private ArrayList<Pago> transacciones = new ArrayList<Pago>();
 
     
-    public static Cuenta_Bancaria crearCuentaBancaria(){
-        return new Cuenta_Bancaria();
-    }
-    
     
     public Cuenta_Bancaria(int idCuenta, String nombreBanco, String numcuenta,
                            float saldoActual,String tipoCuenta) {

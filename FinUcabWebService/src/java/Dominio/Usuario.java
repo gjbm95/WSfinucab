@@ -24,11 +24,7 @@ public class    Usuario {
     private ArrayList<Planificacion> planes = new ArrayList<Planificacion>();
     private ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
 
-   //Contructor por defecto:
-    public static Usuario crearUsuario()
-    {
-        return new Usuario();
-    }
+
     //Contructor
     public Usuario(int idusuario, String nombre, String apellido, String correo, String usuario, String contrasena, String pregunta, String respuesta, ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
         this.idusuario = idusuario;
