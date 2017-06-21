@@ -1,6 +1,6 @@
 package Services;
 
-import DataBase.Conexion;
+import BaseDatosDAO.Conexion;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.Connection;
