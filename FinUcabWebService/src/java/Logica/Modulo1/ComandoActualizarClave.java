@@ -27,10 +27,10 @@ public class ComandoActualizarClave extends Comando{
         Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
      
         int respuesta = dao.ActualizarClave(usuario,clave);
-        if(respuesta == 1){
-            Modulo1sResource.resultado = "Clave Modificada";
-        }else if(respuesta == 0){
-            Modulo1sResource.resultado = "Error";
+        if(respuesta == 5){
+            Modulo1sResource.resultado = "5";
+        }else if(respuesta == 6){
+            Modulo1sResource.resultado = "6";
         }
        
         

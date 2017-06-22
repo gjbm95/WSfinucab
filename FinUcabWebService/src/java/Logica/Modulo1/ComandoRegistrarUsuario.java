@@ -26,12 +26,11 @@ public class ComandoRegistrarUsuario extends Comando{
     
     public void ejecutar(){
         Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
-        
         int respuesta = dao.agregarDatos(usuario);
         if(respuesta == 1){
-            Modulo1sResource.resultado = "Registro exitoso";
+            Modulo1sResource.resultado = "1";
         }else if(respuesta == 0){
-            Modulo1sResource.resultado = "No se pudo registrar";
+            Modulo1sResource.resultado = "0";
         }
         
     }
