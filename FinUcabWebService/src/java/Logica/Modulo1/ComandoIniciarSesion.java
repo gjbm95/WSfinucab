@@ -7,7 +7,6 @@
 package Logica.Modulo1;
 
 import BaseDatosDAO.Modulo1DAO;
-import DataBase.Conexion;
 import Logica.Comando;
 import BaseDatosDAO.*;
 import Services.Modulo1sResource;

@@ -5,7 +5,7 @@
  */
 package Registro;
 
-import Seguridad.Seguridad;
+import BaseDatosDAO.Seguridad;
 
 /**
  *

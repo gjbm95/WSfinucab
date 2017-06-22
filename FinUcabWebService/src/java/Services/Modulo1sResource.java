@@ -1,7 +1,8 @@
 package Services;
 
-import DataBase.Conexion;
+
 import Dominio.Usuario;
+import BaseDatosDAO.Conexion;
 import Logica.FabricaComando;
 import Logica.Modulo1.ComandoActualizarClave;
 import Logica.Modulo1.ComandoIniciarSesion;

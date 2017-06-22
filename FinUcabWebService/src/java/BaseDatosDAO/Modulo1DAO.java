@@ -5,7 +5,7 @@
  */
 package BaseDatosDAO;
 
-import DataBase.Conexion;
+
 import Dominio.Usuario;
 import Services.Modulo1sResource;
 import java.io.StringReader;
