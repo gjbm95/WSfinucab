@@ -7,6 +7,7 @@ package Logica;
 
 import Dominio.Usuario;
 import Logica.Modulo1.*;
+import Logica.Modulo2.ComandoActualizarDatosUsuario;
 
 /**
  *
@@ -32,6 +33,10 @@ public class FabricaComando {
      
      public static ComandoRegistrarUsuario instanciarComandoRegistrarUsuario(Usuario usuario){
         return new ComandoRegistrarUsuario(usuario);
+    }
+    
+     public static ComandoActualizarDatosUsuario instanciarComandoActualizarDatosUsuario(Usuario usuario){
+        return new ComandoActualizarDatosUsuario(usuario);
     }
     
 }
