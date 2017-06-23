@@ -29,7 +29,7 @@ public class ComandoRegistrarUsuario extends Comando{
         int respuesta = dao.agregarDatos(usuario);
         if(respuesta == 1){
             Modulo1sResource.resultado = "1";
-        }else if(respuesta == 0){
+        }else {
             Modulo1sResource.resultado = "0";
         }
         

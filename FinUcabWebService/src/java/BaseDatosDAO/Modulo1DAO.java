@@ -71,16 +71,19 @@ public class Modulo1DAO extends ModuloDAO{
             CallableStatement a = conn.prepareCall("{ call ActualizarClave(?,?) }");
             a.setString(1,usuario);
             a.setString(2,clave);
-        
-         
-            if (a.execute() ) {
-                st.close();
-                respuesta =  5;
-            } else {
-                st.close();
-                respuesta = 6;
+            a.execute();
+            ResultSet rs = a.getResultSet();
+           
+            while(rs.next()){
+                if (rs.getString(1).equals("1")){
+                    st.close();
+                    respuesta =  5; 
+                }else{ 
+                   st.close();
+                   respuesta =  6; 
+                }
             }
-
+         
         } catch (Exception e) {
             System.out.println(e.getMessage());
             respuesta = 2;
@@ -103,8 +106,10 @@ public class Modulo1DAO extends ModuloDAO{
             ResultSet rs = a.getResultSet();
             while(rs.next()){
                 if (rs.getString(1)!=null){
+                    st.close();
                     respuesta =  4; //Usuario no disponible
                 }else{     
+                   st.close();
                    respuesta =  3; //Usuario Disponible
                 }
             }
@@ -143,6 +148,7 @@ public class Modulo1DAO extends ModuloDAO{
                 bandera = 1;
             }
             if(bandera == 0){
+                st.close();
                 respuesta = "ERROR";
             }
             
@@ -181,7 +187,7 @@ public class Modulo1DAO extends ModuloDAO{
                 bandera=1;
             }
             if(bandera==0){
-        
+              st.close();
               respuesta= "7";
         }
             

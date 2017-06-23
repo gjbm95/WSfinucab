@@ -29,7 +29,7 @@ public class ComandoActualizarClave extends Comando{
         int respuesta = dao.ActualizarClave(usuario,clave);
         if(respuesta == 5){
             Modulo1sResource.resultado = "5";
-        }else if(respuesta == 6){
+        }else {
             Modulo1sResource.resultado = "6";
         }
        
