@@ -9,10 +9,8 @@ package Logica;
  *
  * @author Junior
  */
-public class Comando {
+public abstract class Comando {
     
-    public void ejecutar(){
-        
-        
-    }
+    public abstract void ejecutar();
+    
 }
