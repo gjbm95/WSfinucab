@@ -32,6 +32,7 @@ public class Modulo1DAO extends ModuloDAO{
     @Override
     public int agregarDatos(Object object){
         Usuario usuario = (Usuario) object;
+        int respuesta =0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -46,21 +47,23 @@ public class Modulo1DAO extends ModuloDAO{
             a.setString(7, usuario.getContrasena());
             if (a.execute()) {
                 st.close();
-                return 1;
+                respuesta = 1;
             } else {
                 st.close();
-                return 0;
+                respuesta = 0;
             }
 
         } catch (Exception e) {
 
-            return 2;
+            respuesta = 2;
 
         }
+        return respuesta;
     }
     
     public int ActualizarClave(String usuario, String clave){
     String decodifico = URLDecoder.decode(usuario);
+    int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -72,22 +75,23 @@ public class Modulo1DAO extends ModuloDAO{
          
             if (a.execute() ) {
                 st.close();
-                return 1;
+                respuesta =  5;
             } else {
                 st.close();
-                return 0;
+                respuesta = 6;
             }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return 2;
+            respuesta = 2;
 
         }
+        return respuesta;
     }
     
     
     public int verificarUsuario(String usuario){
-        
+        int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -99,21 +103,22 @@ public class Modulo1DAO extends ModuloDAO{
             ResultSet rs = a.getResultSet();
             while(rs.next()){
                 if (rs.getString(1)!=null){
-                    return 1; //Usuario no disponible
+                    respuesta =  4; //Usuario no disponible
                 }else{     
-                   return 0; //Usuario Disponible
+                   respuesta =  3; //Usuario Disponible
                 }
             }
         } catch (SQLException ex) {
              Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
              
         } catch (Exception e) {
-            return 2;
+            respuesta =  2;//cambiar
         }
-        return 0;
+        return respuesta;
     }
     
     public String obtenerXRecuperarClave(String usuario){
+        String respuesta="";
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -122,7 +127,7 @@ public class Modulo1DAO extends ModuloDAO{
             a.setString(1, usuario);
             a.execute(); 
             ResultSet rs = a.getResultSet();
-	
+            Integer bandera = 0;
             while (rs.next()) {
                 JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
                 usuarioBuilder.add("u_id", rs.getString("id"));
@@ -134,17 +139,23 @@ public class Modulo1DAO extends ModuloDAO{
                 usuarioBuilder.add("u_respuesta", rs.getString("respuesta"));
                 usuarioBuilder.add("u_password", rs.getString("password"));
                 JsonObject usuarioJsonObject = usuarioBuilder.build();
-                return usuarioJsonObject.toString()+":-:recuperarclave";
+                respuesta = usuarioJsonObject.toString()+":-:recuperarclave";
+                bandera = 1;
             }
-            return "ERROR";
+            if(bandera == 0){
+                respuesta = "ERROR";
+            }
+            
         } catch (Exception e) {
-            return e.getMessage();
+            respuesta = e.getMessage();
         }
+        return respuesta;
     }
     
     public String obtenerInicioSesion(String usuario, String clave){
         String decodifico = URLDecoder.decode(usuario);
- 
+        String respuesta="";
+        int bandera=0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -166,17 +177,21 @@ public class Modulo1DAO extends ModuloDAO{
                 usuarioBuilder.add("u_respuesta", rs.getString("respuesta"));
                 usuarioBuilder.add("u_password", rs.getString("password"));
                 JsonObject usuarioJsonObject = usuarioBuilder.build();
-                return usuarioJsonObject.toString()+":-:iniciosesion";
+                respuesta= usuarioJsonObject.toString()+":-:iniciosesion";
+                bandera=1;
             }
-
-            return "DATOSMAL";
+            if(bandera==0){
+        
+              respuesta= "7";
+        }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception e) {
-            return "ERROR";
+            respuesta= "ERROR";
         }
         
-    return "";
+    return respuesta;
     }
     
     

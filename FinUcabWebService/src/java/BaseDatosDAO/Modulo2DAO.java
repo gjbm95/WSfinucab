@@ -9,9 +9,15 @@ package BaseDatosDAO;
  *
  * @author Junior
  */
-public class Modulo2DAO extends ModuloDAO{
+public abstract class Modulo2DAO <T> {
     
     
+    public abstract String agregar(T obj);
     
+    public abstract String modificar(T obj);
+    
+    public abstract String consultarTodos(T obj);
+    
+    public abstract String eliminar(T obj);
     
 }

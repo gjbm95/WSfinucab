@@ -6,8 +6,12 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Usuario;
+import Logica.Comando;
+import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -37,6 +41,7 @@ public class Modulo2sResource {
 
     @Context
     private UriInfo context;
+    public static String resultado;
 
     /**
      * Creates a new instance of Modulo2sResource
@@ -44,43 +49,38 @@ public class Modulo2sResource {
     public Modulo2sResource() {
     }
 
- 
-
+    /**
+     * Función que atualiza los datos de un usuario.
+     *
+     * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
+     *
+     */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarDatosUsuario")
-    public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
+    public String actualizarDatosUsuario() {
+//@QueryParam("datosUsuario") String datosCuenta
+//        String decodifico = URLDecoder.decode(datosCuenta);
+        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"ARROZ\" , \"u_nombre\" : \"Alejandro\""
+                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" : \"aledavid21@hotmail.com\", "
+                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/alejandra\", "
+                + "\"u_password\" : \"123456\" }";
 
-        String decodifico = URLDecoder.decode(datosCuenta);
-        
         try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
-            String query = "NSERT INTO usuario ( u_usuario , u_nombre , u_apellido , u_correo , u_pregunta , u_respuesta , u_password ) "
-                    + "VALUES ( '" + usuarioJSON.getString("u_usuario") + "' , '" + usuarioJSON.getString("u_nombre") + "' , "
-                    + "'" + usuarioJSON.getString("u_apellido") + "' , '" + usuarioJSON.getString("u_correo") + "' , "
-                    + "'" + usuarioJSON.getString("u_pregunta") + "' , '" + usuarioJSON.getString("u_respuesta") + "' , "
-                    + "'" + usuarioJSON.getString("u_password") + "' );";
-            
-            query = "UPDATE usuario set ";
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Registro exitoso";
-            } else {
-                st.close();
-                return "No se pudo registrar";
-            }
-
+            System.out.println(usuarioJSON.toString());
+            Usuario usuario = new Usuario();
+            usuario.jsonToUsuario(usuarioJSON);
+            System.out.println("USUARIO: "+usuario.getApellido());
+            Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
+            command.ejecutar();
         } catch (Exception e) {
-
-            return e.getMessage();
-
+            System.out.println(e.getMessage());
         }
+        return "falle";
     }
 
-    
-        /**
+    /**
      * Funcion que convierte un string con estructura JSON en JsonObject
      *
      * @param decodifico String con estructura json

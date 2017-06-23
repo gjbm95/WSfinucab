@@ -25,10 +25,10 @@ public class ComandoVerificarUsuario extends Comando{
     public void ejecutar(){
         Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
         int respuesta = dao.verificarUsuario(usuario);
-        if(respuesta == 1){
-            Modulo1sResource.resultado = "No Disponible";
-        }else if(respuesta == 0){
-            Modulo1sResource.resultado = "Usuario Disponible";
+        if(respuesta == 4){
+            Modulo1sResource.resultado = "4";//EN USO
+        }else if(respuesta == 3){
+            Modulo1sResource.resultado = "3";//DISPONIBLE
         }
         //return null;
     }
