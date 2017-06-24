@@ -7,7 +7,7 @@ package Dominio;
  *relacionado con los presupuestos
  **/
 
-public class Presupuesto {
+public class Presupuesto extends Entidad{
     private String _nombre;
     private String _categoria;
     private Float _monto;
@@ -24,6 +24,16 @@ public class Presupuesto {
         this._tipo = _tipo;
     }
 
+    public Presupuesto(int _id, String _nombre, String _categoria, Float _monto, String _clasificacion, int _duracion, String _tipo) {
+        super(_id);
+        this._nombre = _nombre;
+        this._categoria = _categoria;
+        this._monto = _monto;
+        this._clasificacion = _clasificacion;
+        this._duracion = _duracion;
+        this._tipo = _tipo;
+    }
+    
     public Presupuesto() {
     }
 
