@@ -5,32 +5,29 @@
  */
 package BaseDatosDAO;
 
+import Dominio.Entidad;
 import Dominio.Tarjeta_Credito;
+import java.util.Dictionary;
 
 /**
  *
  * @author AlejandroNegrin
  */
-public class DaoTarjeta_Credito extends Modulo2DAO<Tarjeta_Credito>{
+public class DaoTarjeta_Credito extends DAO{
 
-    @Override
-    public String agregar(Tarjeta_Credito obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int agregar(Entidad e) {
+        return 0; 
     }
 
-    @Override
-    public String modificar(Tarjeta_Credito obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Entidad modificar(Entidad e) {
+        return null;  
+     }
 
-    @Override
-    public String consultarTodos(Tarjeta_Credito obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Entidad consultar(int id) {
+        return null;
+     }
 
-    @Override
-    public String eliminar(Tarjeta_Credito obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    public Dictionary<Integer, Entidad> consultarTodos() {
+        return null;
+     }
 }
