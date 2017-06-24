@@ -5,13 +5,20 @@
  */
 package Services;
 
-import DataBase.Conexion;
+import BaseDatosDAO.Conexion;
+import Dominio.Usuario;
+import Logica.Comando;
+import Logica.FabricaComando;
+import java.io.StringReader;
+import java.net.URLDecoder;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.PathParam;
@@ -20,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -33,6 +41,7 @@ public class Modulo2sResource {
 
     @Context
     private UriInfo context;
+    public static String resultado;
 
     /**
      * Creates a new instance of Modulo2sResource
@@ -41,72 +50,47 @@ public class Modulo2sResource {
     }
 
     /**
-     * Retrieves representation of an instance of Services.Modulo2sResource
-     * @return an instance of javax.json.Json
+     * Función que atualiza los datos de un usuario.
+     *
+     * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
+     *
      */
-   @GET
+    @GET
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("/prueba")
-    public String getPruebaJson() {
-        //TODO return proper representation object
-        JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-        usuarioBuilder.add("Nombre","Jose");
-        usuarioBuilder.add("Apellido","Rodriguez");
-        usuarioBuilder.add("Usuario","jose123");
-        JsonObject usuarioJsonObject = usuarioBuilder.build();
-       return usuarioJsonObject.toString();
-    }
-    
-        @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/pruebaDB")
-    public String getPruebaDataBase() {
-        //TODO return proper representation object
-        String respuesta ="";
-        try{
+    @Path("/actualizarDatosUsuario")
+    public String actualizarDatosUsuario() {
+//@QueryParam("datosUsuario") String datosCuenta
+//        String decodifico = URLDecoder.decode(datosCuenta);
+        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"ARROZ\" , \"u_nombre\" : \"Alejandro\""
+                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" : \"aledavid21@hotmail.com\", "
+                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/alejandra\", "
+                + "\"u_password\" : \"123456\" }";
 
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Usuario;");
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                 usuarioBuilder.add("Nombre",rs.getString(3));
-                 usuarioBuilder.add("Apellido",rs.getString(4));
-                 usuarioBuilder.add("Usuario",rs.getString(2));
-                 JsonObject usuarioJsonObject = usuarioBuilder.build();  
-                 respuesta = usuarioJsonObject.toString();
-            }
-            rs.close();
-            st.close();
-
-            return respuesta;
+        try {
+            JsonObject usuarioJSON = this.stringToJSON(decodifico);
+            System.out.println(usuarioJSON.toString());
+            Usuario usuario = new Usuario();
+            usuario.jsonToUsuario(usuarioJSON);
+            System.out.println("USUARIO: "+usuario.getApellido());
+            Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
+            command.ejecutar();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        catch(Exception e) {
-            return e.getMessage();
-        }
+        return "falle";
     }
 
     /**
-     * POST method for creating an instance of Modulo2Resource
-     * @param content representation for the new resource
-     * @return an HTTP response with content of the created resource
+     * Funcion que convierte un string con estructura JSON en JsonObject
+     *
+     * @param decodifico String con estructura json
+     * @return JsonObject del string
      */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response postJson(Json content) {
-        //TODO
-        return Response.created(context.getAbsolutePath()).build();
+    private JsonObject stringToJSON(String decodifico) {
+        JsonReader reader = Json.createReader(new StringReader(decodifico));
+        JsonObject jsonObj = reader.readObject();
+        reader.close();
+        return jsonObj;
     }
 
-    /**
-     * Sub-resource locator method for {id}
-     */
-    @Path("{id}")
-    public Modulo2Resource getModulo2Resource(@PathParam("id") String id) {
-        return Modulo2Resource.getInstance(id);
-    }
 }

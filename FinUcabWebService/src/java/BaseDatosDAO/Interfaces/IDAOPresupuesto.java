@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica.Modulo2;
-
-import Logica.Modulo1.*;
+package BaseDatosDAO.Interfaces;
 
 /**
  *
- * @author Junior
+ * @author William
  */
-public class ComandoM2 {
+public interface IDAOPresupuesto extends IDAO{
+    
+    int verificarNombre(String nombre);
+    int eliminarPresupuesto(int id);
     
 }

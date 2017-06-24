@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Services;
-import DataBase.Conexion;
+import BaseDatosDAO.Conexion;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;

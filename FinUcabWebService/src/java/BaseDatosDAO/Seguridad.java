@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Seguridad;
+package BaseDatosDAO;
 import static Registro.RegistroBaseDatos.url;
 import java.io.File;
 import java.io.FileInputStream;

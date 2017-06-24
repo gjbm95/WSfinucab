@@ -11,10 +11,6 @@ public class Pago {
     private float total;
     private String tipo;
 
-    public static Pago crearPago() {
-        return new Pago();
-    }
-    
     
     public int getIdPago() {
         return idPago;

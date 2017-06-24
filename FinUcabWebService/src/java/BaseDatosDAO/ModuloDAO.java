@@ -12,7 +12,7 @@ package BaseDatosDAO;
 public class ModuloDAO {
     
     
-    public int agregarDatos(){
+    public int agregarDatos(Object object){
     return 0;
     }
     

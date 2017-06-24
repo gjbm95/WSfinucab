@@ -1,6 +1,7 @@
 package Dominio;
 
 import java.util.ArrayList;
+import javax.json.JsonObject;
 
 /**
  *Modulo 1 - Modulo de  Inicio de Sesion y registro de usuario
@@ -24,11 +25,7 @@ public class    Usuario {
     private ArrayList<Planificacion> planes = new ArrayList<Planificacion>();
     private ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
 
-   //Contructor por defecto:
-    public static Usuario crearUsuario()
-    {
-        return new Usuario();
-    }
+    
     //Contructor
     public Usuario(int idusuario, String nombre, String apellido, String correo, String usuario, String contrasena, String pregunta, String respuesta, ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
         this.idusuario = idusuario;
@@ -43,8 +40,7 @@ public class    Usuario {
         this.planes = planes;
     }
 
-    private Usuario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Usuario() {
     }
 
      //Getter and Setter:
@@ -126,5 +122,18 @@ public class    Usuario {
 
     public void setCuentas(ArrayList<Cuenta_Bancaria> cuentas) {
         this.cuentas = cuentas;
+    }
+    
+    
+    
+    public void jsonToUsuario(JsonObject userJSON){
+        this.idusuario = Integer.parseInt(userJSON.getString("u_id"));
+        this.usuario = userJSON.getString("u_usuario");
+        this.nombre = userJSON.getString("u_nombre");
+        this.apellido = userJSON.getString("u_apellido");
+        this.correo = userJSON.getString("u_correo");
+        this.pregunta = userJSON.getString("u_pregunta");
+        this.respuesta = userJSON.getString("u_respuesta");
+        this.contrasena = userJSON.getString("u_password");
     }
 }
