@@ -9,7 +9,7 @@ package Dominio;
  *
  * @author William
  */
-public class Entidad {
+public abstract class Entidad {
     
     private int _id;
     

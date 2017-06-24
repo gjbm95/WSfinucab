@@ -14,6 +14,11 @@ public class Cuenta_Bancaria extends Entidad {
     private ArrayList<Tarjeta_Credito> _tarjetas = new ArrayList<Tarjeta_Credito>();
     private ArrayList<Pago> _transacciones = new ArrayList<Pago>();
 
+    public Cuenta_Bancaria (){
+    
+    }
+    
+    
     public Cuenta_Bancaria(String _tipoCuenta, String _numcuenta, 
             String _nombreBanco, float _saldoActual, int id) {
         super(id);

@@ -19,6 +19,10 @@ public class Tarjeta_Credito extends Entidad {
         this._saldo = _saldo;
     }
 
+    public Tarjeta_Credito() {
+        
+    }
+
     public String getTipotdc() {
         return _tipotdc;
     }
