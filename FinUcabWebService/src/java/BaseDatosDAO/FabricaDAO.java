@@ -18,4 +18,14 @@ public class FabricaDAO {
     public static DaoUsuario instanciasDaoUsuario() {
         return new DaoUsuario();
     }
+    
+    
+    public static DaoCuenta_Bancaria instanciasDaoCuenta_Bancaria() {
+        return new DaoCuenta_Bancaria();
+    }
+    
+    public static DaoTarjeta_Credito instanciasDaoTarjeta_Credito() {
+        return new DaoTarjeta_Credito();
+    }
+   
 }

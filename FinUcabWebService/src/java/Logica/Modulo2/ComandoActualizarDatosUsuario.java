@@ -5,9 +5,9 @@
  */
 package Logica.Modulo2;
 
+import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Modulo1DAO;
-import BaseDatosDAO.Modulo2DAO;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -20,16 +20,20 @@ import javax.json.JsonObject;
  */
 public class ComandoActualizarDatosUsuario extends Comando {
 
-    Usuario user ;
+    private Usuario user ;
+ 
     
     
     public ComandoActualizarDatosUsuario(Usuario user) {
         this.user  = user;
     }
 
+    
+    
     @Override
     public void ejecutar() {
-        Modulo2DAO daoUsuario = FabricaDAO.instanciasDaoUsuario();
+
+        DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
         daoUsuario.modificar(user);
     }
     
