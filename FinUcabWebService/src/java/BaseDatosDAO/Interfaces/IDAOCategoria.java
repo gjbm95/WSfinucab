@@ -11,6 +11,6 @@ package BaseDatosDAO.Interfaces;
  */
 public interface IDAOCategoria extends IDAO{
     
-    boolean eliminarCategria(int id);
+    String eliminarCategria(int id);
     
 }
