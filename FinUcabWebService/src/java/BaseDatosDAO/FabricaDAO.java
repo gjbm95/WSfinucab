@@ -17,11 +17,9 @@ public class FabricaDAO {
         return new DaoUsuario();
     }
     
-<<<<<<< HEAD
     public static DAOCategoria instanciasDaoCategoria(){
         return new DAOCategoria();
     }
-=======
     
     public static DaoCuenta_Bancaria instanciasDaoCuenta_Bancaria() {
         return new DaoCuenta_Bancaria();
@@ -31,5 +29,4 @@ public class FabricaDAO {
         return new DaoTarjeta_Credito();
     }
    
->>>>>>> Develop
 }
