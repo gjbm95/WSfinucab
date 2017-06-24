@@ -5,8 +5,8 @@
  */
 package Logica.Modulo1;
 
+import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
-import BaseDatosDAO.Modulo1DAO;
 import Logica.Comando;
 import Services.Modulo1sResource;
 
@@ -24,7 +24,7 @@ public class ComandoActualizarClave extends Comando{
     
     @Override
     public void ejecutar(){
-        Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
+        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
      
         int respuesta = dao.ActualizarClave(usuario,clave);
         if(respuesta == 5){

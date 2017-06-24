@@ -11,15 +11,25 @@ package BaseDatosDAO;
  */
 public class FabricaDAO {
     
-    public static Modulo1DAO instanciarModulo1Dao(){
-        return new Modulo1DAO();
-    }
+  
     
     public static DaoUsuario instanciasDaoUsuario() {
         return new DaoUsuario();
     }
     
+<<<<<<< HEAD
     public static DAOCategoria instanciasDaoCategoria(){
         return new DAOCategoria();
     }
+=======
+    
+    public static DaoCuenta_Bancaria instanciasDaoCuenta_Bancaria() {
+        return new DaoCuenta_Bancaria();
+    }
+    
+    public static DaoTarjeta_Credito instanciasDaoTarjeta_Credito() {
+        return new DaoTarjeta_Credito();
+    }
+   
+>>>>>>> Develop
 }

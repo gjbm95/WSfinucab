@@ -11,9 +11,8 @@ import javax.json.JsonObject;
  * Esta clase se encarga de almacenar los datos del usuario.
  *
  **/
-public class    Usuario {
+public class Usuario extends Entidad{
     //Estas variables almacenan los datos personasles de los usuarios en memoria.
-    private int idusuario;
     private String nombre;
     private String apellido;
     private String correo;
@@ -27,8 +26,10 @@ public class    Usuario {
 
     
     //Contructor
-    public Usuario(int idusuario, String nombre, String apellido, String correo, String usuario, String contrasena, String pregunta, String respuesta, ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
-        this.idusuario = idusuario;
+    public Usuario(int idusuario, String nombre, String apellido, String correo, 
+            String usuario, String contrasena, String pregunta, String respuesta, 
+            ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
+        super(idusuario);
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
@@ -43,14 +44,7 @@ public class    Usuario {
     public Usuario() {
     }
 
-     //Getter and Setter:
-    public int getIdusuario() {
-        return idusuario;
-    }
 
-    public void setIdusuario(int idusuario) {
-        this.idusuario = idusuario;
-    }
 
     public String getNombre() {
         return nombre;
@@ -127,7 +121,7 @@ public class    Usuario {
     
     
     public void jsonToUsuario(JsonObject userJSON){
-        this.idusuario = Integer.parseInt(userJSON.getString("u_id"));
+        super.setId(Integer.parseInt(userJSON.getString("u_id")));
         this.usuario = userJSON.getString("u_usuario");
         this.nombre = userJSON.getString("u_nombre");
         this.apellido = userJSON.getString("u_apellido");
