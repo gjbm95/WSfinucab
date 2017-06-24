@@ -11,8 +11,6 @@ package BaseDatosDAO.Interfaces;
  */
 public interface IDAOCategoria extends IDAO{
     
-    boolean habilitarCategoria(int id);
-    boolean deshabilitarCategoria(int id);
     boolean eliminarCategria(int id);
     
 }
