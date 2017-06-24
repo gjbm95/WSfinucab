@@ -18,4 +18,8 @@ public class FabricaDAO {
     public static DaoUsuario instanciasDaoUsuario() {
         return new DaoUsuario();
     }
+    
+    public static DAOCategoria instanciasDaoCategoria(){
+        return new DAOCategoria();
+    }
 }
