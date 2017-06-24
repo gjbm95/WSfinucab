@@ -15,22 +15,22 @@ import java.util.Dictionary;
  */
 public class Modulo5DAO extends DAO implements IDAOPago{
         @Override
-    public int Agregar(Entidad e) {
+    public int agregar(Entidad e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Entidad Modificar(Entidad e) {
+    public Entidad modificar(Entidad e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Entidad Consultar(int id) {
+    public Entidad consultar(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Dictionary<Integer, Entidad> ConsultarTodos() {
+    public Dictionary<Integer, Entidad> consultarTodos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

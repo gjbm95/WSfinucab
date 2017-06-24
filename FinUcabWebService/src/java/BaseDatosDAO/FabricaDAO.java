@@ -11,9 +11,7 @@ package BaseDatosDAO;
  */
 public class FabricaDAO {
     
-    public static Modulo1DAO instanciarModulo1Dao(){
-        return new Modulo1DAO();
-    }
+  
     
     public static DaoUsuario instanciasDaoUsuario() {
         return new DaoUsuario();

@@ -7,7 +7,6 @@ package Logica.Modulo2;
 
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
-import BaseDatosDAO.Modulo1DAO;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
