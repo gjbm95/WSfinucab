@@ -13,21 +13,30 @@ public class Cuenta_Bancaria extends Entidad {
     private float _saldoActual;
     private ArrayList<Tarjeta_Credito> _tarjetas = new ArrayList<Tarjeta_Credito>();
     private ArrayList<Pago> _transacciones = new ArrayList<Pago>();
+    private int _idusuario;
 
-    public Cuenta_Bancaria (){
-    
-    }
-    
-    
     public Cuenta_Bancaria(String _tipoCuenta, String _numcuenta, 
-            String _nombreBanco, float _saldoActual, int id) {
+            String _nombreBanco, float _saldoActual, int id, int idusuario) {
         super(id);
         this._tipoCuenta = _tipoCuenta;
         this._numcuenta = _numcuenta;
         this._nombreBanco = _nombreBanco;
         this._saldoActual = _saldoActual;
+        this._idusuario = idusuario;
     }
 
+    Cuenta_Bancaria() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public int getIdusuario() {
+        return _idusuario;
+    }
+
+    public void setIdusuario(int _idusuario) {
+        this._idusuario = _idusuario;
+    }
+    
     public String getTipoCuenta() {
         return _tipoCuenta;
     }
