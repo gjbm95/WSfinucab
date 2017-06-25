@@ -6,6 +6,7 @@
 package Logica;
 
 import Dominio.Cuenta_Bancaria;
+import Dominio.Tarjeta_Credito;
 import Dominio.Usuario;
 import Logica.Modulo1.*;
 import Logica.Modulo2.*;
@@ -50,6 +51,18 @@ public class FabricaComando {
     
      public static ComandoEliminarCuenta instanciarComandoEliminarCuenta(int id){
         return new ComandoEliminarCuenta(id);
+    }
+    
+     public static ComandoAgregarTDC instanciarComandoAgregarTDC(Tarjeta_Credito tdc){
+        return new ComandoAgregarTDC(tdc);
+    }
+    
+     public static ComandoActualizarTDC instanciarComandoActualizarTDC(Tarjeta_Credito tdc){
+        return new ComandoActualizarTDC(tdc);
+    }
+    
+     public static ComandoEliminarTDC instanciarComandoEliminarTDC(int id){
+        return new ComandoEliminarTDC(id);
     }
     
 }

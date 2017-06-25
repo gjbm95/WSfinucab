@@ -5,9 +5,9 @@
  */
 package Logica.Modulo2;
 
-import BaseDatosDAO.DaoUsuario;
+import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.FabricaDAO;
-import Dominio.Usuario;
+import Dominio.Tarjeta_Credito;
 import Logica.Comando;
 import Services.Modulo1sResource;
 import Services.Modulo2sResource;
@@ -19,12 +19,12 @@ import javax.json.JsonObject;
  */
 public class ComandoActualizarTDC extends Comando {
 
-    private Usuario user ;
+    private Tarjeta_Credito tdc ;
  
     
     
-    public ComandoActualizarTDC(Usuario user) {
-        this.user  = user;
+    public ComandoActualizarTDC(Tarjeta_Credito tdc) {
+        this.tdc  = tdc;
     }
 
     
@@ -32,8 +32,8 @@ public class ComandoActualizarTDC extends Comando {
     @Override
     public Object ejecutar() {
 
-        DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
-        return daoUsuario.modificar(user);
+        DaoTarjeta_Credito daoTarjeta_Credito = FabricaDAO.instanciasDaoTarjeta_Credito();
+        return daoTarjeta_Credito.modificar(tdc);
     }
     
     

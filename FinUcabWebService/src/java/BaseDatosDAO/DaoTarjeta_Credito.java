@@ -5,30 +5,89 @@
  */
 package BaseDatosDAO;
 
+import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.Tarjeta_Credito;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author AlejandroNegrin
  */
-public class DaoTarjeta_Credito extends DAO{
+public class DaoTarjeta_Credito extends DAO {
 
+    private Connection conn = Conexion.conectarADb();
+
+    @Override
     public int agregar(Entidad e) {
-        return 0; 
+        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+        CallableStatement cstmt;
+        int idtarjeta = 0;
+        try {
+            cstmt = conn.prepareCall("{ call agregarTarjetaCredito(?,?,?,?,?)}");
+            cstmt.setString(1, obj.getTipotdc());
+            cstmt.setString(2, obj.getFechaven());
+            cstmt.setString(3, obj.getNumero());
+            cstmt.setFloat(4, obj.getSaldo());
+            cstmt.setInt(5, obj.getIdusuario());
+            cstmt.executeQuery();
+            ResultSet rs = cstmt.getResultSet();
+            rs.next();
+            idtarjeta = rs.getInt(1);
+            System.out.printf("id de: " + rs.getString(1));
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return idtarjeta;
     }
 
+    @Override
     public Entidad modificar(Entidad e) {
-        return null;  
-     }
+        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+        CallableStatement cstmt;
+        try {
+            cstmt = conn.prepareCall("{ call modificarTarjetaCredito(?,?,?,?,?)}");
+            cstmt.setString(1, obj.getTipotdc());
+            cstmt.setString(2, obj.getFechaven());
+            cstmt.setString(3, obj.getNumero());
+            cstmt.setFloat(4, obj.getSaldo());
+            cstmt.setInt(5, obj.getId());
+            cstmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return obj;
+    }
 
     public Entidad consultar(int id) {
         return null;
-     }
+    }
 
     public ArrayList<Entidad> consultarTodos() {
         return null;
-     }
+    }
+
+    public int eliminar(int id) {
+        CallableStatement cstmt;
+        int idtarjeta = 0;
+        try {
+            cstmt = conn.prepareCall("{ call eliminarTarjetasCredito(?)}");
+            cstmt.setInt(1, id);
+            cstmt.executeQuery();
+            ResultSet rs = cstmt.getResultSet();
+            rs.next();
+            idtarjeta = rs.getInt(1);
+            System.out.printf("id de: " + rs.getString(1));
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return idtarjeta;
+    }
+
 }
