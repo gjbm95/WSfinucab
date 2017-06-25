@@ -6,6 +6,7 @@
 package BaseDatosDAO.Interfaces;
 
 import Dominio.Entidad;
+import java.util.ArrayList;
 import java.util.Dictionary;
 
 /**
@@ -20,5 +21,5 @@ public interface IDAO {
     
     Entidad consultar(int id);
     
-    Dictionary<Integer, Entidad> consultarTodos();
+    ArrayList<Entidad> consultarTodos();
 }

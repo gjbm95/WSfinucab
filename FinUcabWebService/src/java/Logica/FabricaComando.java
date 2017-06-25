@@ -5,9 +5,13 @@
  */
 package Logica;
 
+import Dominio.Categoria;
+import Dominio.Entidad;
 import Dominio.Usuario;
 import Logica.Modulo1.*;
 import Logica.Modulo2.ComandoActualizarDatosUsuario;
+import Logica.Modulo4.ComandoAgregarCategoria;
+import Logica.Modulo4.ComandoVisualizarCategoria;
 
 /**
  *
@@ -38,5 +42,12 @@ public class FabricaComando {
      public static ComandoActualizarDatosUsuario instanciarComandoActualizarDatosUsuario(Usuario usuario){
         return new ComandoActualizarDatosUsuario(usuario);
     }
-    
+     
+     public static ComandoAgregarCategoria instanciarComandoAgregarCategoria(Entidad categoria){
+        return new ComandoAgregarCategoria(categoria);
+    }
+     
+     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(String usuario){
+         return new ComandoVisualizarCategoria(usuario);
+     }
 }

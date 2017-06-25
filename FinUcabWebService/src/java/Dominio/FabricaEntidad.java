@@ -47,9 +47,9 @@ public class FabricaEntidad {
       new Tarjeta_Credito(_tipotdc,_fechaven,_numero,_saldo,id); 
     }
     
-    public static Categoria obtenerCategoria(int idcategoria, 
+     public static Categoria obtenerCategoria(int idusuario, 
             String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
-      new Categoria(idcategoria,nombre,descripcion,estaHabilitado,esIngreso);
+      new Categoria(idusuario,nombre,descripcion,estaHabilitado,esIngreso);
     }    
 }
