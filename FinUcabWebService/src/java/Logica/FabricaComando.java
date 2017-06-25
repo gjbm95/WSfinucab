@@ -5,11 +5,16 @@
  */
 package Logica;
 
+import Dominio.Entidad;
+import Logica.Modulo1.*;
+import Logica.Modulo2.ComandoActualizarDatosUsuario;
+import Logica.Modulo4.ComandoAgregarCategoria;
+import Logica.Modulo4.ComandoVisualizarCategoria;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
-import Logica.Modulo1.*;
 import Logica.Modulo2.*;
 import Logica.Modulo5.ComandoListarPagos;
+
 
 /**
  *
@@ -40,6 +45,14 @@ public class FabricaComando {
      public static ComandoActualizarDatosUsuario instanciarComandoActualizarDatosUsuario(Usuario usuario){
         return new ComandoActualizarDatosUsuario(usuario);
     }
+     
+     public static ComandoAgregarCategoria instanciarComandoAgregarCategoria(Entidad categoria){
+        return new ComandoAgregarCategoria(categoria);
+    }
+     
+     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(String usuario){
+         return new ComandoVisualizarCategoria(usuario);
+     }
     
      public static ComandoAgregarCuenta instanciarComandoAgregarCuenta(Cuenta_Bancaria cuenta){
         return new ComandoAgregarCuenta(cuenta);

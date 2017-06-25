@@ -47,13 +47,13 @@ public class FabricaEntidad {
       new Tarjeta_Credito(_tipotdc,_fechaven,_numero,_saldo,id); 
     }
     
-    public static Categoria obtenerCategoria(int idcategoria, 
+     public static Categoria obtenerCategoria(int idusuario, 
             String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
-      new Categoria(idcategoria,nombre,descripcion,estaHabilitado,esIngreso);
-    }   
-    
-    
+      new Categoria(idusuario,nombre,descripcion,estaHabilitado,esIngreso);
+     
+    }
+     
     public static Pago obtenerPago(int idPago, String categoria, String descripcion, float total, String tipo){
        return 
       new Pago(idPago, categoria, descripcion, total, tipo);

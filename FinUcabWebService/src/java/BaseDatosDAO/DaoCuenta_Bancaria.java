@@ -69,7 +69,7 @@ public class DaoCuenta_Bancaria extends DAO {
         return null;
     }
 
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
         return null;
     }
 

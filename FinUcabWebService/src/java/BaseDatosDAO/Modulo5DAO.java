@@ -1,4 +1,3 @@
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -32,7 +31,7 @@ public class Modulo5DAO extends DAO implements IDAOPago{
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

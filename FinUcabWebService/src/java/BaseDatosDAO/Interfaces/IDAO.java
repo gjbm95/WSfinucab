@@ -21,5 +21,5 @@ public interface IDAO {
     
     Entidad consultar(int id);
     
-    ArrayList<Entidad> consultarTodos();
+    ArrayList<Entidad> consultarTodos(int idUsuario);
 }
