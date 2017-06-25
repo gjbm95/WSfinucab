@@ -7,10 +7,10 @@ package BaseDatosDAO.Interfaces;
 
 /**
  *
- * @author Ramon
+ * @author MariPerez
  */
-public interface IDAOPago extends IDAO {
-       
-
+public interface IDAOCategoria extends IDAO{
+    
+    String eliminarCategria(int id);
     
 }

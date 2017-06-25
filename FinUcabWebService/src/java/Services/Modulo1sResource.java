@@ -140,7 +140,6 @@ public class Modulo1sResource {
         
         ComandoRegistrarUsuario cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
         cru.ejecutar();
-                
         return resultado;
     }
 

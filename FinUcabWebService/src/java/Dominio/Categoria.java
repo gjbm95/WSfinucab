@@ -12,7 +12,7 @@ import java.io.Serializable;
  * haciendo los metodos de get y set correspondientes
  */
 
-public class Categoria implements Serializable{
+public class Categoria  extends Entidad implements Serializable{
     public int getIdcategoria() {
         return idcategoria;
     }
