@@ -25,7 +25,7 @@ public class ComandoRegistrarUsuario extends Comando{
     }
     
     
-    public void ejecutar(){
+    public Object ejecutar(){
         DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         int respuesta = dao.agregar((Entidad)usuario);
         if(respuesta == 1){
@@ -33,6 +33,6 @@ public class ComandoRegistrarUsuario extends Comando{
         }else {
             Modulo1sResource.resultado = "0";
         }
-        
+        return null;
     }
 }

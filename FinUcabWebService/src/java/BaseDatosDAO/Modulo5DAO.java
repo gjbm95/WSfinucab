@@ -1,8 +1,14 @@
 
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
 import Dominio.Entidad;
+import java.util.ArrayList;
 import java.util.Dictionary;
 
 /**
@@ -26,9 +32,8 @@ public class Modulo5DAO extends DAO implements IDAOPago{
     }
 
     @Override
-    public Dictionary<Integer, Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
-
