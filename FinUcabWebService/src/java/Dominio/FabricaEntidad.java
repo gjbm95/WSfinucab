@@ -28,9 +28,9 @@ public class FabricaEntidad {
     }
     
     public static Cuenta_Bancaria obtenerCuentaBancaria(String _tipoCuenta, 
-       String _numcuenta,String _nombreBanco, float _saldoActual, int id){
+       String _numcuenta,String _nombreBanco, float _saldoActual, int id, int idusuario){
        return 
-      new Cuenta_Bancaria(_tipoCuenta,_numcuenta,_nombreBanco,_saldoActual,id); 
+      new Cuenta_Bancaria(_tipoCuenta,_numcuenta,_nombreBanco,_saldoActual,id, idusuario); 
     }
     
     public static Cuenta_Bancaria obtenerCuentaBancaria(){

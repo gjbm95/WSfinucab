@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +33,6 @@ public class DaoUsuario extends DAO {
     DaoUsuario() {
     }
 
- 
     @Override
     public int agregar(Entidad e) {
         Usuario usuario = (Usuario) e;
@@ -205,23 +205,23 @@ public class DaoUsuario extends DAO {
 
     @Override
     public Entidad modificar(Entidad e) {
-         Usuario obj = (Usuario)e;
+        Usuario obj = (Usuario) e;
         CallableStatement cstmt;
-    try {
-        cstmt = conn.prepareCall("{ call update_usuario(?,?,?,?,?,?,?,?)}");
-        cstmt.setInt(1, obj.getId());
-        cstmt.setString(2, obj.getUsuario());
-        cstmt.setString(3, obj.getNombre());
-        cstmt.setString(4, obj.getApellido());
-        cstmt.setString(5, obj.getCorreo());
-        cstmt.setString(6, obj.getPregunta());
-        cstmt.setString(7, obj.getRespuesta());
-        cstmt.setString(8, obj.getContrasena());
-        cstmt.execute();
-        System.out.printf("ENTREEEEEEEEEEE");
-    } catch (SQLException ex) {
-        Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        try {
+            cstmt = conn.prepareCall("{ call update_usuario(?,?,?,?,?,?,?,?)}");
+            cstmt.setInt(1, obj.getId());
+            cstmt.setString(2, obj.getUsuario());
+            cstmt.setString(3, obj.getNombre());
+            cstmt.setString(4, obj.getApellido());
+            cstmt.setString(5, obj.getCorreo());
+            cstmt.setString(6, obj.getPregunta());
+            cstmt.setString(7, obj.getRespuesta());
+            cstmt.setString(8, obj.getContrasena());
+            cstmt.execute();
+            System.out.printf("ENTREEEEEEEEEEE");
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return obj;
     }
 
@@ -231,10 +231,8 @@ public class DaoUsuario extends DAO {
     }
 
     @Override
-    public Dictionary<Integer, Entidad> consultarTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public ArrayList<Entidad> consultarTodos() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
 
 }

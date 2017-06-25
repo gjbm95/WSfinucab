@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
+import java.util.ArrayList;
 import java.util.Dictionary;
 
 /**
@@ -31,7 +32,7 @@ public class Modulo3DAO extends DAO implements IDAOPresupuesto {
     }
 
     @Override
-    public Dictionary<Integer, Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

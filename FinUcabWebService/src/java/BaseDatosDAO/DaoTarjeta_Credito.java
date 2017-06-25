@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import Dominio.Entidad;
 import Dominio.Tarjeta_Credito;
+import java.util.ArrayList;
 import java.util.Dictionary;
 
 /**
@@ -27,7 +28,7 @@ public class DaoTarjeta_Credito extends DAO{
         return null;
      }
 
-    public Dictionary<Integer, Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos() {
         return null;
      }
 }
