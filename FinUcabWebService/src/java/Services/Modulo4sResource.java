@@ -1,6 +1,11 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Categoria;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Logica.Comando;
+import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.Connection;
@@ -120,26 +125,16 @@ public class Modulo4sResource {
             JsonObject categoriaJSON = reader.readObject();
            
             reader.close();
-            String query = "INSERT INTO categoria (usuariou_id, ca_nombre , c_descripcion , ca_esingreso , ca_eshabilitado  ) "
-                    + "VALUES ( " + categoriaJSON.getInt("c_usuario") + " , '" + categoriaJSON.getString("c_nombre") + "' , '" + categoriaJSON.getString("c_descripcion") 
-                    + "' , " + "'" + categoriaJSON.getBoolean("c_ingreso") + "' , '" + categoriaJSON.getBoolean("c_estado")  + "');";
-                       
-            System.out.println(query);
-           
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Registro exitoso";
-            } else {
-                st.close();
-                return "No se pudo registrar";
-            }
-
+            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
         } catch (Exception e) {
 
             return e.getMessage();
 
         }
+     return "";
     }
+
     
     /**
      * Función que elimina una categoria y modifica las tablas donde se encontraba esa categoria
