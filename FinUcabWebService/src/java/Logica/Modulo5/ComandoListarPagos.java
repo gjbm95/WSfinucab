@@ -5,6 +5,8 @@
  */
 package Logica.Modulo5;
 
+import BaseDatosDAO.DAO;
+import BaseDatosDAO.FabricaDAO;
 import Logica.Comando;
 
 /**
@@ -22,10 +24,10 @@ public class ComandoListarPagos extends Comando{
     @Override
     public Object ejecutar() {
         
-        //DAO  dao = 
+        DAO  dao = FabricaDAO.instanciasDAOPago();
+        Object response = dao.consultarTodos(idUSuario);
         
-        
-        return null;
+        return response;
     }
     
 }
