@@ -5,9 +5,10 @@
  */
 package Logica;
 
+import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Modulo1.*;
-import Logica.Modulo2.ComandoActualizarDatosUsuario;
+import Logica.Modulo2.*;
 
 /**
  *
@@ -37,6 +38,18 @@ public class FabricaComando {
     
      public static ComandoActualizarDatosUsuario instanciarComandoActualizarDatosUsuario(Usuario usuario){
         return new ComandoActualizarDatosUsuario(usuario);
+    }
+    
+     public static ComandoAgregarCuenta instanciarComandoAgregarCuenta(Cuenta_Bancaria cuenta){
+        return new ComandoAgregarCuenta(cuenta);
+    }
+    
+     public static ComandoActualizarCuenta instanciarComandoActualizarCuenta(Cuenta_Bancaria cuenta){
+        return new ComandoActualizarCuenta(cuenta);
+    }
+    
+     public static ComandoEliminarCuenta instanciarComandoEliminarCuenta(int id){
+        return new ComandoEliminarCuenta(id);
     }
     
 }

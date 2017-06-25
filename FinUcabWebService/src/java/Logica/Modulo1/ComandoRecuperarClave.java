@@ -24,8 +24,9 @@ public class ComandoRecuperarClave extends Comando{
     
     
     @Override
-    public void ejecutar(){
+    public Object ejecutar(){
         DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         Modulo1sResource.resultado = dao.obtenerXRecuperarClave(usuario);
+        return null;
     }
 }
