@@ -28,7 +28,7 @@ public class DaoTarjeta_Credito extends DAO{
         return null;
      }
 
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
         return null;
      }
 }

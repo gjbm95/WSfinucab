@@ -24,7 +24,8 @@ public class ComandoVisualizarCategoria extends Comando {
     @Override
     public Object ejecutar() {
         DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        dao.consultarTodos();
+        int idUsuario = 1;
+        dao.consultarTodos(idUsuario);
         
         return null;
     }

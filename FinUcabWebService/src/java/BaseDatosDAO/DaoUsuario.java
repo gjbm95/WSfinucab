@@ -231,7 +231,7 @@ public class DaoUsuario extends DAO {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -75,7 +75,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
               
         try{
                     
