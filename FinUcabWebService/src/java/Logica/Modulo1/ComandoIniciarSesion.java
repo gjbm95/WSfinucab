@@ -6,7 +6,7 @@
 
 package Logica.Modulo1;
 
-import BaseDatosDAO.Modulo1DAO;
+
 import Logica.Comando;
 import BaseDatosDAO.*;
 import Services.Modulo1sResource;
@@ -25,9 +25,9 @@ public class ComandoIniciarSesion extends Comando{
     }
     
     @Override
-    public void ejecutar(){
-        Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
+    public Object ejecutar(){
+        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         Modulo1sResource.resultado = dao.obtenerInicioSesion(usuario , clave);
-        
+        return null;
     }
 }

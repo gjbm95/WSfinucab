@@ -11,6 +11,6 @@ package Logica;
  */
 public abstract class Comando {
     
-    public abstract void ejecutar();
+    public abstract Object ejecutar();
     
 }

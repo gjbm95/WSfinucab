@@ -6,6 +6,7 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Comando;
 import Logica.FabricaComando;
@@ -53,31 +54,133 @@ public class Modulo2sResource {
      * Función que atualiza los datos de un usuario.
      *
      * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
+     * @param String Json String con los atributos: u_id , u_uduario , u_nombre ,u_apellido, u_correo , u_pregunta ,
+     * u_respuesta , u_password
      *
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarDatosUsuario")
-    public String actualizarDatosUsuario() {
-//@QueryParam("datosUsuario") String datosCuenta
-//        String decodifico = URLDecoder.decode(datosCuenta);
-        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"ARROZ\" , \"u_nombre\" : \"Alejandro\""
-                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" : \"aledavid21@hotmail.com\", "
-                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/alejandra\", "
-                + "\"u_password\" : \"123456\" }";
+    public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
+ 
+        String decodifico = URLDecoder.decode(datosCuenta);
+        String resultado = "1";
+//        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"Eoeooeoe\" , \"u_nombre\" : \"Alejandro\""
+//                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" : \"aledavid21@hotmail.com\", "
+//                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/alejandra\", "
+//                + "\"u_password\" : \"123456\" }";
 
         try {
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
-            System.out.println(usuarioJSON.toString());
             Usuario usuario = new Usuario();
             usuario.jsonToUsuario(usuarioJSON);
-            System.out.println("USUARIO: "+usuario.getApellido());
             Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
             command.ejecutar();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            resultado = "0";
         }
-        return "falle";
+        return resultado;
+    }
+
+    /**
+     * Función que agrega una nueva Cuenta Bancaria para un Usuario
+     *
+     * @return int id de la nueva cuenta, 0 si no logro actualizar
+     * @param String JSON String con los atributos: ct_tipocuenta , ct_numcuenta , ct_nombrebanco, ct_saldoactual ,
+     * usuariou_id
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/agregarCuentaBancaria")
+    public String agregarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
+
+        String decodifico = URLDecoder.decode(datosCuenta);
+        Object resultado;
+//        String decodifico = "{ \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"9900120\" , \"ct_nombrebanco\" : \"AND BANK\""
+//                + ", \"ct_saldoactual\" : \"522\", \"usuariou_id\" : \"1\" }";
+
+        try {
+            JsonObject cuentaJSON = this.stringToJSON(decodifico);
+
+            Cuenta_Bancaria cuenta = new Cuenta_Bancaria(cuentaJSON.getString("ct_tipocuenta"),
+                    cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+                    Float.parseFloat(cuentaJSON.getString("ct_saldoactual")), 0,
+                    Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+
+            Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
+     * Función que actualiza o modifica los datos de una cuenta bancaria
+     *
+     * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
+     * @param String Json String con los atributos: ct_id , ct_tipocuenta , ct_numcuenta ,ct_nombrebanco, ct_saldoactual
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/actualizarCuentaBancaria")
+    public String actualizarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
+
+        String decodifico = URLDecoder.decode(datosCuenta);
+        String resultado = "1";
+//        String decodifico = "{ \"ct_id\" : \"8\" , \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"15946\" ,"
+//                + " \"ct_nombrebanco\" : \"OKOKN BANK\", \"ct_saldoactual\" : \"522\" , \"usuariou_id\" : \"1\"}";
+
+        try {
+            JsonObject cuentaJSON = this.stringToJSON(decodifico);
+
+            Cuenta_Bancaria cuenta = new Cuenta_Bancaria(cuentaJSON.getString("ct_tipocuenta"),
+                    cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+                    Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
+                    Integer.parseInt(cuentaJSON.getString("ct_id")),
+                    Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+
+            Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
+            command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado;
+    }
+
+    /**
+     * Función que agrega una nueva Cuenta Bancaria para un Usuario
+     *
+     * @return int id de la nueva cuenta, 0 si no logro actualizar
+     * @param String JSON String con los atributos: ct_tipocuenta , ct_numcuenta , ct_nombrebanco, ct_saldoactual ,
+     * usuariou_id
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/eliminarCuentaBancaria")
+    public String eliminarCuentaBancaria(@QueryParam("idCuenta") String idCuenta) {
+
+        String decodifico = URLDecoder.decode(idCuenta);
+        Object resultado = "1";
+//        String decodifico = "3";
+
+        try {
+           int id = Integer.parseInt(decodifico);
+
+            Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
     }
 
     /**

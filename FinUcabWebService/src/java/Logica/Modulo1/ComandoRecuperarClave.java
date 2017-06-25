@@ -5,8 +5,8 @@
  */
 package Logica.Modulo1;
 
+import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
-import BaseDatosDAO.Modulo1DAO;
 import Logica.Comando;
 import Services.Modulo1sResource;
 
@@ -24,8 +24,9 @@ public class ComandoRecuperarClave extends Comando{
     
     
     @Override
-    public void ejecutar(){
-        Modulo1DAO dao = FabricaDAO.instanciarModulo1Dao();
+    public Object ejecutar(){
+        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         Modulo1sResource.resultado = dao.obtenerXRecuperarClave(usuario);
+        return null;
     }
 }

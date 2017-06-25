@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BaseDatosDAO;
+package BaseDatosDAO.Interfaces;
 
 /**
  *
  * @author Junior
  */
-public class Modulo4DAO {
+public interface IDAOCuentaBancaria extends IDAO {
     
 }
