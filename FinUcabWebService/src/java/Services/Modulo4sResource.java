@@ -235,36 +235,9 @@ public class Modulo4sResource {
                     
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id <> -1  AND usuariou_id = '" + decodifico + "';");
+            Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
             
-            
-             JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
-             JsonArrayBuilder list = Json.createArrayBuilder();
-             int cont = 1;
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 
-                 categoriaBuilder.add("Id",rs.getInt(1));
-                 System.out.println(rs.getInt(1));
-                 categoriaBuilder.add("Nombre",rs.getString(2));
-                 System.out.println(rs.getString(2));
-                 categoriaBuilder.add("Descripcion",rs.getString(3));
-                 categoriaBuilder.add("esIngreso",rs.getBoolean(5));
-                 categoriaBuilder.add("esHabilitado",rs.getBoolean(4));
-                 JsonObject categoriaJsonObject = categoriaBuilder.build();  
-                 respuesta = categoriaJsonObject.toString();
-                 
-                 list.add( respuesta);
-                
-            }
-            rs.close();
-            st.close();
-            JsonArray listJsonObject = list.build();
-            String resp = listJsonObject.toString();
-            System.out.println(resp);
-            return resp;
+            return "";
         }
         catch(Exception e) {
             return e.getMessage();
