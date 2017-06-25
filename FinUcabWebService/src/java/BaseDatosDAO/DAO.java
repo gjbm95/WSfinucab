@@ -33,7 +33,8 @@ public abstract class DAO implements IDAO {
 
         try {
             Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection(RegistroBaseDatos.url, RegistroBaseDatos.nombreDB, RegistroBaseDatos.contrasenaDB);
+            conn = DriverManager.getConnection(RegistroBaseDatos.url, 
+                    RegistroBaseDatos.nombreDB, RegistroBaseDatos.contrasenaDB);
         } catch (ClassNotFoundException ex) { 
             Logger.getLogger(DAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -42,6 +43,11 @@ public abstract class DAO implements IDAO {
         return conn;
     }
 
+    /**
+     * Metodo que establece la conexion a la base de datos
+     *
+     * @return un conector para hacer llamadas a la BD
+     */
     public void Desconectar(){
         
         try {
@@ -51,6 +57,12 @@ public abstract class DAO implements IDAO {
         }
     }
     
+    
+    /**
+     * Metodo que desconecta la conexion a la base de datos
+     *
+     * @return un conector para hacer llamadas a la BD
+     */
     public void Desconectar(Connection conexion){
         
         try {

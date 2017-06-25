@@ -5,31 +5,33 @@
  */
 package BaseDatosDAO;
 
+import Dominio.Cuenta_Bancaria;
+import Dominio.Entidad;
+import java.util.Dictionary;
+
 /**
  *
  * @author AlejandroNegrin
  */
-public class DaoCuenta_Bancaria extends Modulo2DAO{
+public class DaoCuenta_Bancaria extends DAO{
 
-    @Override
-    public String agregar(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public int agregar(Entidad e) {
+        return 0;
+       
     }
 
-    @Override
-    public String modificar(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Entidad modificar(Entidad e) {
+        return null;  
+     }
 
-    @Override
-    public String consultarTodos(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Entidad consultar(int id) {
+        return null;
+     }
 
-    @Override
-    public String eliminar(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Dictionary<Integer, Entidad> consultarTodos() {
+        return null;
+     }
 
 
     
