@@ -6,8 +6,7 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
-import Dominio.Cuenta_Bancaria;
-import Dominio.Usuario;
+import Dominio.*;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
@@ -62,7 +61,7 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarDatosUsuario")
     public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
- 
+
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
 //        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"Eoeooeoe\" , \"u_nombre\" : \"Alejandro\""
@@ -171,9 +170,110 @@ public class Modulo2sResource {
 //        String decodifico = "3";
 
         try {
-           int id = Integer.parseInt(decodifico);
+            int id = Integer.parseInt(decodifico);
 
             Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
+     * Función que agrega una nueva Tarjet de Crédito para un Usuario
+     *
+     * @return int id de la nueva cuenta, 0 si no logro actualizar
+     * @param String JSON String con los atributos: tc_tipo , tc_fechavencimiento (en formato DD/MM/YYYY) , tc_numero,
+     * tc_saldo ,usuariou_id
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/agregarTDC")
+    public String agregarTDC(@QueryParam("datosTDC") String datosTDC) {
+
+//        String decodifico = URLDecoder.decode(datosTDC);
+        Object resultado;
+        String decodifico = "{ \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
+                + " \"tc_numero\" : \"12234\""
+                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
+
+        try {
+            JsonObject tdcJSON = this.stringToJSON(decodifico);
+
+            Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
+                    tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+                    Float.parseFloat(tdcJSON.getString("tc_saldo")), 0,
+                    Integer.parseInt(tdcJSON.getString("usuariou_id")));
+
+            Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
+     * Función que actualiza o modifica los datos de una Tarjeta de crédito
+     *
+     * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
+     * @param String JSON String con los atributos: tc_id , tc_tipo , tc_fechavencimiento (en formato DD/MM/YYYY) ,
+     * tc_numero, tc_saldo ,usuariou_id
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/actualizarTDC")
+    public String actualizarTDC(@QueryParam("datosTDC") String datosTDC) {
+
+//        String decodifico = URLDecoder.decode(datosTDC);
+        String resultado = "1";
+        String decodifico = "{ \"tc_id\" : \"1\" , \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
+                + " \"tc_numero\" : \"12234\""
+                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
+        try {
+            JsonObject tdcJSON = this.stringToJSON(decodifico);
+
+            Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
+                    tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+                    Float.parseFloat(tdcJSON.getString("tc_saldo")),
+                    Integer.parseInt(tdcJSON.getString("tc_id")),
+                    Integer.parseInt(tdcJSON.getString("usuariou_id")));
+
+            Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
+            command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado;
+    }
+
+    /**
+     * Función que agrega una nueva Cuenta Bancaria para un Usuario
+     *
+     * @return int id de la nueva cuenta, 0 si no logro actualizar
+     * @param String JSON String con los atributos: ct_tipocuenta , ct_numcuenta , ct_nombrebanco, ct_saldoactual ,
+     * usuariou_id
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/eliminarTDC")
+    public String eliminarTDC(@QueryParam("idtdc") String idtdc) {
+
+//        String decodifico = URLDecoder.decode(idtdc);
+        Object resultado = "1";
+        String decodifico = "3";
+
+        try {
+            int id = Integer.parseInt(decodifico);
+
+            Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
             resultado = command.ejecutar();
 
         } catch (Exception e) {
