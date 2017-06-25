@@ -52,4 +52,16 @@ public class FabricaComando {
         return new ComandoEliminarCuenta(id);
     }
     
+     /*---------------------------     PAGOS      ------------------------------------*/
+     /**
+      * Fabrica inicializadora del ComandoListarPagos
+      * @param idUsuario
+      * @return 
+      */
+     public static ComandoListarPagos instanciarComandoListarPagos(int idUsuario){
+        return new ComandoListarPagos(id);
+    }
+     
+     
+     /*---------------------------     /PAGOS      ------------------------------------*/
 }

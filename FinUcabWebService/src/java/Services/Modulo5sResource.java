@@ -6,6 +6,7 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.Connection;
@@ -155,6 +156,11 @@ public class Modulo5sResource {
         String respuesta ="";
 
         try {
+            
+            //Comando c = FabricaComando.
+            
+            
+            /*
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion"
@@ -166,14 +172,10 @@ public class Modulo5sResource {
             {
                 //Creo el objeto Json!             
                  pagoBuilder.add("pg_id",rs.getInt(1));
-                 System.out.println(rs.getInt(1));
                  pagoBuilder.add("pg_monto",rs.getFloat(2));
-                 System.out.println(rs.getFloat(2));
                  pagoBuilder.add("pg_tipoTransaccion",rs.getString(3));
                  pagoBuilder.add("pg_categoria",rs.getInt(4));
-                 System.out.println(rs.getString(4));
                  pagoBuilder.add("pg_descripcion",rs.getString(5));
-                 System.out.println(rs.getString(5));
                  JsonObject pagoJsonObject = pagoBuilder.build();  
                  respuesta = pagoJsonObject.toString();
                  
@@ -181,6 +183,7 @@ public class Modulo5sResource {
             rs.close();
             st.close();
             System.out.println(respuesta);
+            */
             return respuesta;
         
 
