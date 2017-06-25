@@ -12,7 +12,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Dictionary;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,7 +69,7 @@ public class DaoTarjeta_Credito extends DAO {
         return null;
     }
 
-    public Dictionary<Integer, Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos() {
         return null;
     }
 

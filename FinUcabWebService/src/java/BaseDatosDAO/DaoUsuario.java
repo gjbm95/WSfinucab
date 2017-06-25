@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -230,7 +231,7 @@ public class DaoUsuario extends DAO {
     }
 
     @Override
-    public Dictionary<Integer, Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
