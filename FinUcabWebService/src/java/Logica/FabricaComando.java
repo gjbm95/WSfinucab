@@ -9,6 +9,7 @@ import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Modulo1.*;
 import Logica.Modulo2.*;
+import Logica.Modulo5.ComandoListarPagos;
 
 /**
  *
@@ -55,11 +56,11 @@ public class FabricaComando {
      /*---------------------------     PAGOS      ------------------------------------*/
      /**
       * Fabrica inicializadora del ComandoListarPagos
-      * @param idUsuario
+      * @param idUsuario Identificador de usuario en base de datos
       * @return 
       */
      public static ComandoListarPagos instanciarComandoListarPagos(int idUsuario){
-        return new ComandoListarPagos(id);
+        return new ComandoListarPagos(idUsuario);
     }
      
      

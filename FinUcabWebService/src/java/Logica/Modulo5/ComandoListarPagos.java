@@ -5,10 +5,27 @@
  */
 package Logica.Modulo5;
 
+import Logica.Comando;
+
 /**
  *
  * @author Ramon
  */
-public class ComandoListarPagos {
+public class ComandoListarPagos extends Comando{
+
+    private int idUSuario;
+    
+    public ComandoListarPagos(int idUsuario){
+        this.idUSuario = idUsuario;
+    }
+    
+    @Override
+    public Object ejecutar() {
+        
+        //DAO  dao = 
+        
+        
+        return null;
+    }
     
 }
