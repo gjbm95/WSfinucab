@@ -292,11 +292,11 @@ public class Modulo2sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarTDC")
-    public String consultarTDC() {
-//@QueryParam("idUsuario") String idUsuario
-//        String decodifico = URLDecoder.decode(idUsuario);
+    public String consultarTDC(@QueryParam("idUsuario") String idUsuario) {
+
+        String decodifico = URLDecoder.decode(idUsuario);
         Object resultado = "1";
-        String decodifico = "1";
+//        String decodifico = "1";
 
         try {
             int id = Integer.parseInt(decodifico);
@@ -320,11 +320,11 @@ public class Modulo2sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarCuentas")
-    public String consultarCuentas() {
-//@QueryParam("idUsuario") String idUsuario
-//        String decodifico = URLDecoder.decode(idUsuario);
+    public String consultarCuentas(@QueryParam("idUsuario") String idUsuario) {
+
+        String decodifico = URLDecoder.decode(idUsuario);
         Object resultado = "1";
-        String decodifico = "1";
+//        String decodifico = "1";
 
         try {
             int id = Integer.parseInt(decodifico);
