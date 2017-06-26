@@ -6,11 +6,15 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Pago;
+import Logica.Comando;
+import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -155,6 +159,7 @@ public class Modulo5sResource {
         String respuesta ="";
 
         try {
+         
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion"
@@ -166,14 +171,10 @@ public class Modulo5sResource {
             {
                 //Creo el objeto Json!             
                  pagoBuilder.add("pg_id",rs.getInt(1));
-                 System.out.println(rs.getInt(1));
                  pagoBuilder.add("pg_monto",rs.getFloat(2));
-                 System.out.println(rs.getFloat(2));
                  pagoBuilder.add("pg_tipoTransaccion",rs.getString(3));
                  pagoBuilder.add("pg_categoria",rs.getInt(4));
-                 System.out.println(rs.getString(4));
                  pagoBuilder.add("pg_descripcion",rs.getString(5));
-                 System.out.println(rs.getString(5));
                  JsonObject pagoJsonObject = pagoBuilder.build();  
                  respuesta = pagoJsonObject.toString();
                  
@@ -181,6 +182,7 @@ public class Modulo5sResource {
             rs.close();
             st.close();
             System.out.println(respuesta);
+
             return respuesta;
         
 
@@ -203,48 +205,43 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idUsuario) {
-   
-        String respuesta ="";
         
         try{
-                    
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
-                    + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idUsuario);
-
-             JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-             JsonArrayBuilder list = Json.createArrayBuilder();
-        
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 pagoBuilder.add("pg_id",rs.getInt(1));
-                 System.out.println(rs.getInt(1));
-                 pagoBuilder.add("pg_monto",rs.getFloat(2));
-                 System.out.println(rs.getFloat(2));
-                 pagoBuilder.add("pg_tipoTransaccion",rs.getString(3));
-                 pagoBuilder.add("pg_categoria",rs.getInt(4));
-                 System.out.println(rs.getString(4));
-                 pagoBuilder.add("pg_descripcion",rs.getString(5));
-                 System.out.println(rs.getString(5));
-                 JsonObject pagoJsonObject = pagoBuilder.build();  
-                 respuesta = pagoJsonObject.toString();
-                 
-                 list.add( respuesta);
+            
+            Comando c = FabricaComando.instanciarComandoListarPagos(idUsuario);
+            Object objectResponse = c.ejecutar();
+            
+            if (objectResponse != null ){
                 
+                ArrayList<Pago> lista = (ArrayList<Pago>) objectResponse;
+                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
+                JsonArrayBuilder list = Json.createArrayBuilder();
+                
+                for (Pago pago : lista) {
+                    
+                    pagoBuilder.add("pg_id",pago.getIdPago());
+                    pagoBuilder.add("pg_monto",pago.getTotal());
+                    pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                    pagoBuilder.add("pg_categoria",pago.getCategoria());
+                    pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                    JsonObject pagoJsonObject = pagoBuilder.build();  
+
+                    list.add( pagoJsonObject.toString());
+                    
+                }
+                
+                JsonArray listJsonObject = list.build();
+                String resp = listJsonObject.toString();
+                
+                return resp;
             }
-            rs.close();
-            st.close();
-            JsonArray listJsonObject = list.build();
-            String resp = listJsonObject.toString();
-            System.out.println(resp);
-            return resp;
+
         }
         catch(Exception e) {
             return e.getMessage();
         }
+        
+        return "Error";
     }
       
     /**

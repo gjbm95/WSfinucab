@@ -4,53 +4,66 @@ package Dominio;
  * Created by Junior on 03/05/2017.
  */
 
-public class Tarjeta_Credito {
-    private int idTDC;
-    private String tipotdc;
-    private String fechaven;
-    private String numero;
-    private float saldo;
+public class Tarjeta_Credito extends Entidad {
+    private String _tipotdc;
+    private String _fechaven;
+    private String _numero;
+    private float _saldo;
+    private int _idusuario;
 
-   
+    public Tarjeta_Credito(String _tipotdc, String _fechaven, String _numero,
+            float _saldo, int id, int idusuario) {
+        super(id);
+        this._tipotdc = _tipotdc;
+        this._fechaven = _fechaven;
+        this._numero = _numero;
+        this._saldo = _saldo;
+        this._idusuario = idusuario;
+    }
+
+    public Tarjeta_Credito() {
+        
+    }
+
+    public int getIdusuario() {
+        return _idusuario;
+    }
+
+    public void setIdusuario(int _idusuario) {
+        this._idusuario = _idusuario;
+    }
     
-    
-    public float getSaldo() {
-        return saldo;
+    public String getTipotdc() {
+        return _tipotdc;
     }
 
-    public void setSaldo(float saldo) {
-        this.saldo = saldo;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
+    public void setTipotdc(String _tipotdc) {
+        this._tipotdc = _tipotdc;
     }
 
     public String getFechaven() {
-        return fechaven;
+        return _fechaven;
     }
 
-    public void setFechaven(String fechaven) {
-        this.fechaven = fechaven;
+    public void setFechaven(String _fechaven) {
+        this._fechaven = _fechaven;
     }
 
-    public String getTipotdc() {
-        return tipotdc;
+    public String getNumero() {
+        return _numero;
     }
 
-    public void setTipotdc(String tipotdc) {
-        this.tipotdc = tipotdc;
+    public void setNumero(String _numero) {
+        this._numero = _numero;
     }
 
-    public int getIdTDC() {
-        return idTDC;
+    public float getSaldo() {
+        return _saldo;
     }
 
-    public void setIdTDC(int idTDC) {
-        this.idTDC = idTDC;
+    public void setSaldo(float _saldo) {
+        this._saldo = _saldo;
     }
+
+
 }

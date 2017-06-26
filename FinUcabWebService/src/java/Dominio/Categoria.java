@@ -12,13 +12,20 @@ import java.io.Serializable;
  * haciendo los metodos de get y set correspondientes
  */
 
-public class Categoria implements Serializable{
+public class Categoria  extends Entidad implements Serializable{
     public int getIdcategoria() {
         return idcategoria;
     }
 
     public void setIdcategoria(int idcategoria) {
         this.idcategoria = idcategoria;
+    }
+        public int getIdUsario() {
+        return idusuario;
+    }
+
+    public void setUsuario(int idusuario) {
+        this.idusuario = idusuario;
     }
 
     public String getNombre() {
@@ -54,6 +61,7 @@ public class Categoria implements Serializable{
     }
 
     private int idcategoria;
+    private int idusuario;
     private String nombre;
     private String descripcion;
     private boolean estaHabilitado;
@@ -68,16 +76,17 @@ public class Categoria implements Serializable{
     }
 
 
-    public Categoria(int idcategoria, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
-        this.idcategoria = idcategoria;
+    public Categoria(int idusuario,int idcategoria, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
+        super(idcategoria);
+        this.idusuario=idusuario;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.estaHabilitado = estaHabilitado;
         this.esIngreso = esIngreso;
     }
 
-    public Categoria( String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
-        this.idcategoria = -1;
+    public Categoria(int idusuario, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
+        this.idusuario=idusuario;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.estaHabilitado = estaHabilitado;
