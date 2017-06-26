@@ -54,9 +54,9 @@ public class FabricaEntidad {
      
     }
      
-    public static Pago obtenerPago(int idPago, int categoria, String descripcion, float total, String tipo){
+    public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo){
        return 
-      new Pago(idPago, categoria, descripcion, total, tipo);
+      new Pago( categoria, descripcion, total, tipo);
     }   
     
 }

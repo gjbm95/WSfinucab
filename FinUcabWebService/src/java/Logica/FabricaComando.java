@@ -13,6 +13,7 @@ import Logica.Modulo4.ComandoVisualizarCategoria;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Modulo2.*;
+import Logica.Modulo5.ComandoAgregarPago;
 import Logica.Modulo5.ComandoListarPagos;
 
 
@@ -75,7 +76,15 @@ public class FabricaComando {
      public static ComandoListarPagos instanciarComandoListarPagos(int idUsuario){
         return new ComandoListarPagos(idUsuario);
     }
-     
+    
+     /**
+      * Fabrica inicializadora del ComandoAgregarPago
+      * @param pago 
+      * @return 
+      */
+     public static ComandoAgregarPago instanciarComandoAgregarPago(Entidad pago){
+        return new ComandoAgregarPago(pago);
+     }
      
      /*---------------------------     /PAGOS      ------------------------------------*/
 }

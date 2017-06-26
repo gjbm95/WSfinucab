@@ -6,6 +6,7 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
+import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.Pago;
 import java.sql.Connection;
@@ -29,7 +30,29 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      try {
+            Pago pago = (Pago) e;
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+           String query = "INSERT INTO pago ( pg_monto , pg_tipoTransaccion , categoriaca_id , pg_descripcion ) "
+           + "VALUES (" + pago.getTotal() + "' , '" + pago.getTipo() + "' , '"
+          + pago.getCategoria() + "' , '" + pago.getDescripcion() + "');";
+                       
+            System.out.println(query);
+           
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return 1;
+            } else {
+                st.close();
+                return 0;
+            }
+
+        } catch (Exception ex) {
+
+            return 2;
+
+        }  
     }
 
     @Override

@@ -6,6 +6,8 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import Dominio.Pago;
 import Logica.Comando;
 import Logica.FabricaComando;
@@ -114,32 +116,26 @@ public class Modulo5sResource {
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos) {
 
+        System.out.println(datosPagos);
         String decodifico = URLDecoder.decode(datosPagos);
 
         try {
+           
             Connection conn = Conexion.conectarADb();
+           
             Statement st = conn.createStatement();
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
+           
             reader.close();
-            String query = "INSERT INTO pago ( pg_monto , pg_tipoTransaccion , categoriaca_id , pg_descripcion ) "
-                    + "VALUES ( '" + pagoJSON.getInt("pg_monto") + "' , '" + pagoJSON.getString("pg_tipoTransaccion") + "' , '"
-                    + pagoJSON.getInt("pg_categoria") 
-                    + "' , '" + pagoJSON.getString("pg_descripcion") + "' );";
-
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Registro exitoso";
-            } else {
-                st.close();
-                return "No se pudo registrar";
-            }
-
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            Comando c = FabricaComando.instanciarComandoAgregarPago(e);
         } catch (Exception e) {
 
             return e.getMessage();
 
         }
+     return "";
     }
     
     /**
