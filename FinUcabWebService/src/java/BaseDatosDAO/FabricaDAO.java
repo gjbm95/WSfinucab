@@ -28,5 +28,9 @@ public class FabricaDAO {
     public static DaoTarjeta_Credito instanciasDaoTarjeta_Credito() {
         return new DaoTarjeta_Credito();
     }
+    
+    public static DAOPago instanciasDAOPago() {
+        return new DAOPago();
+    }
    
 }

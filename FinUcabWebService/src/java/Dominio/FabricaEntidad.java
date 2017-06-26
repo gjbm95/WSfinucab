@@ -42,14 +42,21 @@ public class FabricaEntidad {
     }
     
     public static Tarjeta_Credito obtenerTarjetaCredito(String _tipotdc, 
-            String _fechaven, String _numero,float _saldo, int id){
+            String _fechaven, String _numero,float _saldo, int id, int idusuario){
        return 
-      new Tarjeta_Credito(_tipotdc,_fechaven,_numero,_saldo,id); 
+      new Tarjeta_Credito(_tipotdc,_fechaven,_numero,_saldo,id, idusuario); 
     }
     
      public static Categoria obtenerCategoria(int idusuario, 
             String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
       new Categoria(idusuario,nombre,descripcion,estaHabilitado,esIngreso);
-    }    
+     
+    }
+     
+    public static Pago obtenerPago(int idPago, int categoria, String descripcion, float total, String tipo){
+       return 
+      new Pago(idPago, categoria, descripcion, total, tipo);
+    }   
+    
 }

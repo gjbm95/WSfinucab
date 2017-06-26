@@ -5,6 +5,7 @@
  */
 package Logica.Modulo2;
 
+import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
 import Dominio.Usuario;
@@ -19,12 +20,12 @@ import javax.json.JsonObject;
  */
 public class ComandoEliminarTDC extends Comando {
 
-    private Usuario user ;
+    private int tdc ;
  
     
     
-    public ComandoEliminarTDC(Usuario user) {
-        this.user  = user;
+    public ComandoEliminarTDC(int tdc) {
+        this.tdc  = tdc;
     }
 
     
@@ -32,8 +33,8 @@ public class ComandoEliminarTDC extends Comando {
     @Override
     public Object ejecutar() {
 
-        DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
-        return daoUsuario.modificar(user);
+        DaoTarjeta_Credito daoTarjeta_credito = FabricaDAO.instanciasDaoTarjeta_Credito();
+        return daoTarjeta_credito.eliminar(tdc);
     }
     
     

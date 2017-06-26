@@ -7,10 +7,10 @@ package BaseDatosDAO.Interfaces;
 
 /**
  *
- * @author Juan
+ * @author Ramon
  */
-public interface IDAOPago extends IDAO{
+public interface IDAOPago extends IDAO {
+       
+
     
-    
-   
 }
