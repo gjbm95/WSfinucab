@@ -51,7 +51,7 @@ public class FabricaComando {
         return new ComandoAgregarCategoria(categoria);
     }
      
-     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(String usuario){
+     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(int usuario){
          return new ComandoVisualizarCategoria(usuario);
      }
     
