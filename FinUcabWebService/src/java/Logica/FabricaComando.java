@@ -65,4 +65,12 @@ public class FabricaComando {
         return new ComandoEliminarTDC(id);
     }
     
+     public static ComandoConsultarTDC instanciarComandoConsultarTDC(int id){
+        return new ComandoConsultarTDC(id);
+    }
+    
+     public static ComandoConsultarCuentas instanciarComandoConsultarCuentas(int id){
+        return new ComandoConsultarCuentas(id);
+    }
+    
 }

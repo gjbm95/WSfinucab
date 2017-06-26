@@ -230,11 +230,11 @@ public class Modulo2sResource {
     @Path("/actualizarTDC")
     public String actualizarTDC(@QueryParam("datosTDC") String datosTDC) {
 
-//        String decodifico = URLDecoder.decode(datosTDC);
+        String decodifico = datosTDC;
         String resultado = "1";
-        String decodifico = "{ \"tc_id\" : \"1\" , \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
-                + " \"tc_numero\" : \"12234\""
-                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
+//        String decodifico = "{ \"tc_id\" : \"1\" , \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
+//                + " \"tc_numero\" : \"12234\""
+//                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
 
@@ -268,12 +268,69 @@ public class Modulo2sResource {
 
 //        String decodifico = URLDecoder.decode(idtdc);
         Object resultado = "1";
-        String decodifico = "3";
+        String decodifico = idtdc;
 
         try {
             int id = Integer.parseInt(decodifico);
 
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
+     * Función que busca todas las tarjetas de credito de un usuario
+     *
+     * @return JsonToString compuesto de JsonArrays de cada tarjeta
+     * @param String id del usuario
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/consultarTDC")
+    public String consultarTDC(@QueryParam("idUsuario") String idUsuario) {
+
+        String decodifico = idUsuario;
+        Object resultado = "1";
+//        String decodifico = "1";
+
+        try {
+            int id = Integer.parseInt(decodifico);
+
+            Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        System.out.println(resultado.toString());
+        return resultado.toString();
+    }
+
+    /**
+     * Función que busca todas las tarjetas de credito de un usuario
+     *
+     * @return JsonToString compuesto de JsonArrays de cada tarjeta
+     * @param String id del usuario
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/consultarCuentas")
+    public String consultarCuentas(@QueryParam("idUsuario") String idUsuario) {
+
+        String decodifico = URLDecoder.decode(idUsuario);
+        Object resultado = "1";
+//        String decodifico = "1";
+
+        try {
+            int id = Integer.parseInt(decodifico);
+          
+            Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
             resultado = command.ejecutar();
 
         } catch (Exception e) {
