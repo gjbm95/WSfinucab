@@ -8,13 +8,21 @@ package BaseDatosDAO;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.Tarjeta_Credito;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonBuilderFactory;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  *
@@ -88,6 +96,35 @@ public class DaoTarjeta_Credito extends DAO {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idtarjeta;
+    }
+
+    public String getTarjetasXUsuario(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call obtenerTarjetasCredito(?)}");
+            cstm.setInt(1, id);
+            
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder tdcBuilder = Json.createObjectBuilder();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            while (rs.next()) {
+                tdcBuilder.add("tc_id", rs.getString("id"));
+                tdcBuilder.add("tc_tipo", rs.getString("tipo"));
+                tdcBuilder.add("tc_fechavencimiento", rs.getString("fecha"));
+                tdcBuilder.add("tc_numero", rs.getString("numero"));
+                tdcBuilder.add("tc_saldo", rs.getString("saldo"));
+                JsonObject tdcJsonObject = tdcBuilder.build();
+                arrayBuilder.add(tdcJsonObject);
+            }
+             JsonArray array = arrayBuilder.build();
+             respuesta = array.toString();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            respuesta = "0";
+        }
+        return respuesta;
     }
 
 }

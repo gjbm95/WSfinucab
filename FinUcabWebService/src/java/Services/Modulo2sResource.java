@@ -284,6 +284,62 @@ public class Modulo2sResource {
     }
 
     /**
+     * Función que busca todas las tarjetas de credito de un usuario
+     *
+     * @return JsonToString compuesto de JsonArrays de cada tarjeta
+     * @param String id del usuario
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/consultarTDC")
+    public String consultarTDC() {
+//@QueryParam("idUsuario") String idUsuario
+//        String decodifico = URLDecoder.decode(idUsuario);
+        Object resultado = "1";
+        String decodifico = "1";
+
+        try {
+            int id = Integer.parseInt(decodifico);
+
+            Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
+     * Función que busca todas las tarjetas de credito de un usuario
+     *
+     * @return JsonToString compuesto de JsonArrays de cada tarjeta
+     * @param String id del usuario
+     */
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/consultarCuentas")
+    public String consultarCuentas() {
+//@QueryParam("idUsuario") String idUsuario
+//        String decodifico = URLDecoder.decode(idUsuario);
+        Object resultado = "1";
+        String decodifico = "1";
+
+        try {
+            int id = Integer.parseInt(decodifico);
+          
+            Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
+            resultado = command.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            resultado = "0";
+        }
+        return resultado.toString();
+    }
+
+    /**
      * Funcion que convierte un string con estructura JSON en JsonObject
      *
      * @param decodifico String con estructura json
