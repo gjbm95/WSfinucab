@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -225,23 +226,45 @@ public class Modulo4sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarCategoria")
-    public String VisualizarCategoria(@QueryParam("datosCategoria") String usuario) {
+    public String VisualizarCategoria(@QueryParam("datosCategoria") int usuario) {
               
-        String decodifico = URLDecoder.decode(usuario);
-       
         String respuesta ="";
         
         try{
-                    
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
+
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
+            Object objectResponse = c.ejecutar();
             
-            return "";
-        }
+            if (objectResponse != null ){
+                
+                ArrayList<Categoria> lista = (ArrayList<Categoria>) objectResponse;
+                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
+                JsonArrayBuilder list = Json.createArrayBuilder();
+                
+                for (Categoria categoria : lista) {
+                    
+                    categoriaBuilder.add("ca_id",categoria.getIdcategoria());
+                    categoriaBuilder.add("ca_nombre",categoria.getNombre());
+                    categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
+                    categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
+                    categoriaBuilder.add("ca_esingreso",categoria.isIngreso());
+                    categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
+                    JsonObject categoriaJsonObject = categoriaBuilder.build();  
+
+                    list.add( categoriaJsonObject.toString());
+                    
+                }
+                
+                JsonArray listJsonObject = list.build();
+                String resp = listJsonObject.toString();
+                
+                return resp;
+            }
+            }
         catch(Exception e) {
             return e.getMessage();
         }
+        return "Error";
     }
 
      /**
