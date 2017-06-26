@@ -5,8 +5,10 @@
  */
 package Logica.Modulo2;
 
+import BaseDatosDAO.DaoCuenta_Bancaria;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -19,12 +21,12 @@ import javax.json.JsonObject;
  */
 public class ComandoConsultarCuentas extends Comando {
 
-    private Usuario user ;
+    private int idusuario ;
  
     
     
-    public ComandoConsultarCuentas(Usuario user) {
-        this.user  = user;
+    public ComandoConsultarCuentas(int idusuario) {
+        this.idusuario  = idusuario;
     }
 
     
@@ -32,8 +34,8 @@ public class ComandoConsultarCuentas extends Comando {
     @Override
     public Object ejecutar() {
 
-        DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
-        return daoUsuario.modificar(user);
+        DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
+        return dao.getCuentasXUsuario(idusuario);
     }
     
     
