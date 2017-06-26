@@ -15,17 +15,16 @@ import Logica.Comando;
  * @author MariPerez
  */
 public class ComandoVisualizarCategoria extends Comando {
-         private String usuario;
+         private int usuario;
      
-     public ComandoVisualizarCategoria(String usuario){
+     public ComandoVisualizarCategoria(int usuario){
          this.usuario=usuario;
      }
 
     @Override
     public Object ejecutar() {
         DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        int idUsuario = 1;
-        dao.consultarTodos(idUsuario);
+        dao.consultarTodos(usuario);
         
         return null;
     }

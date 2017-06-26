@@ -77,27 +77,24 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
               
+        String respuesta ="";
+        ArrayList<Entidad> listaCategoria = new ArrayList<>();
+        
         try{
                     
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id <> -1  AND usuariou_id = '" + 1 + "';");
-            ArrayList<Entidad> list= null;
+            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id <> -1  AND usuariou_id = '" + idUsuario + "';");
+
             while (rs.next())
             {
-                //Creo el objeto Json!             
-                 Categoria ca= new Categoria();
-                 ca.setIdcategoria(rs.getInt(1));
-                 ca.setNombre(rs.getString(2));
-                 ca.setDescripcion(rs.getString(3));
-                 ca.setEsIngreso(rs.getBoolean(5));
-                 ca.setEstaHabilitado(rs.getBoolean(4));
-                 list.add(ca);
-                 System.out.println(ca);
+                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
+                listaCategoria.add(categoria);
+                
             }
-             
-            return list;
+            
+            return listaCategoria;
         }
         catch(Exception e) {
             return null;
