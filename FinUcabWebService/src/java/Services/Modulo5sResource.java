@@ -219,8 +219,7 @@ public class Modulo5sResource {
                 
                 for (Pago pago : lista) {
                     
-                    //Creo el objeto Json!             
-                    pagoBuilder.add("pg_id",pago.getCategoria());
+                    pagoBuilder.add("pg_id",pago.getIdPago());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
@@ -242,7 +241,7 @@ public class Modulo5sResource {
             return e.getMessage();
         }
         
-        return "ERROR";
+        return "Error";
     }
       
     /**
