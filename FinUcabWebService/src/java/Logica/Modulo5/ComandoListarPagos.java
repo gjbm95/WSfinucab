@@ -25,8 +25,7 @@ public class ComandoListarPagos extends Comando{
     public Object ejecutar() {
         
         DAO  dao = FabricaDAO.instanciasDAOPago();
-        Object response = dao.consultarTodos(idUSuario);
-        
+        Object response = dao.consultarTodos(idUSuario);        
         return response;
     }
     
