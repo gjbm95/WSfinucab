@@ -115,7 +115,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos) {
-
+            Object resultado;
         System.out.println(datosPagos);
         String decodifico = URLDecoder.decode(datosPagos);
 
@@ -129,13 +129,13 @@ public class Modulo5sResource {
            
             reader.close();
             Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-            Comando c = FabricaComando.instanciarComandoAgregarPago(e);
+            Comando command = FabricaComando.instanciarComandoAgregarPago(e);
+            resultado = command.ejecutar();
         } catch (Exception e) {
-
-            return e.getMessage();
-
+            System.out.println(e.getMessage());
+            resultado = "0";
         }
-     return "";
+        return resultado.toString();
     }
     
     /**
@@ -155,39 +155,44 @@ public class Modulo5sResource {
         String respuesta ="";
 
         try {
-         
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion"
-                         + " FROM pago WHERE pg_id = " + idPago);
-
-             JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-             //int cont = 1;
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 pagoBuilder.add("pg_id",rs.getInt(1));
-                 pagoBuilder.add("pg_monto",rs.getFloat(2));
-                 pagoBuilder.add("pg_tipoTransaccion",rs.getString(3));
-                 pagoBuilder.add("pg_categoria",rs.getInt(4));
-                 pagoBuilder.add("pg_descripcion",rs.getString(5));
-                 JsonObject pagoJsonObject = pagoBuilder.build();  
+            
+            Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
+            Object objectResponse = c.ejecutar();
+            
+            if (objectResponse != null ){
+                
+                
+                
+                //ArrayList<Pago> lista = (ArrayList<Pago>) objectResponse;
+                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
+                //JsonArrayBuilder list = Json.createArrayBuilder();
+                
+                Pago pago = (Pago) objectResponse;
+                //for (Pago pago : lista) {          
+                 pagoBuilder.add("pg_id",pago.getIdPago());
+                 pagoBuilder.add("pg_monto",pago.getTotal());
+                 pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                 pagoBuilder.add("pg_categoria",pago.getCategoria());
+                 pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                JsonObject pagoJsonObject = pagoBuilder.build(); 
                  respuesta = pagoJsonObject.toString();
-                 
-            }
-            rs.close();
-            st.close();
-            System.out.println(respuesta);
+            
+                
+                
+                
+           
 
             return respuesta;
-        
+            }
 
         } catch (Exception e) {
 
             return e.getMessage();
 
         }
+         return "Error";
     }
+
    
     /**
      * Función que visualiza los pagos.

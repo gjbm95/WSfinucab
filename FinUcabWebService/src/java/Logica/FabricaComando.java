@@ -14,6 +14,7 @@ import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Modulo2.*;
 import Logica.Modulo5.ComandoAgregarPago;
+import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
 
 
@@ -85,6 +86,15 @@ public class FabricaComando {
      public static ComandoAgregarPago instanciarComandoAgregarPago(Entidad pago){
         return new ComandoAgregarPago(pago);
      }
+     
+     /**
+      * Fabrica inicializadora del ComandoConsultarPago
+      * @param idPago Identificador de pago en base de datos
+      * @return 
+      */
+      public static ComandoConsultarPago instanciarComandoConsultarPago(int idPago){
+        return new ComandoConsultarPago(idPago);
+    }
      
      /*---------------------------     /PAGOS      ------------------------------------*/
 }
