@@ -70,6 +70,9 @@ public class DaoCuenta_Bancaria extends DAO {
     }
 
     public ArrayList<Entidad> consultarTodos() {
+        CallableStatement cstmt;
+        int idCuenta = 0;
+        
         return null;
     }
 

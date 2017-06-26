@@ -194,11 +194,11 @@ public class Modulo2sResource {
     @Path("/agregarTDC")
     public String agregarTDC(@QueryParam("datosTDC") String datosTDC) {
 
-//        String decodifico = URLDecoder.decode(datosTDC);
+       String decodifico = URLDecoder.decode(datosTDC);
         Object resultado;
-        String decodifico = "{ \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
-                + " \"tc_numero\" : \"12234\""
-                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
+//        String decodifico = "{ \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
+//                + " \"tc_numero\" : \"12234\""
+//                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
 
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
