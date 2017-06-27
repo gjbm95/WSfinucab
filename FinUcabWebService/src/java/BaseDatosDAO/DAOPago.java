@@ -103,7 +103,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public Entidad consultar(int idPago) {
-             String respuesta ="";
+             Pago pago = null;
              
              try {
             Connection conn = Conexion.conectarADb();
@@ -113,11 +113,11 @@ public class DAOPago extends DAO implements IDAOPago{
             ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
             
-            
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
+            while (rs.next()){
+                pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
                 //listaPagos.add(pago);
                 
-           
+            }
             
             return pago;
             
