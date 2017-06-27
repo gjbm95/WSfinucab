@@ -31,7 +31,7 @@ public class ComandoAgregarCategoria extends Comando {
                 }
         else{System.out.println("Fallido");}
         
-        return null;
+        return respuesta;
         
     }
     

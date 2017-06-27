@@ -11,9 +11,12 @@ import Dominio.Entidad;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -66,12 +69,57 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+           
+            Categoria ca = (Categoria) e;
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            String query = "UPDATE categoria SET "
+                    + "ca_nombre = '" + ca.getNombre()
+                    + "', c_descripcion = '" + ca.getDescripcion()
+                    + "', ca_esingreso = " + ca.isIngreso()
+                    + ",ca_eshabilitado = " + ca.isEstaHabilitado() +
+                    " WHERE "
+                    + "ca_id = " + ca.getIdcategoria() + ";";
+           
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return null;
+            } else {
+                st.close();
+                return null;
+                
+            }
+
+        } catch (Exception ex) {
+
+            return null;
+
+        }
     }
 
     @Override
     public Entidad consultar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        String respuesta ="";
+             
+             try {
+                 
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            
+             //Se coloca el query
+            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
+            
+                Categoria categoria = new Categoria(  rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
+           
+            return categoria;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 
     @Override
