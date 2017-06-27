@@ -11,6 +11,7 @@ import Dominio.Entidad;
 import Dominio.Pago;
 import Dominio.Usuario;
 import java.io.StringReader;
+import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -40,13 +41,13 @@ public class DAOPago extends DAO implements IDAOPago{
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement pag = conn.prepareCall("{ call Agregar(?,?,?,?,?) }");
+            CallableStatement pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
             pag.setInt(4, pago.getCategoria());
             pag.setInt(5, pago.getIdUsario());
-            
+                        
             if (pag.execute()) {  respuesta = 1; }
             else { respuesta = 0;  }
             
@@ -63,40 +64,23 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public Entidad modificar(Entidad e) {
-        
-       try {
-            Pago pago = (Pago) e;
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
-           
-            String query = "UPDATE pago SET "
-                    + "pg_monto = '" +pago.getTotal()
-                    + "', pg_tipoTransaccion = '" + pago.getTipo()
-                    + "', categoriaca_id= " + pago.getCategoria()
-                    + ",pg_descripcion = '" + pago.getDescripcion() +
-                    "' WHERE "
-                    + "pg_id = " + pago.getIdUsario();
-            
-                   
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                System.out.println("modificacion exitosa");
-                return null;
-            } else {
-                st.close();
-                System.out.println("no se pudo modificar");
-                return null;
-                
-            }
-
-        } catch (Exception ex) {
-
-            return null;
-
+        Pago pago = (Pago) e;
+     
+        CallableStatement cstmt;
+        try {
+            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?) }");
+            cstmt.setFloat(1,pago.getTotal());
+            cstmt.setString(2,pago.getDescripcion());
+            cstmt.setString(3,pago.getDescripcion());
+            cstmt.setInt(4,pago.getCategoria());
+            cstmt.execute();
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+        return pago;
     }
+         
+   
 
     @Override
     public Entidad consultar(int idPago) {
