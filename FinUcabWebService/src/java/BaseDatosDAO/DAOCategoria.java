@@ -32,13 +32,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author MariPerez
  */
-public class DAOCategoria extends DAO implements IDAOCategoria {
-    
-    @Override
-    public String eliminarCategria(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+public class DAOCategoria extends DAO implements IDAOCategoria {   
     
     public int agregar(Entidad e) {
         
@@ -146,6 +140,53 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
         }
         catch(Exception e) {
             return null;
+        }
+    }
+    
+    @Override 
+    public int eliminarCategoria(int idCategoria){
+        try {
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            EliminarCategoria2(idCategoria, "presupuesto");
+            EliminarCategoria2(idCategoria,"pago");
+           
+            String query = "DELETE FROM categoria WHERE ca_id =" + idCategoria  + ";";
+            
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return 1;
+            } else {
+                st.close();
+                return 0;
+            }
+
+        } catch (Exception e) {
+
+            return 2;
+
+        }
+    }
+    
+    public boolean EliminarCategoria2 (int id, String tabla){
+        try{
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            String query = "UPDATE "+tabla+" SET "
+                    + "categoriaca_id = " + -1 + 
+                    " WHERE "
+                    + "categoriaca_id = " + id + ";";
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return true;
+            } else {
+                st.close();
+                return false;
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false ;
+
         }
     }
    
