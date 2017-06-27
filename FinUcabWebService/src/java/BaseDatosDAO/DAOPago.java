@@ -9,6 +9,8 @@ import BaseDatosDAO.Interfaces.IDAOPago;
 import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.Pago;
+import Dominio.Usuario;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,30 +32,43 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-      try {
+    /*  try {
             Pago pago = (Pago) e;
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-           String query = "INSERT INTO pago ( pg_monto , pg_tipoTransaccion , categoriaca_id , pg_descripcion ) "
-           + "VALUES (" + pago.getTotal() + "' , '" + pago.getTipo() + "' , '"
-          + pago.getCategoria() + "' , '" + pago.getDescripcion() + "');";
-                       
-            System.out.println(query);
-           
-            if (st.executeUpdate(query) > 0) {
+           String query = "INSERT INTO pago ( pg_monto , pg_descripcion ,  pg_tipoTransaccion , categoriaca_id , usuariou_id) "
+           + "VALUES (" + pago.getTotal() + "' , '" + pago.getDescripcion() + "' , '"
+          + pago.getTipo()+ "' , '" + pago.getCategoria()+ "' , '" +pago.getIdUsario() + "');";
+        */
+    Pago pago = (Pago) e;
+        int respuesta =0;
+        try {
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            CallableStatement pag = conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+            pag.setFloat(1, pago.getTotal());
+            pag.setString(2, pago.getDescripcion());
+            pag.setString(3, pago.getTipo());
+            pag.setInt(4, pago.getCategoria());
+            pag.setInt(5, pago.getIdUsario());
+            
+            if (pag.execute()) {
                 st.close();
-                return 1;
+                respuesta = 1;
             } else {
                 st.close();
-                return 0;
+                respuesta = 0;
             }
 
         } catch (Exception ex) {
 
-            return 2;
+            respuesta = 2;
 
-        }  
+        }
+        return respuesta;
     }
+    
+    
 
     @Override
     public Entidad modificar(Entidad e) {
