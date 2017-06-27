@@ -5,9 +5,8 @@
  */
 package Logica.Modulo5;
 
-import BaseDatosDAO.DAOCategoria;
-import BaseDatosDAO.DAOPago;
-import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.DAO;
+import BaseDatosDAO.Singleton.SingletonDAOPago;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -25,14 +24,13 @@ public class ComandoAgregarPago extends Comando {
 
     @Override
     public Object ejecutar() {
-        DAOPago dao = FabricaDAO.instanciasDAOPago();
+        DAO dao = SingletonDAOPago.getInstance();
         int respuesta = dao.agregar(pago);
-        if(respuesta==1){
-            System.out.println("Registro Exitoso");
-                }
+        
+        if(respuesta==1){   System.out.println("Registro Exitoso");  }
         else{System.out.println("Fallido");}
         
-        return null;
+        return respuesta;
         
     }
     
