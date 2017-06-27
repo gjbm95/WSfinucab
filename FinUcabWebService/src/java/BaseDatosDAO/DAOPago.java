@@ -32,16 +32,9 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-    /*  try {
-            Pago pago = (Pago) e;
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-           String query = "INSERT INTO pago ( pg_monto , pg_descripcion ,  pg_tipoTransaccion , categoriaca_id , usuariou_id) "
-           + "VALUES (" + pago.getTotal() + "' , '" + pago.getDescripcion() + "' , '"
-          + pago.getTipo()+ "' , '" + pago.getCategoria()+ "' , '" +pago.getIdUsario() + "');";
-        */
-    Pago pago = (Pago) e;
-        int respuesta =0;
+
+        Pago pago = (Pago) e;
+        int respuesta;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
@@ -52,14 +45,10 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.setInt(4, pago.getCategoria());
             pag.setInt(5, pago.getIdUsario());
             
-            if (pag.execute()) {
-                st.close();
-                respuesta = 1;
-            } else {
-                st.close();
-                respuesta = 0;
-            }
-
+            if (pag.execute()) {  respuesta = 1; }
+            else { respuesta = 0;  }
+            
+            st.close();
         } catch (Exception ex) {
 
             respuesta = 2;
@@ -77,9 +66,9 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public Entidad consultar(int idPago) {
-             String respuesta ="";
-             
-             try {
+        
+        Pago pago = null ;
+        try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
@@ -87,19 +76,13 @@ public class DAOPago extends DAO implements IDAOPago{
             ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
             
-            
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
-                //listaPagos.add(pago);
-                
-           
-            
-            return pago;
+            pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return pago;
         
     }
    
@@ -108,7 +91,6 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
         
-        String respuesta ="";
         ArrayList<Entidad> listaPagos = new ArrayList<>();
         
         try {
@@ -126,13 +108,11 @@ public class DAOPago extends DAO implements IDAOPago{
                 
             }
             
-            return listaPagos;
-            
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return listaPagos;
         
     }
     
