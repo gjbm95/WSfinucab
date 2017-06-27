@@ -133,16 +133,14 @@ public class Modulo2sResource {
         String resultado = "1";
 //        String decodifico = "{ \"ct_id\" : \"8\" , \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"15946\" ,"
 //                + " \"ct_nombrebanco\" : \"OKOKN BANK\", \"ct_saldoactual\" : \"522\" , \"usuariou_id\" : \"1\"}";
-
+       
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
-
             Cuenta_Bancaria cuenta = new Cuenta_Bancaria(cuentaJSON.getString("ct_tipocuenta"),
                     cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
                     Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
                     Integer.parseInt(cuentaJSON.getString("ct_id")),
                     Integer.parseInt(cuentaJSON.getString("usuariou_id")));
-
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
 
