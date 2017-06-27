@@ -115,16 +115,12 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos) {
-            Object resultado;
-        System.out.println(datosPagos);
-        String decodifico = URLDecoder.decode(datosPagos);
+          Object resultado;
+          String decodifico = URLDecoder.decode(datosPagos);
 
         try {
            
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
+          JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
            
             reader.close();
@@ -257,46 +253,25 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
-        System.out.println(datosPagos);
-        String decodifico = URLDecoder.decode(datosPagos);
+        
+        
+          Object resultado;
+          String decodifico = URLDecoder.decode(datosPagos);
 
         try {
            
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
+          JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
-            System.out.println(pagoJSON);
-            reader.close();
-            String query = "UPDATE pago SET "
-                    + "pg_monto = '" + pagoJSON.getInt("pg_monto")
-                    + "', pg_tipoTransaccion = '" + pagoJSON.getString("pg_tipoTransaccion") 
-                    + "', categoriaca_id= " + pagoJSON.getInt("pg_categoria")
-                    + ",pg_descripcion = '" + pagoJSON.getString("pg_descripcion") +
-                    "' WHERE "
-                    + "pg_id = " + pagoJSON.getInt("pg_id");
-            
-               System.out.println(query);
-                       
-            //System.out.println(query);
            
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                System.out.println("modificacion exitosa");
-                return "Modificacion exitosa";
-            } else {
-                st.close();
-                System.out.println("no se pudo modificar");
-                return "No se pudo modificar";
-                
-            }
-
+            reader.close();
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            Comando command = FabricaComando.instanciarComandoModificarPago(e);
+            resultado = command.ejecutar();
         } catch (Exception e) {
-
-            return e.getMessage();
-
+            System.out.println(e.getMessage());
+            resultado = "0";
         }
+        return resultado.toString();
     }
     
     

@@ -10,6 +10,7 @@ import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.Pago;
 import Dominio.Usuario;
+import java.io.StringReader;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,6 +24,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 
 /**
  *
@@ -32,20 +34,12 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-    /*  try {
-            Pago pago = (Pago) e;
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-           String query = "INSERT INTO pago ( pg_monto , pg_descripcion ,  pg_tipoTransaccion , categoriaca_id , usuariou_id) "
-           + "VALUES (" + pago.getTotal() + "' , '" + pago.getDescripcion() + "' , '"
-          + pago.getTipo()+ "' , '" + pago.getCategoria()+ "' , '" +pago.getIdUsario() + "');";
-        */
-    Pago pago = (Pago) e;
+        Pago pago = (Pago) e;
         int respuesta =0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement pag = conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+            CallableStatement pag = conn.prepareCall("{ call Agregar(?,?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
@@ -72,7 +66,39 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+       try {
+            Pago pago = (Pago) e;
+            Connection conn = Conexion.conectarADb();
+           
+            Statement st = conn.createStatement();
+           
+            String query = "UPDATE pago SET "
+                    + "pg_monto = '" +pago.getTotal()
+                    + "', pg_tipoTransaccion = '" + pago.getTipo()
+                    + "', categoriaca_id= " + pago.getCategoria()
+                    + ",pg_descripcion = '" + pago.getDescripcion() +
+                    "' WHERE "
+                    + "pg_id = " + pago.getIdUsario();
+            
+                   
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                System.out.println("modificacion exitosa");
+                return null;
+            } else {
+                st.close();
+                System.out.println("no se pudo modificar");
+                return null;
+                
+            }
+
+        } catch (Exception ex) {
+
+            return null;
+
+        }
+            
     }
 
     @Override
