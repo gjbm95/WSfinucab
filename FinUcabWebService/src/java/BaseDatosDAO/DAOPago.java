@@ -110,12 +110,12 @@ public class DAOPago extends DAO implements IDAOPago{
             Statement st = conn.createStatement();
             
              //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
+            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
             
 
             while (rs.next()){
-                pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
+                pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
                 //listaPagos.add(pago);
                 
             }
@@ -143,12 +143,12 @@ public class DAOPago extends DAO implements IDAOPago{
             Statement st = conn.createStatement();
             
             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
+            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idUsuario);
             
             while (rs.next())
             {
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
+                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
                 listaPagos.add(pago);
                 
             }
