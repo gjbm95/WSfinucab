@@ -50,7 +50,7 @@ public class FabricaEntidad {
      public static Categoria obtenerCategoria(int idusuario, 
             String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
-      new Categoria(idusuario,nombre,descripcion,estaHabilitado,esIngreso);
+      new Categoria(nombre,descripcion,estaHabilitado,esIngreso,idusuario);
      
     }
      

@@ -94,20 +94,20 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
     @Override
     public Entidad consultar(int id) {
-        
-        String respuesta ="";
+         Entidad entidad = null;
              
              try {
                  
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            
-             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
-            
-                Categoria categoria = new Categoria(  rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
-           
-            return categoria;
+                Connection conn = Conexion.conectarADb();
+                Statement st = conn.createStatement();
+
+                 //Se coloca el query
+                ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
+                while (rs.next()){
+                entidad = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4),rs.getInt(6) );
+                }
+                
+                return entidad;
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,7 +131,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
             while (rs.next())
             {
-                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
+                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4), rs.getInt(6) );
                 listaCategoria.add(categoria);
                 
             }

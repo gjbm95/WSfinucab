@@ -270,7 +270,7 @@ public class Modulo4sResource {
             Object objectResponse = c.ejecutar();
             
             if (objectResponse != null ){           
-                
+                System.out.println("entro");
                 JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
 
                 Categoria categoria = (Categoria) objectResponse;
@@ -282,14 +282,14 @@ public class Modulo4sResource {
                 categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
                 JsonObject categoriaJsonObject = categoriaBuilder.build();  
                 String  respuesta = categoriaJsonObject.toString();
-            System.out.println(respuesta);
-            return respuesta;
+                System.out.println(respuesta);
+                return respuesta;
             }
         }
         catch(Exception e) {
             return e.getMessage();
         }
-        return null;
+    return "Error";
     }
 
     /**
