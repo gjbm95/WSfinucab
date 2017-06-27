@@ -119,21 +119,19 @@ public class Modulo4sResource {
 
         try {
            
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject categoriaJSON = reader.readObject();
            
             reader.close();
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
-            //Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
+            Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
+            Object objectResponse =c.ejecutar();
+            return objectResponse.toString();
         } catch (Exception e) {
 
             return e.getMessage();
 
         }
-     return "";
     }
 
     
@@ -288,38 +286,20 @@ public class Modulo4sResource {
 
         try {
            
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
             JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject categoriaJSON = reader.readObject();
+            JsonObject categoriaJSON = reader.readObject();       
             reader.close();
-            String query = "UPDATE categoria SET "
-                    + "ca_nombre = '" + categoriaJSON.getString("c_nombre")
-                    + "', c_descripcion = '" + categoriaJSON.getString("c_descripcion") 
-                    + "', ca_esingreso = " + categoriaJSON.getBoolean("c_ingreso")
-                    + ",ca_eshabilitado = " + categoriaJSON.getBoolean("c_estado") +
-                    " WHERE "
-                    + "ca_id = " + categoriaJSON.getInt("c_id") + ";";
             
-               
-                       
-            //System.out.println(query);
-           
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Modificacion exitosa";
-            } else {
-                st.close();
-                return "No se pudo modificar";
-                
-            }
-
+            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
+            Object objectResponse = c.ejecutar();
+            return objectResponse.toString();
         } catch (Exception e) {
 
             return e.getMessage();
 
         }
+        
     }
     
         /**
@@ -339,23 +319,23 @@ public class Modulo4sResource {
     public String buscarCategoria(@QueryParam("datosCategoria") String datosCategoria){
         String decodifico = URLDecoder.decode(datosCategoria);
         try{
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + decodifico + "';");
-            JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
-            while (rs.next())
-            {
-            categoriaBuilder.add("Id",rs.getInt(1));
-            System.out.println(rs.getInt(1));
-            categoriaBuilder.add("Nombre",rs.getString(2));
-            System.out.println(rs.getString(2));
-            categoriaBuilder.add("Descripcion",rs.getString(3));
-            categoriaBuilder.add("esIngreso",rs.getBoolean(5));
-            categoriaBuilder.add("esHabilitado",rs.getBoolean(4));
-            categoriaBuilder.add("usuariou_id",rs.getInt(6));
-            JsonObject categoriaJsonObject = categoriaBuilder.build();  
-            String  respuesta = categoriaJsonObject.toString();
+            
+            Comando c = FabricaComando.instanciarComandoConsultarCategoria(0);
+            Object objectResponse = c.ejecutar();
+            
+            if (objectResponse != null ){           
+                
+                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
+
+                Categoria categoria = (Categoria) objectResponse;
+                categoriaBuilder.add("ca_id",categoria.getIdcategoria());
+                categoriaBuilder.add("ca_nombre",categoria.getNombre());
+                categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
+                categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
+                categoriaBuilder.add("ca_esingreso",categoria.isIngreso());
+                categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
+                JsonObject categoriaJsonObject = categoriaBuilder.build();  
+                String  respuesta = categoriaJsonObject.toString();
             System.out.println(respuesta);
             return respuesta;
             }
