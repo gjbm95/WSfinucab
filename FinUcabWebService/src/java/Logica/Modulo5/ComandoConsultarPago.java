@@ -11,21 +11,21 @@ import Logica.Comando;
 
 /**
  *
- * @author Ramon
+ * @author Juan
  */
-public class ComandoListarPagos extends Comando{
-
-    private int idUSuario;
+public class ComandoConsultarPago extends Comando {
     
-    public ComandoListarPagos(int idUsuario){
-        this.idUSuario = idUsuario;
+    private int idPago;
+    
+    public ComandoConsultarPago(int idPago){
+        this.idPago = idPago;
     }
     
     @Override
     public Object ejecutar() {
         
         DAO  dao = FabricaDAO.instanciasDAOPago();
-        Object response = dao.consultarTodos(idUSuario);        
+        Object response = dao.consultar(idPago);        
         return response;
     }
     

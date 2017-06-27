@@ -3,35 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica.Modulo4;
+package Logica.Modulo5;
 
 import BaseDatosDAO.DAOCategoria;
+import BaseDatosDAO.DAOPago;
 import BaseDatosDAO.FabricaDAO;
-import Dominio.Categoria;
 import Dominio.Entidad;
 import Logica.Comando;
 
 /**
  *
- * @author MariPerez
+ * @author Juan
  */
-public class ComandoAgregarCategoria extends Comando {
-     private Entidad categoria;
+public class ComandoAgregarPago extends Comando {
+
+    private Entidad pago;
      
-     public ComandoAgregarCategoria(Entidad categoria){
-         this.categoria=categoria;
+     public ComandoAgregarPago(Entidad categoria){
+         this.pago=pago;
      }
 
     @Override
     public Object ejecutar() {
-        DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        int respuesta = dao.agregar(categoria);
+        DAOPago dao = FabricaDAO.instanciasDAOPago();
+        int respuesta = dao.agregar(pago);
         if(respuesta==1){
             System.out.println("Registro Exitoso");
                 }
         else{System.out.println("Fallido");}
         
-        return respuesta;
+        return null;
         
     }
     
