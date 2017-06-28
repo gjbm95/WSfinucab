@@ -124,7 +124,7 @@ public class Modulo5sResource {
 
             reader.close();
             
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
+            Entidad e = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
             Comando command = FabricaComando.instanciarComandoAgregarPago(e);
             Object resultado = command.ejecutar();
             
@@ -276,7 +276,7 @@ public class Modulo5sResource {
             resultado = command.ejecutar();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            resultado = "0";
+            
         }
         return resultado.toString();
     }
