@@ -6,6 +6,7 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
+import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.Pago;
 import java.sql.CallableStatement;
@@ -25,7 +26,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-
+/*
         Pago pago = (Pago) e;
         int respuesta;
         try {
@@ -37,6 +38,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.setString(3, pago.getTipo());
             pag.setInt(4, pago.getCategoria());
             pag.setInt(5, pago.getIdUsario());
+            pag.executeQuery();
                         
             if (pag.execute()) {  respuesta = 1; }
             else { respuesta = 0;  }
@@ -48,6 +50,26 @@ public class DAOPago extends DAO implements IDAOPago{
 
         }
         return respuesta;
+*/
+
+            Pago pago = (Pago) e;
+            CallableStatement pag;
+        int idPago = 0;
+        try {
+            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
+            pag.setFloat(1, pago.getTotal());
+            pag.setString(2, pago.getDescripcion());
+            pag.setString(3, pago.getTipo());
+            pag.setInt(4, pago.getCategoria());
+            pag.setInt(5, pago.getIdUsario());
+            pag.executeQuery();
+            ResultSet rs = pag.getResultSet();
+            rs.next();
+            
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return idPago;
     }
     
     
@@ -58,12 +80,13 @@ public class DAOPago extends DAO implements IDAOPago{
      
         CallableStatement cstmt;
         try {
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?) }");
-            cstmt.setFloat(1,pago.getTotal());
-            cstmt.setString(2,pago.getDescripcion());
+            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?,?) }");
+            cstmt.setInt(1,pago.getIdPago());
+            cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
-            cstmt.setInt(4,pago.getCategoria());
-            cstmt.setInt(5,pago.getIdUsario());
+            cstmt.setString(4,pago.getDescripcion());
+            cstmt.setInt(5,pago.getCategoria());
+            cstmt.setInt(6,pago.getIdUsario());
             cstmt.execute();
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
