@@ -8,6 +8,8 @@ package BaseDatosDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -123,7 +125,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
               
         String respuesta ="";
         ArrayList<Entidad> listaCategoria = new ArrayList<>();
@@ -142,7 +144,9 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                 
             }
             
-            return listaCategoria;
+            ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategoria);
+        
+            return listaEntidad;
         }
         catch(Exception e) {
             return null;

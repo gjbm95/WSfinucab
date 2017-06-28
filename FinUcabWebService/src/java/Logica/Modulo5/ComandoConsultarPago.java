@@ -22,10 +22,10 @@ public class ComandoConsultarPago extends Comando {
     }
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DAO dao = SingletonDAOPago.getInstance();
         Object response = dao.consultar(idPago);        
-        return response;
+        
     }
     
 }

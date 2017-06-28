@@ -125,7 +125,8 @@ public class Modulo4sResource {
             reader.close();
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
-            Object objectResponse =c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null; //
             return objectResponse.toString();
         } catch (Exception e) {
 
@@ -231,7 +232,8 @@ public class Modulo4sResource {
         try{
 
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             
             if (objectResponse != null ){
                 
@@ -292,7 +294,8 @@ public class Modulo4sResource {
             
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             return objectResponse.toString();
         } catch (Exception e) {
 
@@ -321,7 +324,8 @@ public class Modulo4sResource {
         try{
             
             Comando c = FabricaComando.instanciarComandoConsultarCategoria(0);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             
             if (objectResponse != null ){           
                 

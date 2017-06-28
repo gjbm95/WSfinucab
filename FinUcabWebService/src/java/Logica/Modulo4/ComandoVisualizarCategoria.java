@@ -22,11 +22,11 @@ public class ComandoVisualizarCategoria extends Comando {
      }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
         dao.consultarTodos(usuario);
         
-        return null;
+        //return null;
     }
     
 }

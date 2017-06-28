@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import java.util.ArrayList;
 import java.util.Dictionary;
 
@@ -31,7 +32,7 @@ public class Modulo5DAO extends DAO implements IDAOPago{
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

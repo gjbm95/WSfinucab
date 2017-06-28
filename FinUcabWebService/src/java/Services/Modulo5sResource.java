@@ -126,7 +126,7 @@ public class Modulo5sResource {
             
             Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
             Comando command = FabricaComando.instanciarComandoAgregarPago(e);
-            Object resultado = command.ejecutar();
+            /*Object resultado = command.ejecutar();
             
             if (resultado != null){
                                
@@ -134,7 +134,7 @@ public class Modulo5sResource {
                 
             }else{
                 respuesta = "Error";
-            }
+            }*/
             
             
         } catch (Exception e) {
@@ -163,7 +163,8 @@ public class Modulo5sResource {
         try {
             
             Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             
             if (objectResponse != null ){
                 
@@ -210,7 +211,8 @@ public class Modulo5sResource {
         try{
             
             Comando c = FabricaComando.instanciarComandoListarPagos(idUsuario);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             
             if (objectResponse != null ){
                 
@@ -270,7 +272,7 @@ public class Modulo5sResource {
             reader.close();
             Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
             Comando command = FabricaComando.instanciarComandoModificarPago(e);
-            resultado = command.ejecutar();
+            //resultado = command.ejecutar();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";

@@ -7,6 +7,8 @@ package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Pago;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -108,7 +110,7 @@ public class DAOPago extends DAO implements IDAOPago{
     
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         
         ArrayList<Entidad> listaPagos = new ArrayList<>();
         
@@ -132,8 +134,9 @@ public class DAOPago extends DAO implements IDAOPago{
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
+        ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPagos);
         
-        return listaPagos;
+        return listaEntidad;
         
     }
 

@@ -59,4 +59,7 @@ public class FabricaEntidad {
       new Pago( categoria, descripcion, total, tipo, usuario);
     }   
     
+    public static ListaEntidad obtenerListaEntidad(ArrayList<Entidad> lista){
+       return new ListaEntidad(lista);
+    } 
 }

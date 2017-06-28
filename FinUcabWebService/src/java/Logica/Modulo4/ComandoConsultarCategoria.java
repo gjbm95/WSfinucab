@@ -23,11 +23,11 @@ public class ComandoConsultarCategoria extends Comando{
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
      
         DAO dao = FabricaDAO.instanciasDaoCategoria();
         Object response = dao.consultar(idusuario);
-        return response;
+        //return response;
         
     }
     

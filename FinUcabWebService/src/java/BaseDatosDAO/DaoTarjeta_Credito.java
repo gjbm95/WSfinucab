@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import Dominio.Tarjeta_Credito;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -92,7 +93,7 @@ public class DaoTarjeta_Credito extends DAO {
         return null;
     }
 
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         return null;
     }
 

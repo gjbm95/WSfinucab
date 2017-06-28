@@ -6,6 +6,7 @@
 package BaseDatosDAO;
 
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import Services.Modulo1sResource;
 import java.net.URLDecoder;
@@ -231,7 +232,7 @@ public class DaoUsuario extends DAO {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -23,14 +23,13 @@ public class ComandoAgregarPago extends Comando {
      }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DAO dao = SingletonDAOPago.getInstance();
         int respuesta = dao.agregar(pago);
         
         if(respuesta==1){   System.out.println("Registro Exitoso");  }
         else{System.out.println("Fallido");}
         
-        return respuesta;
         
     }
     

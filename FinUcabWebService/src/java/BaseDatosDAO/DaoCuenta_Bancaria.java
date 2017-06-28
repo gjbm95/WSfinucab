@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -135,7 +136,7 @@ public class DaoCuenta_Bancaria extends DAO {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
        return null;
     }
     

@@ -25,15 +25,16 @@ public class ComandoModificarPago extends Comando{
     
 
  @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DAOPago dao = FabricaDAO.instanciasDAOPago();
         Entidad respuesta = dao.modificar(pago);
-        
+        /*
         if (respuesta != null)
         return respuesta;
         
         else
             return "Modificacion no exitosa";
+*/
         
     }
     
