@@ -235,8 +235,7 @@ public class Modulo4sResource {
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject categoriaJSON = reader.readObject();       
             reader.close();
-            
-            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
             Object objectResponse = c.ejecutar();
             return objectResponse.toString();
