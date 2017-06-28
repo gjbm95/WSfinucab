@@ -59,8 +59,8 @@ public class FabricaEntidad {
       new Pago( categoria, descripcion, total, tipo, usuario);
     }   
     
-    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, Integer categoria, String tipo) {
-        return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria, tipo);
+    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, Integer categoria) {
+        return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
 
 }

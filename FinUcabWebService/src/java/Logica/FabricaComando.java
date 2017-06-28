@@ -21,6 +21,7 @@ import Logica.Modulo5.ComandoAgregarPago;
 import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
 import Logica.Modulo5.ComandoModificarPago;
+import Logica.Modulo6.ComandoAgregarPresupuesto;
 
 
 /**
@@ -143,4 +144,8 @@ public class FabricaComando {
         return new ComandoConsultarCuentas(id);
     }
 
+     
+     public static ComandoAgregarPresupuesto instanciarComandoAgregarPresupuesto(Entidad e){
+         return new ComandoAgregarPresupuesto(e);
+     }
 }

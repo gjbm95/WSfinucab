@@ -10,6 +10,7 @@ import Dominio.Entidad;
 import Dominio.Presupuesto;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,24 +36,23 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta =0;
         try{
+           
             Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            CallableStatement pag = conn.prepareCall("{ call agregarPresupuesto (?,?,?,?,?,?)}");
+            PreparedStatement pag = conn.prepareStatement(" select agregarpresupuesto (?,?::real,?,?,?,?)");
             pag.setString(1, presupuesto.getNombre());
             pag.setDouble(2, presupuesto.getMonto());
             pag.setString(3, presupuesto.getClasificacion());
-            pag.setInt(4,presupuesto.getDuracion());
+            pag.setInt(4, presupuesto.getDuracion());
             pag.setInt(5, presupuesto.getUsuario());
             pag.setInt(6, presupuesto.getCategoria());
+            pag.executeQuery();
+            ResultSet rs = pag.getResultSet();
+            rs.next();
+            respuesta = rs.getInt("agregarpresupuesto");
+            pag.close();
             
-            if (pag.execute()){
-                st.close();
-                respuesta = 1;
-            } else {
-                st.close();
-                respuesta =0;
-            }
         } catch (Exception ex){
+            ex.printStackTrace();
             respuesta = 2;
             
         }

@@ -1,7 +1,11 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import Dominio.Presupuesto;
+import Logica.Comando;
+import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
@@ -252,33 +256,21 @@ public class Modulo3sResource {
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
         String decodifico = URLDecoder.decode(datosPresupuesto);
-
+        String respuesta = "0";
+        System.out.println(decodifico);
         JsonReader reader = Json.createReader(new StringReader(decodifico));
         JsonObject presupuestoJSON = reader.readObject();
         reader.close();
-        Presupuesto presupuesto = new Presupuesto(presupuestoJSON.getString("pr_nombre"),
-                Double.valueOf(presupuestoJSON.getString("pr_monto")), presupuestoJSON.getString("pr_clasificacion"),
-                Integer.parseInt(presupuestoJSON.getString("pr_duracion")), presupuestoJSON.getInt("pr_usuarioid"),
-                presupuestoJSON.getInt("categoriaca_id"));
-        String respuesta = "0";
-        try {
-            Connection conn = Conexion.conectarADb();
-            PreparedStatement pag = conn.prepareStatement(" select agregarpresupuesto (?,?::real,?,?,?,?)");
-            pag.setString(1, presupuesto.getNombre());
-            pag.setDouble(2, presupuesto.getMonto());
-            pag.setString(3, presupuesto.getClasificacion());
-            pag.setInt(4, presupuesto.getDuracion());
-            pag.setInt(5, presupuesto.getUsuario());
-            pag.setInt(6, presupuesto.getCategoria());
-            pag.executeQuery();
-            ResultSet rs = pag.getResultSet();
-            rs.next();
-            respuesta = String.valueOf(rs.getInt("agregarpresupuesto"));
-            pag.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            respuesta = "2";
-        } 
+        
+        Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
+                Double.valueOf(presupuestoJSON.getString("pr_monto")), 
+                presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
+                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
+        
+        Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
+        Object resultado = command.ejecutar();
+        respuesta = resultado.toString();
+        
         return respuesta;
         
     }
