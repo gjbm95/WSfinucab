@@ -115,27 +115,34 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos) {
-            Object resultado;
-        System.out.println(datosPagos);
-        String decodifico = URLDecoder.decode(datosPagos);
-
+        
+         String respuesta = "";
         try {
-           
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
+            String decodifico = URLDecoder.decode(datosPagos);
             JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject pagoJSON = reader.readObject();
-           
+            JsonObject pagoJSON = reader.readObject();           
+
             reader.close();
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
             Comando command = FabricaComando.instanciarComandoAgregarPago(e);
-            resultado = command.ejecutar();
+            Object resultado = command.ejecutar();
+            
+            if (resultado != null){
+                               
+                respuesta = String.valueOf(resultado);
+                
+            }else{
+                respuesta = "Error";
+            }
+            
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            resultado = "0";
+            respuesta = "0";
         }
-        return resultado.toString();
+        
+        return respuesta;
     }
     
     /**
@@ -151,7 +158,6 @@ public class Modulo5sResource {
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
 
-        System.out.println(idPago);
         String respuesta ="";
 
         try {
@@ -161,11 +167,7 @@ public class Modulo5sResource {
             
             if (objectResponse != null ){
                 
-                
-                
-                //ArrayList<Pago> lista = (ArrayList<Pago>) objectResponse;
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-                //JsonArrayBuilder list = Json.createArrayBuilder();
                 
                 Pago pago = (Pago) objectResponse;
                 //for (Pago pago : lista) {          
@@ -176,21 +178,17 @@ public class Modulo5sResource {
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                 JsonObject pagoJsonObject = pagoBuilder.build(); 
                  respuesta = pagoJsonObject.toString();
-            
-                
-                
-                
-           
 
-            return respuesta;
+            }else{
+                respuesta = "Error";
             }
 
         } catch (Exception e) {
 
-            return e.getMessage();
+            respuesta = "Error :"+e.getMessage();
 
         }
-         return "Error";
+         return respuesta;
     }
 
    
@@ -206,6 +204,8 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idUsuario) {
+        
+        String respuesta ="";
         
         try{
             
@@ -232,17 +232,18 @@ public class Modulo5sResource {
                 }
                 
                 JsonArray listJsonObject = list.build();
-                String resp = listJsonObject.toString();
+                respuesta = listJsonObject.toString();
                 
-                return resp;
+            }else{
+                respuesta = "Error";
             }
 
         }
         catch(Exception e) {
-            return e.getMessage();
+            respuesta = "Error :"+e.getMessage();
         }
         
-        return "Error";
+        return respuesta;
     }
       
     /**
@@ -257,46 +258,24 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
-        System.out.println(datosPagos);
+        
         String decodifico = URLDecoder.decode(datosPagos);
+        Object resultado = "";
 
         try {
            
-            Connection conn = Conexion.conectarADb();
-           
-            Statement st = conn.createStatement();
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
+          JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
-            System.out.println(pagoJSON);
-            reader.close();
-            String query = "UPDATE pago SET "
-                    + "pg_monto = '" + pagoJSON.getInt("pg_monto")
-                    + "', pg_tipoTransaccion = '" + pagoJSON.getString("pg_tipoTransaccion") 
-                    + "', categoriaca_id= " + pagoJSON.getInt("pg_categoria")
-                    + ",pg_descripcion = '" + pagoJSON.getString("pg_descripcion") +
-                    "' WHERE "
-                    + "pg_id = " + pagoJSON.getInt("pg_id");
-            
-               System.out.println(query);
-                       
-            //System.out.println(query);
            
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                System.out.println("modificacion exitosa");
-                return "Modificacion exitosa";
-            } else {
-                st.close();
-                System.out.println("no se pudo modificar");
-                return "No se pudo modificar";
-                
-            }
-
+            reader.close();
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
+            Comando command = FabricaComando.instanciarComandoModificarPago(e);
+            resultado = command.ejecutar();
         } catch (Exception e) {
-
-            return e.getMessage();
-
+            System.out.println(e.getMessage());
+            resultado = "0";
         }
+        return resultado.toString();
     }
     
     
