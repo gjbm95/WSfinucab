@@ -1,12 +1,14 @@
 package Dominio;
 
+import java.io.Serializable;
+
 /**
  * Created by Jeffrey on 10/05/2017.
  */
 
-public class Pago {
+public class Pago  extends Entidad implements Serializable{
     private int idPago;
-    private String categoria;
+    private int categoria;
     private String descripcion;
     private float total;
     private String tipo;
@@ -20,11 +22,11 @@ public class Pago {
         this.idPago = idPago;
     }
 
-    public String getCategoria() {
+    public int getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(int categoria) {
         this.categoria = categoria;
     }
 
@@ -52,7 +54,16 @@ public class Pago {
         this.tipo = tipo;
     }
 
-    public Pago(int idPago, String categoria, String descripcion, float total, String tipo) {
+    public Pago(int idPago, int categoria, String descripcion, float total, String tipo) {
+        this.idPago = idPago;
+        this.categoria = categoria;
+        this.descripcion = descripcion;
+        this.total = total;
+        this.tipo = tipo;
+    }
+    
+    public Pago(int _id, int idPago, int categoria, String descripcion, float total, String tipo) {
+        super(_id);
         this.idPago = idPago;
         this.categoria = categoria;
         this.descripcion = descripcion;

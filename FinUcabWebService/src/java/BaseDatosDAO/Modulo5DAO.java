@@ -31,7 +31,7 @@ public class Modulo5DAO extends DAO implements IDAOPago{
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos() {
+    public ArrayList<Entidad> consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

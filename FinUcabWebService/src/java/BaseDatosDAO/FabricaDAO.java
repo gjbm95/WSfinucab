@@ -28,5 +28,16 @@ public class FabricaDAO {
     public static DaoTarjeta_Credito instanciasDaoTarjeta_Credito() {
         return new DaoTarjeta_Credito();
     }
-   
+    
+    public static DAOPago instanciasDAOPago() {
+        return new DAOPago();
+    }
+    
+    public static DaoPresupuesto instanciasDAOPresupuesto() {
+        return new DaoPresupuesto();
+    }
+    
+    public static DaoPlanificacion instanciasDAOPlanificacion() {
+        return new DaoPlanificacion();
+    }
 }

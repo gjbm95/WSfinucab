@@ -5,10 +5,17 @@
  */
 package Logica;
 
-import Dominio.Cuenta_Bancaria;
-import Dominio.Usuario;
+import Dominio.Entidad;
 import Logica.Modulo1.*;
+import Logica.Modulo2.ComandoActualizarDatosUsuario;
+import Logica.Modulo4.ComandoAgregarCategoria;
+import Logica.Modulo4.ComandoVisualizarCategoria;
+import Dominio.Cuenta_Bancaria;
+import Dominio.Tarjeta_Credito;
+import Dominio.Usuario;
 import Logica.Modulo2.*;
+import Logica.Modulo5.ComandoListarPagos;
+
 
 /**
  *
@@ -39,6 +46,14 @@ public class FabricaComando {
      public static ComandoActualizarDatosUsuario instanciarComandoActualizarDatosUsuario(Usuario usuario){
         return new ComandoActualizarDatosUsuario(usuario);
     }
+     
+     public static ComandoAgregarCategoria instanciarComandoAgregarCategoria(Entidad categoria){
+        return new ComandoAgregarCategoria(categoria);
+    }
+     
+     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(String usuario){
+         return new ComandoVisualizarCategoria(usuario);
+     }
     
      public static ComandoAgregarCuenta instanciarComandoAgregarCuenta(Cuenta_Bancaria cuenta){
         return new ComandoAgregarCuenta(cuenta);
@@ -52,4 +67,41 @@ public class FabricaComando {
         return new ComandoEliminarCuenta(id);
     }
     
+     /*---------------------------     PAGOS      ------------------------------------*/
+     /**
+      * Fabrica inicializadora del ComandoListarPagos
+      * @param idUsuario Identificador de usuario en base de datos
+      * @return 
+      */
+     public static ComandoListarPagos instanciarComandoListarPagos(int idUsuario){
+        return new ComandoListarPagos(idUsuario);
+    }
+     
+     
+     /*---------------------------   Gestion de Cuentas y Tarjetas      ------------------------------------*/
+
+     public static ComandoAgregarTDC instanciarComandoAgregarTDC(Tarjeta_Credito tdc){
+        return new ComandoAgregarTDC(tdc);
+    }
+    
+     public static ComandoActualizarTDC instanciarComandoActualizarTDC(Tarjeta_Credito tdc){
+        return new ComandoActualizarTDC(tdc);
+    }
+    
+     public static ComandoEliminarTDC instanciarComandoEliminarTDC(int id){
+        return new ComandoEliminarTDC(id);
+    }
+    
+     public static ComandoConsultarTDC instanciarComandoConsultarTDC(int id){
+        return new ComandoConsultarTDC(id);
+    }
+    
+     public static ComandoConsultarCuentas instanciarComandoConsultarCuentas(int id){
+        return new ComandoConsultarCuentas(id);
+    }
+    
+     public static ComandoConsultarEstadisticasHome instanciarComandoConsultarEstadisticas(int id){
+        return new ComandoConsultarEstadisticasHome(id);
+    }
+
 }
