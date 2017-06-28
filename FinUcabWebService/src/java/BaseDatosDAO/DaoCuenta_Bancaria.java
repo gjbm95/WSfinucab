@@ -76,7 +76,6 @@ public class DaoCuenta_Bancaria extends DAO {
         return null;
     }
 
-
     public ArrayList<Entidad> consultarTodos() {
         CallableStatement cstmt;
         int idCuenta = 0;
@@ -84,7 +83,6 @@ public class DaoCuenta_Bancaria extends DAO {
         return null;
     }
 
-    
     public int eliminar(int id) {
         CallableStatement cstmt;
         int idCuenta = 0;
@@ -102,21 +100,20 @@ public class DaoCuenta_Bancaria extends DAO {
         return idCuenta;
     }
 
-        
-   public String getCuentasXUsuario(int id) {
+    public String getCuentasXUsuario(int id) {
         CallableStatement cstm;
         String respuesta;
         try {
             Statement st = conn.createStatement();
             cstm = conn.prepareCall("{ call obtenerCuentasBancarias(?,?)}");
             cstm.setInt(2, id);
-            cstm.setString(1,"OBTENERCUENTASUSUARIO");
-            System.out.println("Entre con id"+id);
+            cstm.setString(1, "OBTENERCUENTASUSUARIO");
+            System.out.println("Entre con id" + id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             while (rs.next()) {
-                            System.out.println("Entre2");
+                System.out.println("Entre2");
                 cuentaBuilder.add("ct_id", rs.getString("ct_id"));
                 cuentaBuilder.add("ct_tipo", rs.getString("ct_tipocuenta"));
                 cuentaBuilder.add("ct_numerocuenta", rs.getString("ct_numcuenta"));
@@ -125,8 +122,8 @@ public class DaoCuenta_Bancaria extends DAO {
                 JsonObject cuentaJsonObject = cuentaBuilder.build();
                 arrayBuilder.add(cuentaJsonObject);
             }
-             JsonArray array = arrayBuilder.build();
-             respuesta = array.toString();
+            JsonArray array = arrayBuilder.build();
+            respuesta = array.toString();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -136,7 +133,30 @@ public class DaoCuenta_Bancaria extends DAO {
 
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
-       return null;
+        return null;
     }
-    
+
+    public String getSaldoTotal(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call getSaldoCuentas(?)}");
+            cstm.setInt(1, id);
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            if (rs.next()) {
+                respuesta = rs.getString(1);
+            }
+            else {
+                respuesta = "";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            respuesta = "e";
+        }
+        return respuesta;
+    }
+
 }
