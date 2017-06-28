@@ -271,7 +271,7 @@ public class Modulo5sResource {
             JsonObject pagoJSON = reader.readObject();
            
             reader.close();
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
             Comando command = FabricaComando.instanciarComandoModificarPago(e);
             resultado = command.ejecutar();
         } catch (Exception e) {
