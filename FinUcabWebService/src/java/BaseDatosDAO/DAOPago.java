@@ -32,12 +32,11 @@ public class DAOPago extends DAO implements IDAOPago{
             
         int idPago = 0;
         try {
-            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
+            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
             pag.setInt(4, pago.getCategoria());
-            pag.setInt(5, pago.getIdUsario());
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             rs.next();
@@ -57,13 +56,12 @@ public class DAOPago extends DAO implements IDAOPago{
         CallableStatement cstmt;
         
         try {
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?,?) }");
+            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
             cstmt.setInt(1,pago.getIdPago());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
             cstmt.setString(4,pago.getDescripcion());
             cstmt.setInt(5,pago.getCategoria());
-            cstmt.setInt(6,pago.getIdUsario());
             cstmt.execute();
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +90,7 @@ public class DAOPago extends DAO implements IDAOPago{
                         
             ResultSet rs = a.getResultSet();
             while (rs.next()){
-                pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
+                pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
                
                
             }
@@ -127,7 +125,7 @@ public class DAOPago extends DAO implements IDAOPago{
                      
             while (rs.next())
             {
-                Pago pago = new Pago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
+                Pago pago = new Pago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
                 listaPagos.add(pago);
                 
             }

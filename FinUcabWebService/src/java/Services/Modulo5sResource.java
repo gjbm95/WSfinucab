@@ -124,7 +124,7 @@ public class Modulo5sResource {
 
             reader.close();
             
-            Entidad e = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
+            Entidad e = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
             Comando command = FabricaComando.instanciarComandoAgregarPago(e);
             Object resultado = command.ejecutar();
             
@@ -175,8 +175,7 @@ public class Modulo5sResource {
                  pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                  pagoBuilder.add("pg_categoria",pago.getCategoria());
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                 pagoBuilder.add("usuariou_id",pago.getIdUsario());
-                JsonObject pagoJsonObject = pagoBuilder.build(); 
+                 JsonObject pagoJsonObject = pagoBuilder.build(); 
                 respuesta = pagoJsonObject.toString();
                 System.out.println(respuesta);
                 System.out.println("ANDO ACAAA");
@@ -227,7 +226,6 @@ public class Modulo5sResource {
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                    pagoBuilder.add("usuariou_id",pago.getIdUsario());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
 
                     list.add( pagoJsonObject.toString());
@@ -271,7 +269,7 @@ public class Modulo5sResource {
             JsonObject pagoJSON = reader.readObject();
            
             reader.close();
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
             Comando command = FabricaComando.instanciarComandoModificarPago(e);
             resultado = command.ejecutar();
         } catch (Exception e) {
