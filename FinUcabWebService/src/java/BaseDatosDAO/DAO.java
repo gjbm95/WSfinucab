@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 public abstract class DAO implements IDAO {
 
-    private Connection conn;
+    Connection conn;
     
     /**
      * Metodo que crea el conector de la base de datos
