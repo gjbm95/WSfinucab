@@ -61,5 +61,23 @@ public class FabricaEntidad {
     
     public static ListaEntidad obtenerListaEntidad(ArrayList<Entidad> lista){
        return new ListaEntidad(lista);
+    }     
+    
+    public static SimpleResponse obtenerSimpleResponseStatus(int status){
+       SimpleResponse sr = new SimpleResponse();
+       sr.setStatus(status);
+       return sr;
+    } 
+    
+    public static SimpleResponse obtenerSimpleResponse(int id){
+       return new SimpleResponse(id);
+    } 
+     
+    public static SimpleResponse obtenerSimpleResponse(int id, int status){
+       return new SimpleResponse(id, status);
+    } 
+     
+    public static SimpleResponse obtenerSimpleResponse(int id, int status, String descripcion){
+       return new SimpleResponse(id,status, descripcion);
     } 
 }

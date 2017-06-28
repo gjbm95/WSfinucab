@@ -13,14 +13,14 @@ import java.util.ArrayList;
  */
 public class ListaEntidad extends Entidad{
     
-    private ArrayList<Entidad> lista;
+    private ArrayList<Entidad> _lista;
     
     public ListaEntidad( ArrayList<Entidad> lista){
-        this.lista = lista;
+        this._lista = lista;
     }
     
     public ArrayList<Entidad> getLista(){        
-        return lista;
+        return _lista;
     }
     
 }

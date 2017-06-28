@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class DAOPago extends DAO implements IDAOPago{
 
     @Override
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
 
         Pago pago = (Pago) e;
         int respuesta;
@@ -49,7 +49,7 @@ public class DAOPago extends DAO implements IDAOPago{
             respuesta = 2;
 
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
     

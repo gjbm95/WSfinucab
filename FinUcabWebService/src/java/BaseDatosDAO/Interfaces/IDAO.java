@@ -16,7 +16,7 @@ import java.util.Dictionary;
  */
 public interface IDAO {
     
-    int agregar(Entidad e);
+    Entidad agregar(Entidad e);
     
     Entidad modificar(Entidad e);
     

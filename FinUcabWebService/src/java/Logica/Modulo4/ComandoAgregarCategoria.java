@@ -25,12 +25,13 @@ public class ComandoAgregarCategoria extends Comando {
     @Override
     public void ejecutar() {
         DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        int respuesta = dao.agregar(categoria);
-        if(respuesta==1){
+        Entidad respuesta = dao.agregar(categoria);
+        
+        /*if(respuesta==1){
             System.out.println("Registro Exitoso");
                 }
         else{System.out.println("Fallido");}
-        
+        */
         //return respuesta;
         
     }

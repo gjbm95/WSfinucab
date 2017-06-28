@@ -6,6 +6,7 @@
 package BaseDatosDAO;
 
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import Services.Modulo1sResource;
@@ -35,7 +36,7 @@ public class DaoUsuario extends DAO {
     }
 
     @Override
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
         Usuario usuario = (Usuario) e;
         int respuesta =0;
         try {
@@ -62,7 +63,7 @@ public class DaoUsuario extends DAO {
             respuesta = 2;
 
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
     public int ActualizarClave(String usuario, String clave){

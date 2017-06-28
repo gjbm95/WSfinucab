@@ -5,7 +5,7 @@
  */
 package Logica.Modulo5;
 
-import BaseDatosDAO.DAO;
+import BaseDatosDAO.Interfaces.IDAOPago;
 import BaseDatosDAO.Singleton.SingletonDAOPago;
 import Dominio.Entidad;
 import Logica.Comando;
@@ -24,11 +24,11 @@ public class ComandoAgregarPago extends Comando {
 
     @Override
     public void ejecutar() {
-        DAO dao = SingletonDAOPago.getInstance();
-        int respuesta = dao.agregar(pago);
+        IDAOPago dao = SingletonDAOPago.getInstance();
+        Entidad respuesta = dao.agregar(pago);
         
-        if(respuesta==1){   System.out.println("Registro Exitoso");  }
-        else{System.out.println("Fallido");}
+        //if(respuesta==1){   System.out.println("Registro Exitoso");  }
+        //else{System.out.println("Fallido");}
         
         
     }
