@@ -6,7 +6,6 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
-import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.Pago;
 import java.sql.CallableStatement;
