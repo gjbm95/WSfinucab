@@ -94,6 +94,8 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
+            System.out.println("ANDO ACAAA2");
+            
             CallableStatement a = conn.prepareCall("{ call ConsultarPago(?,?,?,?,?,?) }");
             a.execute();
   
