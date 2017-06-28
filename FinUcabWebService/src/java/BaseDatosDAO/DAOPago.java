@@ -6,12 +6,8 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
-import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.Pago;
-import Dominio.Usuario;
-import java.io.StringReader;
-import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,12 +16,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 
 /**
  *
