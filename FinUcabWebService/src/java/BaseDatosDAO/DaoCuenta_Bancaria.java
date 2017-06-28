@@ -58,10 +58,11 @@ public class DaoCuenta_Bancaria extends DAO {
         Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
         CallableStatement cstmt;
         try {
+            System.out.println("Paso por aqui");
             cstmt = conn.prepareCall("{ call modificarCuentaBancaria(?,?,?,?,?)}");
-            cstmt.setString(1, obj.getTipoCuenta());
+            cstmt.setString(3, obj.getTipoCuenta());
             cstmt.setString(2, obj.getNumcuenta());
-            cstmt.setString(3, obj.getNombreBanco());
+            cstmt.setString(1, obj.getNombreBanco());
             cstmt.setFloat(4, obj.getSaldoActual());
             cstmt.setInt(5, obj.getId());
             cstmt.execute();
@@ -107,19 +108,20 @@ public class DaoCuenta_Bancaria extends DAO {
         String respuesta;
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerCuentasBancarias(?)}");
-            cstm.setInt(1, id);
+            cstm = conn.prepareCall("{ call obtenerCuentasBancarias(?,?)}");
+            cstm.setInt(2, id);
+            cstm.setString(1,"OBTENERCUENTASUSUARIO");
             System.out.println("Entre con id"+id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             while (rs.next()) {
                             System.out.println("Entre2");
-                cuentaBuilder.add("ct_id", rs.getString("id"));
-                cuentaBuilder.add("ct_tipo", rs.getString("tipo"));
-                cuentaBuilder.add("ct_numerocuenta", rs.getString("numero"));
-                cuentaBuilder.add("ct_nombrebanco", rs.getString("nombre"));
-                cuentaBuilder.add("ct_saldoactual", rs.getString("saldo"));
+                cuentaBuilder.add("ct_id", rs.getString("ct_id"));
+                cuentaBuilder.add("ct_tipo", rs.getString("ct_tipocuenta"));
+                cuentaBuilder.add("ct_numerocuenta", rs.getString("ct_numcuenta"));
+                cuentaBuilder.add("ct_nombrebanco", rs.getString("ct_nombrebanco"));
+                cuentaBuilder.add("ct_saldoactual", rs.getString("ct_saldo"));
                 JsonObject cuentaJsonObject = cuentaBuilder.build();
                 arrayBuilder.add(cuentaJsonObject);
             }
