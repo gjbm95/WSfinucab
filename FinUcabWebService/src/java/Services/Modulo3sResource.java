@@ -1,11 +1,15 @@
 package Services;
 
 import BaseDatosDAO.Conexion;
+import Dominio.Presupuesto;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Types;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -255,7 +259,46 @@ public class Modulo3sResource {
     public String registrarPresupuesto(@QueryParam("usuarioid")
             String nombreusuario, @QueryParam("datosPresupuesto")
             String datosPresupuesto) {
-      
+        String decodifico = URLDecoder.decode(datosPresupuesto);
+        System.out.println(decodifico);
+      Integer idUsuario = 0;
+      JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject presupuestoJSON = reader.readObject();
+            reader.close();
+      Presupuesto presupuesto = new Presupuesto(presupuestoJSON.getString("pr_nombre"),
+              Double.valueOf(presupuestoJSON.getString("pr_monto")), presupuestoJSON.getString("pr_clasificacion"),
+              Integer.parseInt(presupuestoJSON.getString("pr_duracion")),presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
+        String respuesta ="0";
+        try{
+            Connection conn = Conexion.conectarADb();
+            PreparedStatement pag = conn.prepareStatement(" select agregarpresupuesto (?,?::real,?,?,?,?)");
+            pag.setString(1, presupuesto.getNombre());
+            pag.setDouble(2, presupuesto.getMonto());
+            pag.setString(3, presupuesto.getClasificacion());
+            pag.setInt(4,presupuesto.getDuracion());
+            pag.setInt(5, presupuesto.getUsuario());
+            pag.setInt(6, presupuesto.getCategoria());
+            
+            pag.executeQuery();
+            ResultSet rs = pag.getResultSet();
+            rs.next();
+            System.out.println(rs.getInt("agregarpresupuesto"));
+            //
+            //int resp = pag.getInt(1);
+            //System.out.println("La respuesta es " + resp);
+            /*if (pag.execute()){
+                st.close();
+                respuesta = "1";
+            } else {
+                st.close();
+            }*/
+        } catch (Exception ex){
+            ex.printStackTrace();
+            respuesta = "2";
+            
+        }
+        return respuesta;
+    }/*
       String decodifico = URLDecoder.decode(datosPresupuesto);
       Integer idUsuario = 0;
       try {
@@ -286,8 +329,8 @@ public class Modulo3sResource {
 
             return e.getMessage();
 
-        }
-      }
+        }*/
+      
     /**
      * Se encarga de modificar el presupuesto seleccionado 
      * @param nombrePresupuesto
