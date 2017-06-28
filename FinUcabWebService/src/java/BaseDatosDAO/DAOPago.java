@@ -84,22 +84,19 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-            System.out.println("ando DAOPAGO     llamada antes");
+            
             
             CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
             a.setInt(1, idPago);
-            //a.execute();
             a.executeQuery();
-            //rs.next();
-            
-            
-           ResultSet rs = a.getResultSet();
+                        
+            ResultSet rs = a.getResultSet();
             while (rs.next()){
                 pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
                
-                
+               
             }
-            System.out.println("despues del procedure" +pago.getDescripcion());
+            
             return pago;
 
             
@@ -122,15 +119,15 @@ public class DAOPago extends DAO implements IDAOPago{
            Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-            CallableStatement a = conn.prepareCall("{ call ListaPagos(?,?,?,?,?,?) }");
-            a.execute();
+            CallableStatement a = conn.prepareCall("{ call ListaPagos(?) }");
+            a.setInt(1, idUsuario);
+            a.executeQuery();
   
            ResultSet rs = a.getResultSet();
-            
-            
+                     
             while (rs.next())
             {
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
+                Pago pago = new Pago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
                 listaPagos.add(pago);
                 
             }
