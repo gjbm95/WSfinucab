@@ -8,7 +8,9 @@ package Services;
 import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Pago;
+import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
@@ -125,16 +127,17 @@ public class Modulo5sResource {
             reader.close();
             
             Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
-            Comando command = FabricaComando.instanciarComandoAgregarPago(e);
-            /*Object resultado = command.ejecutar();
-            
-            if (resultado != null){
-                               
-                respuesta = String.valueOf(resultado);
+            Comando c = FabricaComando.instanciarComandoAgregarPago(e);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+          
+            if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
                 
             }else{
                 respuesta = "Error";
-            }*/
+            }
             
             
         } catch (Exception e) {
@@ -164,7 +167,7 @@ public class Modulo5sResource {
             
             Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
             c.ejecutar();
-            Object objectResponse = null;
+            Entidad objectResponse = c.getResponse();
             
             if (objectResponse != null ){
                 
@@ -212,16 +215,16 @@ public class Modulo5sResource {
             
             Comando c = FabricaComando.instanciarComandoListarPagos(idUsuario);
             c.ejecutar();
-            Object objectResponse = null;
+            Entidad objectResponse = c.getResponse();
             
             if (objectResponse != null ){
                 
-                ArrayList<Pago> lista = (ArrayList<Pago>) objectResponse;
+                ArrayList<Entidad> lista = ((ListaEntidad) objectResponse).getLista();
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
                 
-                for (Pago pago : lista) {
-                    
+                for (Entidad enti : lista) {
+                    Pago pago = (Pago) enti;
                     pagoBuilder.add("pg_id",pago.getIdPago());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
@@ -262,7 +265,7 @@ public class Modulo5sResource {
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
         String decodifico = URLDecoder.decode(datosPagos);
-        Object resultado = "";
+        String respuesta = "";
 
         try {
            
@@ -271,13 +274,25 @@ public class Modulo5sResource {
            
             reader.close();
             Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
-            Comando command = FabricaComando.instanciarComandoModificarPago(e);
-            //resultado = command.ejecutar();
+            Comando c = FabricaComando.instanciarComandoModificarPago(e);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+
+            if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                
+            }else{
+                respuesta = "Error";
+            }
+            
+            
+            //resultado = 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            resultado = "0";
+            respuesta = "0";
         }
-        return resultado.toString();
+        return respuesta;
     }
     
     

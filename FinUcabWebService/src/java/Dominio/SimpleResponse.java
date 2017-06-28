@@ -35,6 +35,14 @@ public class SimpleResponse extends Entidad{
         this._status = status;
         this._descripcion = descripcion;
     }
+
+    public int getStatus() {
+        return _status;
+    }
+
+    public String getDescripcion() {
+        return _descripcion;
+    }
     
     
 }
