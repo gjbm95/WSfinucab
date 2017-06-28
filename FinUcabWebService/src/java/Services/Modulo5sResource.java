@@ -164,7 +164,7 @@ public class Modulo5sResource {
             
             Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
             Object objectResponse = c.ejecutar();
-           System.out.println("ANDO ACAAA"); 
+           System.out.println("despues de ejecutar"); 
             if (objectResponse != null ){
                 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
