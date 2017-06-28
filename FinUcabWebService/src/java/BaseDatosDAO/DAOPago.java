@@ -73,6 +73,7 @@ public class DAOPago extends DAO implements IDAOPago{
             cstmt.setString(2,pago.getDescripcion());
             cstmt.setString(3,pago.getDescripcion());
             cstmt.setInt(4,pago.getCategoria());
+            cstmt.setInt(5,pago.getIdUsario());
             cstmt.execute();
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +84,7 @@ public class DAOPago extends DAO implements IDAOPago{
    
 
     @Override
-    public Entidad consultar(int idPago) {
+    public Entidad consultar(int idPago ) {
 
              Pago pago = null;
              
@@ -93,14 +94,13 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
-                    + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
-            
-
+            CallableStatement a = conn.prepareCall("{ call ConsultarPago(?,?,?,?,?,?) }");
+            a.execute();
+  
+           ResultSet rs = a.getResultSet();
             while (rs.next()){
                 pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
-                //listaPagos.add(pago);
+               
                 
             }
             
@@ -123,12 +123,14 @@ public class DAOPago extends DAO implements IDAOPago{
         ArrayList<Entidad> listaPagos = new ArrayList<>();
         
         try {
-            Connection conn = Conexion.conectarADb();
+           Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
-                    + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idUsuario);
+            CallableStatement a = conn.prepareCall("{ call ListaPagos(?,?,?,?,?,?) }");
+            a.execute();
+  
+           ResultSet rs = a.getResultSet();
+            
             
             while (rs.next())
             {
@@ -144,5 +146,7 @@ public class DAOPago extends DAO implements IDAOPago{
         return listaPagos;
         
     }
+
+   
     
 }
