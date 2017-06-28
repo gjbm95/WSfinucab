@@ -6,12 +6,9 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
-import Dominio.Categoria;
+import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.Pago;
-import Dominio.Usuario;
-import java.io.StringReader;
-import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -25,54 +22,55 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 
 /**
  *
  * @author Ramon
  */
-public class DAOPago extends DAO implements IDAOPago{
+public class DAOPago extends DAO implements IDAOPago {
+
+    private Connection conn = Conexion.conectarADb();
 
     @Override
     public int agregar(Entidad e) {
 
-        Pago pago = (Pago) e;
-        int respuesta;
+            Pago pago = (Pago) e;
+            CallableStatement pag;
+            
+        int idPago = 0;
         try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            CallableStatement pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
+            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
             pag.setInt(4, pago.getCategoria());
             pag.setInt(5, pago.getIdUsario());
-                        
-            if (pag.execute()) {  respuesta = 1; }
-            else { respuesta = 0;  }
+            pag.executeQuery();
+            ResultSet rs = pag.getResultSet();
+            rs.next();
             
-            st.close();
-        } catch (Exception ex) {
-
-            respuesta = 2;
-
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return respuesta;
+        return idPago;
     }
     
     
 
     @Override
     public Entidad modificar(Entidad e) {
+        
         Pago pago = (Pago) e;
-     
         CallableStatement cstmt;
+        
         try {
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?) }");
-            cstmt.setFloat(1,pago.getTotal());
-            cstmt.setString(2,pago.getDescripcion());
+            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?,?) }");
+            cstmt.setInt(1,pago.getIdPago());
+            cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
-            cstmt.setInt(4,pago.getCategoria());
+            cstmt.setString(4,pago.getDescripcion());
+            cstmt.setInt(5,pago.getCategoria());
+            cstmt.setInt(6,pago.getIdUsario());
             cstmt.execute();
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +81,7 @@ public class DAOPago extends DAO implements IDAOPago{
    
 
     @Override
-    public Entidad consultar(int idPago) {
+    public Entidad consultar(int idPago ) {
 
              Pago pago = null;
              
@@ -93,15 +91,17 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
-                    + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
             
-
+            
+            CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
+            a.setInt(1, idPago);
+            a.executeQuery();
+                        
+            ResultSet rs = a.getResultSet();
             while (rs.next()){
-                pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
-                //listaPagos.add(pago);
-                
+                pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
+               
+               
             }
             
             return pago;
@@ -119,30 +119,91 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
-        
+
+        String respuesta = "";
         ArrayList<Entidad> listaPagos = new ArrayList<>();
-        
+
         try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
-                    + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idUsuario);
-            
+           Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();   
+            CallableStatement a = conn.prepareCall("{ call ListaPagos(?) }");
+            a.setInt(1, idUsuario);
+            a.executeQuery();
+  
+           ResultSet rs = a.getResultSet();
+                     
             while (rs.next())
             {
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
+                Pago pago = new Pago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getInt(6) );
                 listaPagos.add(pago);
-                
             }
-            
+            return listaPagos;
+
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return listaPagos;
-        
+
     }
-    
+
+    public JsonArray getUltimosPagosXUsuario(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        JsonArray array = null;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call obtenerUltimosPagos(?)}");
+            cstm.setInt(1, id);
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            int n = 0;
+            while (rs.next()) {
+                n++;
+                cuentaBuilder.add("est_id", "3." + Integer.toString(n));
+                cuentaBuilder.add("est_fecha", rs.getString("pg_fecha"));
+                cuentaBuilder.add("est_transaccion", rs.getString("pg_descripcion"));
+                JsonObject cuentaJsonObject = cuentaBuilder.build();
+                arrayBuilder.add(cuentaJsonObject);
+            }
+            array = arrayBuilder.build();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return array;
+    }
+
+    public JsonObject getBalance(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        JsonObject cuentaJsonObject = null;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call obtenerBalance(?)}");
+            cstm.setInt(1, id);
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
+            int n = 0;
+            if (rs.next()) {
+                float ingresos = rs.getFloat("ingreso");
+                float egresos = rs.getFloat("egreso");
+                float total = ingresos + egresos;
+                ingresos = ingresos * 100 / total;
+                egresos = egresos * 100 / total;
+                cuentaBuilder.add("est_id", "2");
+                cuentaBuilder.add("est_ingreso", Float.toString(ingresos));
+                cuentaBuilder.add("est_egreso", Float.toString(egresos));
+                cuentaJsonObject = cuentaBuilder.build();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return cuentaJsonObject;
+    }
+
+
 }

@@ -24,7 +24,8 @@ public class ComandoConsultarPago extends Comando {
     @Override
     public Object ejecutar() {
         DAO dao = SingletonDAOPago.getInstance();
-        Object response = dao.consultar(idPago);        
+        Object response = dao.consultar(idPago);
+        System.out.println("despues consultar");
         return response;
     }
     

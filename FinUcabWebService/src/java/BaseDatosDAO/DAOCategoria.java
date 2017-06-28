@@ -88,7 +88,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
         } catch (Exception ex) {
 
             return null;
-
+            
         }
     }
 

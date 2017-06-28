@@ -164,20 +164,22 @@ public class Modulo5sResource {
             
             Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
             Object objectResponse = c.ejecutar();
-            
+           System.out.println("despues de ejecutar"); 
             if (objectResponse != null ){
                 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 
-                Pago pago = (Pago) objectResponse;
-                //for (Pago pago : lista) {          
+                Pago pago = (Pago) objectResponse;                  
                  pagoBuilder.add("pg_id",pago.getIdPago());
                  pagoBuilder.add("pg_monto",pago.getTotal());
                  pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                  pagoBuilder.add("pg_categoria",pago.getCategoria());
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                 pagoBuilder.add("usuariou_id",pago.getIdUsario());
                 JsonObject pagoJsonObject = pagoBuilder.build(); 
-                 respuesta = pagoJsonObject.toString();
+                respuesta = pagoJsonObject.toString();
+                System.out.println(respuesta);
+                System.out.println("ANDO ACAAA");
 
             }else{
                 respuesta = "Error";
@@ -225,6 +227,7 @@ public class Modulo5sResource {
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                    pagoBuilder.add("usuariou_id",pago.getIdUsario());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
 
                     list.add( pagoJsonObject.toString());
