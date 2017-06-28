@@ -50,15 +50,15 @@ public class FabricaEntidad {
     public static Categoria obtenerCategoria(int idusuario,
             String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
-      new Categoria(idusuario,nombre,descripcion,estaHabilitado,esIngreso);
-
+      new Categoria(nombre,descripcion,estaHabilitado,esIngreso,idusuario);
+     
     }
-
-    public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo){
+     
+    public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo, int usuario){
        return 
-      new Pago( categoria, descripcion, total, tipo);
-    }
-
+      new Pago( categoria, descripcion, total, tipo, usuario);
+    }   
+    
     public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, Integer categoria, String tipo) {
         return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria, tipo);
     }

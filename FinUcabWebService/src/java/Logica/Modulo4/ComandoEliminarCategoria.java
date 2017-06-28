@@ -8,26 +8,26 @@ package Logica.Modulo4;
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.DAOCategoria;
 import BaseDatosDAO.FabricaDAO;
-import Dominio.Entidad;
 import Logica.Comando;
 
 /**
  *
- * @author MariPerez
+ * @author Jeffrey
  */
-public class ComandoVisualizarCategoria extends Comando {
-         private int usuario;
-     
-     public ComandoVisualizarCategoria(int usuario){
-         this.usuario=usuario;
-     }
+public class ComandoEliminarCategoria extends Comando {
+    private int idCategoria;
+    
+    public ComandoEliminarCategoria(int idcategoria){
+        this.idCategoria = idcategoria;
+    }        
 
     @Override
     public Object ejecutar() {
-        DAO dao = FabricaDAO.instanciasDaoCategoria();
-        Object response = dao.consultarTodos(usuario);
         
+        DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        Object response = dao.eliminarCategoria(idCategoria);
         return response;
+    
     }
     
 }

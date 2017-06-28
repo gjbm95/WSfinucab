@@ -15,10 +15,12 @@ import Dominio.Tarjeta_Credito;
 import Dominio.Usuario;
 import Logica.Modulo2.*;
 import Logica.Modulo4.ComandoConsultarCategoria;
+import Logica.Modulo4.ComandoEliminarCategoria;
 import Logica.Modulo4.ComandoModificarCategoria;
 import Logica.Modulo5.ComandoAgregarPago;
 import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
+import Logica.Modulo5.ComandoModificarPago;
 
 
 /**
@@ -53,6 +55,9 @@ public class FabricaComando {
      
      public static ComandoAgregarCategoria instanciarComandoAgregarCategoria(Entidad categoria){
         return new ComandoAgregarCategoria(categoria);
+    }
+     public static ComandoEliminarCategoria instanciarComandoEliminarCategoria(int categoria){
+        return new ComandoEliminarCategoria(categoria);
     }
      
      public static ComandoModificarCategoria instanciarComandoModificarCategoria(Entidad categoria){
@@ -96,6 +101,15 @@ public class FabricaComando {
       */
      public static ComandoAgregarPago instanciarComandoAgregarPago(Entidad pago){
         return new ComandoAgregarPago(pago);
+     }
+     
+     /**
+      * Fabrica inicializadora del ComandoAgregarPago
+      * @param pago 
+      * @return 
+      */
+     public static ComandoModificarPago instanciarComandoModificarPago(Entidad pago){
+        return new ComandoModificarPago(pago);
      }
      
      /**

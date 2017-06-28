@@ -16,17 +16,17 @@ import Logica.Comando;
  */
 
 public class ComandoConsultarCategoria extends Comando{
-    private int idusuario;
+    private int idcategoria;
     
-    public ComandoConsultarCategoria(int usuario){
-        this.idusuario = usuario;
+    public ComandoConsultarCategoria(int categoria){
+        this.idcategoria = categoria;
     }
 
     @Override
     public Object ejecutar() {
      
         DAO dao = FabricaDAO.instanciasDaoCategoria();
-        Object response = dao.consultar(idusuario);
+        Object response = dao.consultar(idcategoria);
         return response;
         
     }

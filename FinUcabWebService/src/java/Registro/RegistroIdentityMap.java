@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BaseDatosDAO.Interfaces;
+package Registro;
 
 /**
  *
- * @author MariPerez
+ * @author Ramon
  */
-public interface IDAOCategoria extends IDAO{
+public class RegistroIdentityMap {
     
-    int eliminarCategoria(int id);
+    
+    public static final String pago_listado = "pago_listado";
     
 }
