@@ -53,6 +53,13 @@ public class FabricaEntidad {
       new Categoria(nombre,descripcion,estaHabilitado,esIngreso,idusuario);
      
     }
+    
+        public static Categoria obtenerCategoria(int idcategoria,int idusuario,
+            String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
+       return 
+      new Categoria(idcategoria,nombre,descripcion,estaHabilitado,esIngreso,idusuario);
+     
+    }
      
     public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo, int usuario){
        return 
