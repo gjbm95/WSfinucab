@@ -10,6 +10,8 @@ import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.Pago;
 import Dominio.Usuario;
+import java.io.StringReader;
+import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,6 +25,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 
 /**
  *
@@ -32,34 +35,23 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public int agregar(Entidad e) {
-    /*  try {
-            Pago pago = (Pago) e;
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-           String query = "INSERT INTO pago ( pg_monto , pg_descripcion ,  pg_tipoTransaccion , categoriaca_id , usuariou_id) "
-           + "VALUES (" + pago.getTotal() + "' , '" + pago.getDescripcion() + "' , '"
-          + pago.getTipo()+ "' , '" + pago.getCategoria()+ "' , '" +pago.getIdUsario() + "');";
-        */
-    Pago pago = (Pago) e;
-        int respuesta =0;
+
+        Pago pago = (Pago) e;
+        int respuesta;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement pag = conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+            CallableStatement pag = conn.prepareCall("{ call AgregarPago(?,?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
             pag.setInt(4, pago.getCategoria());
             pag.setInt(5, pago.getIdUsario());
+                        
+            if (pag.execute()) {  respuesta = 1; }
+            else { respuesta = 0;  }
             
-            if (pag.execute()) {
-                st.close();
-                respuesta = 1;
-            } else {
-                st.close();
-                respuesta = 0;
-            }
-
+            st.close();
         } catch (Exception ex) {
 
             respuesta = 2;
@@ -72,34 +64,54 @@ public class DAOPago extends DAO implements IDAOPago{
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Pago pago = (Pago) e;
+     
+        CallableStatement cstmt;
+        try {
+            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?) }");
+            cstmt.setFloat(1,pago.getTotal());
+            cstmt.setString(2,pago.getDescripcion());
+            cstmt.setString(3,pago.getDescripcion());
+            cstmt.setInt(4,pago.getCategoria());
+            cstmt.execute();
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pago;
     }
+         
+   
 
     @Override
     public Entidad consultar(int idPago) {
-             String respuesta ="";
+
+             Pago pago = null;
              
-             try {
+            
+        try {
+
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
              //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
+            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idPago);
             
-            
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
+
+            while (rs.next()){
+                pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
                 //listaPagos.add(pago);
                 
-           
+            }
             
             return pago;
+
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return pago;
         
     }
    
@@ -108,7 +120,6 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
         
-        String respuesta ="";
         ArrayList<Entidad> listaPagos = new ArrayList<>();
         
         try {
@@ -116,23 +127,21 @@ public class DAOPago extends DAO implements IDAOPago{
             Statement st = conn.createStatement();
             
             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion "
+            ResultSet rs = st.executeQuery("SELECT pg_id, pg_monto, pg_tipoTransaccion, categoriaca_id, pg_descripcion, usuariou_id "
                     + "FROM Pago, Categoria WHERE categoriaca_id = ca_id AND usuariou_id = "+ idUsuario);
             
             while (rs.next())
             {
-                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3) );
+                Pago pago = new Pago( rs.getInt(1), rs.getInt(4), rs.getString(5), rs.getFloat(2), rs.getString(3), rs.getInt(6) );
                 listaPagos.add(pago);
                 
             }
-            
-            return listaPagos;
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return listaPagos;
         
     }
     
