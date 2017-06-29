@@ -170,6 +170,7 @@ public class DAOPago extends DAO implements IDAOPago {
             array = arrayBuilder.build();
             cstm.close();
             st.close();
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -201,6 +202,7 @@ public class DAOPago extends DAO implements IDAOPago {
             }
             cstm.close();
             st.close();
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 

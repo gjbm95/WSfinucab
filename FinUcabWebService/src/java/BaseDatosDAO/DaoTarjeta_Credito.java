@@ -59,6 +59,7 @@ public class DaoTarjeta_Credito extends DAO {
             idtarjeta = rs.getInt(1);
             System.out.printf("id de: " + rs.getString(1));
             cstmt.close();
+            rs.close();
            
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -112,7 +113,7 @@ public class DaoTarjeta_Credito extends DAO {
             idtarjeta = rs.getInt(1);
             System.out.printf("id de: " + rs.getString(1));
             cstmt.close();
-            
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -144,6 +145,7 @@ public class DaoTarjeta_Credito extends DAO {
             respuesta = array.toString();
             cstm.close();   
             st.close();
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -166,6 +168,7 @@ public class DaoTarjeta_Credito extends DAO {
             }
             cstm.close();
             st.close();
+            rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";
