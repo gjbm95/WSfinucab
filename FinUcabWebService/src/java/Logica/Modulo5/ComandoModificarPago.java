@@ -27,14 +27,7 @@ public class ComandoModificarPago extends Comando{
  @Override
     public void ejecutar() {
         IDAOPago dao = SingletonDAOPago.getInstance();
-        Entidad respuesta = dao.modificar(pago);
-        /*
-        if (respuesta != null)
-        return respuesta;
-        
-        else
-            return "Modificacion no exitosa";
-*/
+        this.response = dao.modificar(pago);
         
     }
     

@@ -25,11 +25,7 @@ public class ComandoAgregarPago extends Comando {
     @Override
     public void ejecutar() {
         IDAOPago dao = SingletonDAOPago.getInstance();
-        Entidad respuesta = dao.agregar(pago);
-        
-        //if(respuesta==1){   System.out.println("Registro Exitoso");  }
-        //else{System.out.println("Fallido");}
-        
+        this.response = dao.agregar(pago);
         
     }
     

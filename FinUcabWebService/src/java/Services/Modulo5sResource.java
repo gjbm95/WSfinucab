@@ -5,19 +5,14 @@
  */
 package Services;
 
-import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
-import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
 import java.net.URLDecoder;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -89,7 +84,7 @@ public class Modulo5sResource {
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 
                 Pago pago = (Pago) Objeto;                  
-                 pagoBuilder.add("pg_id",pago.getIdPago());
+                 pagoBuilder.add("pg_id",pago.getId());
                  pagoBuilder.add("pg_monto",pago.getTotal());
                  pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                  pagoBuilder.add("pg_categoria",pago.getCategoria());
@@ -113,7 +108,7 @@ public class Modulo5sResource {
                 
                 for (Pago pago : lista) {
                     
-                    pagoBuilder.add("pg_id",pago.getIdPago());
+                    pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());

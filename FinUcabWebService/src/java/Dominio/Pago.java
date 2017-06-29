@@ -13,17 +13,6 @@ public class Pago  extends Entidad implements Serializable{
     private float total;
     private String tipo;
 
-    
-    public int getIdPago() {
-        return idPago;
-    }
-
-    public void setIdPago(int idPago) {
-        this.idPago = idPago;
-    }
-    
-    
-
     public int getCategoria() {
         return categoria;
     }
@@ -56,8 +45,7 @@ public class Pago  extends Entidad implements Serializable{
         this.tipo = tipo;
     }
 
-    public Pago(int categoria, String descripcion, float total, String tipo) {
-       
+    public Pago( int categoria, String descripcion, float total, String tipo) {
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.total = total;
@@ -66,8 +54,7 @@ public class Pago  extends Entidad implements Serializable{
     }
     
     public Pago( int id, int categoria, String descripcion, float total, String tipo) {
-        //super(_id);
-        this.idPago= id;
+        super(id);
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.total = total;

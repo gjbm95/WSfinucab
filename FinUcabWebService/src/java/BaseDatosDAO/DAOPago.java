@@ -60,7 +60,7 @@ public class DAOPago extends DAO implements IDAOPago{
         
         try {
             cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
-            cstmt.setInt(1,pago.getIdPago());
+            cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
             cstmt.setString(4,pago.getDescripcion());
