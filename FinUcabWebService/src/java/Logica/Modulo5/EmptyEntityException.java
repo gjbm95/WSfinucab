@@ -15,7 +15,9 @@ public class EmptyEntityException extends Exception{
         super();
     };
     
+
     
+
     public String EmptyEntity(){
         return "Error se tiene una Entidad Vacia";
     }

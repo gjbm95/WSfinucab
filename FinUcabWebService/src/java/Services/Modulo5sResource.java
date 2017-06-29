@@ -14,6 +14,7 @@ import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
 import Logica.Modulo5.EmptyStringException;
+import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -71,14 +72,17 @@ public class Modulo5sResource {
         JsonObject usuarioJsonObject = usuarioBuilder.build();
        return usuarioJsonObject.toString();
     }
+    
+    
 
     /**
      * Metodo encargado de la construccion de los JSON para agregar un pago
      * @param datosPagos
      * @return Entidad
      */
-    private Entidad CrearJSONagregarPago (@QueryParam("datosPago") String datosPagos) throws EmptyEntityException, UnsupportedEncodingException    {
-        
+
+    private Entidad CrearJSONagregarPago (@QueryParam("datosPago") String datosPagos)  throws EmptyEntityException  {
+
         Entidad ex = null;
         
         
@@ -86,12 +90,14 @@ public class Modulo5sResource {
             
             try{
         
-            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+            String decodifico = URLDecoder.decode(datosPagos);
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();           
             reader.close();
             ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-            throw new EmptyEntityException();
+
+           throw new EmptyEntityException();
+
         }
             catch(EmptyEntityException e){
                 System.out.println(e.EmptyEntity());
@@ -111,7 +117,9 @@ public class Modulo5sResource {
      * @param Objeto
      * @return String
      */
+
     private String CrearJSONverPago(Entidad Objeto) throws EmptyStringException{
+
        
          String respuesta ="";
          
@@ -129,17 +137,21 @@ public class Modulo5sResource {
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                  JsonObject pagoJsonObject = pagoBuilder.build(); 
                 respuesta = pagoJsonObject.toString();
+
                  throw new EmptyStringException();
         }
             catch(EmptyStringException e){
                 System.out.println(e.EmptyString());
                     }
+
     }
+          
+         
           else{
                System.out.println("Parametro de entrada nulo o vacio");
           }
             return respuesta;
-    }
+    } 
     
 
     
@@ -149,7 +161,9 @@ public class Modulo5sResource {
      * @param objeto
      * @return String
      */
+
     private String CrearJSONlistaPago (Entidad objeto) throws EmptyStringException{
+
        
     String respuesta = "";
         
@@ -176,11 +190,13 @@ public class Modulo5sResource {
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-                 throw new EmptyStringException();
+
+                System.out.println(respuesta);
+            throw new EmptyStringException();
         }
             catch(EmptyStringException e){
                 System.out.println(e.EmptyString());
-            
+
             }
     }
         
@@ -198,14 +214,16 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
+
     private Entidad CrearJSONmodificarPago(@QueryParam("datosPago") String datosPagos)throws EmptyEntityException{
+
         
         Entidad ex = null;
         
         if( (datosPagos != null) || (datosPagos.equals("")) ){
             
             try {
-            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+            String decodifico = URLDecoder.decode(datosPagos);
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
             reader.close();
@@ -214,11 +232,13 @@ public class Modulo5sResource {
         }
             catch(EmptyEntityException e){
                 System.out.println(e.EmptyEntity());
-            } catch (UnsupportedEncodingException ex1) {
-                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
+
+          
+
             }
         }
         else {
+            
            System.out.println("Parametro de entrada nulo o vacio");  
         }
         return ex;
