@@ -14,8 +14,11 @@ import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -82,7 +85,7 @@ public class Modulo5sResource {
             
             try{
         
-            String decodifico = URLDecoder.decode(datosPagos);
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();           
             reader.close();
@@ -201,7 +204,7 @@ public class Modulo5sResource {
         if( (datosPagos != null) || (datosPagos.equals("")) ){
             
             try {
-            String decodifico = URLDecoder.decode(datosPagos);
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
             reader.close();
@@ -210,6 +213,8 @@ public class Modulo5sResource {
         }
             catch(EmptyEntityException e){
                 System.out.println(e.EntityEmpty());
+            } catch (UnsupportedEncodingException ex1) {
+                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
         else {
