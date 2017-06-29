@@ -103,7 +103,8 @@ public class DAOPago extends DAO implements IDAOPago{
                 while (rs.next()){
                     pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
                 }
-
+                
+                SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -141,6 +142,8 @@ public class DAOPago extends DAO implements IDAOPago{
                 }
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPagos);
+                
+                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
                 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
