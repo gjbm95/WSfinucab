@@ -31,10 +31,10 @@ public class ComandoEliminarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito daoTarjeta_credito = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return daoTarjeta_credito.eliminar(tdc);
+        //return daoTarjeta_credito.eliminar(tdc);
     }
     
     

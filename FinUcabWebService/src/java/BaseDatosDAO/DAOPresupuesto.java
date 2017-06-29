@@ -7,6 +7,8 @@ package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
 import Registro.RegistroBaseDatos;
 import java.sql.CallableStatement;
@@ -31,7 +33,7 @@ import javax.json.JsonObjectBuilder;
 public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
        
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta =0;
@@ -56,7 +58,8 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = 2;
             
         }
-        return respuesta;
+        
+        return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -5,12 +5,20 @@
  */
 package Logica;
 
+import Dominio.Entidad;
+
 /**
  *
  * @author Junior
  */
 public abstract class Comando {
     
-    public abstract Object ejecutar();
+    protected Entidad response;
+    
+    public abstract void ejecutar();   
+    
+    public Entidad getResponse(){
+        return response;
+    }
     
 }

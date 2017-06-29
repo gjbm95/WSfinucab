@@ -25,9 +25,9 @@ public class ComandoIniciarSesion extends Comando{
     }
     
     @Override
-    public Object ejecutar(){
+    public void ejecutar(){
         DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         Modulo1sResource.resultado = dao.obtenerInicioSesion(usuario , clave);
-        return null;
+        //return null;
     }
 }

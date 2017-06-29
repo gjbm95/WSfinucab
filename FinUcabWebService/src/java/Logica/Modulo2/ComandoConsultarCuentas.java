@@ -32,10 +32,10 @@ public class ComandoConsultarCuentas extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        return dao.getCuentasXUsuario(idusuario);
+        //return dao.getCuentasXUsuario(idusuario);
     }
     
     

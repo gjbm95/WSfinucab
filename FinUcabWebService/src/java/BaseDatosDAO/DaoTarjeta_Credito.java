@@ -7,6 +7,8 @@ package BaseDatosDAO;
 
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Tarjeta_Credito;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -36,7 +38,7 @@ public class DaoTarjeta_Credito extends DAO {
     private Connection conn = Conexion.conectarADb();
 
     @Override
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
         Tarjeta_Credito obj = (Tarjeta_Credito) e;
         CallableStatement cstmt;
         int idtarjeta = 0;
@@ -61,7 +63,7 @@ public class DaoTarjeta_Credito extends DAO {
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return idtarjeta;
+        return FabricaEntidad.obtenerSimpleResponse(idtarjeta);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class DaoTarjeta_Credito extends DAO {
         return null;
     }
 
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
         return null;
     }
 

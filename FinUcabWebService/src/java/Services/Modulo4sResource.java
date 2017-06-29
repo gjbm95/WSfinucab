@@ -125,8 +125,10 @@ public class Modulo4sResource {
             reader.close();
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse(); 
             return objectResponse.toString();
+            
         } catch (Exception e) {
 
             return e.getMessage();
@@ -152,7 +154,8 @@ public class Modulo4sResource {
     public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
 
         Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
-        Object objectResponse = c.ejecutar();
+        c.ejecutar();
+        Entidad objectResponse = c.getResponse(); 
         return objectResponse.toString();
     }
     
@@ -177,7 +180,8 @@ public class Modulo4sResource {
         try{
 
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             
             if (objectResponse != null ){
                 
@@ -237,7 +241,8 @@ public class Modulo4sResource {
             reader.close();
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Object objectResponse = null;
             return objectResponse.toString();
         } catch (Exception e) {
 
@@ -265,8 +270,10 @@ public class Modulo4sResource {
         //String decodifico = URLDecoder.decode(datosCategoria);
         try{
             
+
             Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse(); 
             
             if (objectResponse != null ){           
                 System.out.println("entro");

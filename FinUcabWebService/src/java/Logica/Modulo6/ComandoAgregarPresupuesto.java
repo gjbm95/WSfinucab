@@ -7,6 +7,7 @@ package Logica.Modulo6;
 
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAO;
+import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -23,11 +24,10 @@ public class ComandoAgregarPresupuesto extends Comando{
     }
     
     @Override
-    public Object ejecutar() {
-        int respuesta =0;
-        IDAO dao = FabricaDAO.instanciarDAOPresupuesto();
-        respuesta = dao.agregar(presupuesto);
-        return respuesta;
+    public void ejecutar() {
+        
+        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        this.response = dao.agregar(presupuesto);
     }
     
 }

@@ -23,7 +23,7 @@ public class ComandoActualizarClave extends Comando{
     }
     
     @Override
-    public Object ejecutar(){
+    public void ejecutar(){
         DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
      
         int respuesta = dao.ActualizarClave(usuario,clave);
@@ -34,6 +34,6 @@ public class ComandoActualizarClave extends Comando{
         }
        
         
-        return null;
+        //return null;
     }
 }

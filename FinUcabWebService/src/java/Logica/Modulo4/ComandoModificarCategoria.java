@@ -22,16 +22,16 @@ public class ComandoModificarCategoria extends Comando{
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DAO dao = FabricaDAO.instanciasDaoCategoria();
         Entidad respuesta = dao.modificar(categoria);
-        if (respuesta != null){
+        /*if (respuesta != null){
             return respuesta;
         }
         else {
             return "Error";
         }
-            
+           */ 
 
     }
     

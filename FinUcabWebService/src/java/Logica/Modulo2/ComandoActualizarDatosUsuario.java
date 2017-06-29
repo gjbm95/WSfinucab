@@ -30,10 +30,10 @@ public class ComandoActualizarDatosUsuario extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
-        return daoUsuario.modificar(user);
+        //return daoUsuario.modificar(user);
     }
     
     
