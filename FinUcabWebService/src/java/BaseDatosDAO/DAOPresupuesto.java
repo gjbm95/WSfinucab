@@ -8,6 +8,7 @@ package BaseDatosDAO;
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
 import Dominio.Presupuesto;
+import Registro.RegistroBaseDatos;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -38,7 +38,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         try{
            
             Connection conn = Conexion.conectarADb();
-            PreparedStatement pag = conn.prepareStatement(" select agregarpresupuesto (?,?::real,?,?,?,?)");
+            PreparedStatement pag = conn.prepareStatement(RegistroBaseDatos.AGREGAR_PRESUPUESTO);
             pag.setString(1, presupuesto.getNombre());
             pag.setDouble(2, presupuesto.getMonto());
             pag.setString(3, presupuesto.getClasificacion());
@@ -61,7 +61,31 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+        Presupuesto presupuesto = (Presupuesto) e;
+        int respuesta = 0;
+        
+        try{
+            Connection conn = Conectar();
+            PreparedStatement pag = conn.prepareStatement(RegistroBaseDatos.MODIFICAR_PRESUPUESTO);
+            pag.setString(1, presupuesto.getNombre());
+            pag.setDouble(2, presupuesto.getMonto());
+            pag.setString(3, presupuesto.getClasificacion());
+            pag.setInt(4, presupuesto.getDuracion());
+            pag.setInt(5, presupuesto.getUsuario());
+            pag.setInt(6, presupuesto.getCategoria());
+            pag.executeQuery();
+            ResultSet rs = pag.getResultSet();
+            rs.next();
+            respuesta = rs.getInt("modificarpresupuesto");
+            pag.close();
+            Desconectar(conn);
+                        
+        } catch (Exception ex){
+            ex.printStackTrace();
+            respuesta = 2;
+        }
+        return presupuesto;
     }
 
     @Override

@@ -154,7 +154,7 @@ public class Modulo3sResource {
         Integer idUsuario = 0;
         try {
 
-            idUsuario = obtenerIdUsuario(Usuario);
+            idUsuario = Integer.parseInt(Usuario);
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
 
@@ -289,40 +289,23 @@ public class Modulo3sResource {
     public String modificarPresupuesto(@QueryParam("nombrePresupuesto") String nombrePresupuesto, @QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
 
         String decodifico = URLDecoder.decode(datosPresupuesto);
-        Integer idUsuario = 0;
-        try {
-            idUsuario = obtenerIdUsuario(nombreusuario);
-            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject presupuestoJSON = reader.readObject();
-            reader.close();
-
-            String query = "UPDATE presupuesto SET pr_nombre='"
-                    + presupuestoJSON.getString("pr_nombre") + "',"
-                    + "pr_monto=" + presupuestoJSON.getString("pr_monto") + ","
-                    + "pr_clasificacion='"
-                    + presupuestoJSON.getString("pr_clasificacion") + "',"
-                    + "pr_duracion=" + presupuestoJSON.getString("pr_duracion")
-                    + ", categoriaca_id="
-                    + presupuestoJSON.getString("categoriaca_id")
-                    + "WHERE usuariou_id='" + idUsuario
-                    + "'and pr_nombre ='" + nombrePresupuesto + "';";
-
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Registro exitoso";
-            } else {
-                st.close();
-                return "No se pudo registrar";
-            }
-
-        } catch (Exception e) {
-
-            return e.getMessage();
-
-        }
+        System.out.println(decodifico);
+        String respuesta = "0";
+        JsonReader reader = Json.createReader(new StringReader((decodifico)));
+        JsonObject presupuestoJSON = reader.readObject();
+        reader.close();
+        
+        Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
+                Double.valueOf(presupuestoJSON.getString("pr_monto")), 
+                presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
+                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
+        
+        Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
+        Entidad resultado = (Entidad) command.ejecutar();
+        
+        if (resultado != null)
+            respuesta = "1";
+       return respuesta;
     }
 
     /**
