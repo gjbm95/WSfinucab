@@ -110,7 +110,7 @@ public class Modulo5sResource {
      * @param Objeto
      * @return String
      */
-    private String CrearJSONverPago(Object Objeto){
+    private String CrearJSONverPago(Entidad Objeto){
        
          String respuesta ="";
          
@@ -148,7 +148,7 @@ public class Modulo5sResource {
      * @param objeto
      * @return String
      */
-    private String CrearJSONlistaPago (Object objeto){
+    private String CrearJSONlistaPago (Entidad objeto){
        
     String respuesta = "";
         
