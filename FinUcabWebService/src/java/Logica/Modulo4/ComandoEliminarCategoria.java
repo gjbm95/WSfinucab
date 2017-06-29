@@ -8,6 +8,7 @@ package Logica.Modulo4;
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.DAOCategoria;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Logica.Comando;
 
 /**
@@ -22,11 +23,10 @@ public class ComandoEliminarCategoria extends Comando {
     }        
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         
-        DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        Object response = dao.eliminarCategoria(idCategoria);
-        return response;
+        IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        this.response = dao.eliminarCategoria(idCategoria);
     
     }
     

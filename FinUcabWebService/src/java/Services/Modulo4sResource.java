@@ -4,9 +4,12 @@ import BaseDatosDAO.Conexion;
 import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
+import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -114,24 +117,30 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarCategoria")
     public String registrarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
-        System.out.println(datosCategoria);
-        String decodifico = URLDecoder.decode(datosCategoria);
+        String respuesta = "";
 
         try {
-           
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject categoriaJSON = reader.readObject();
-           
-            reader.close();
-            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+
+            Entidad e = registroCategoria(datosCategoria);
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
-            Object objectResponse = c.ejecutar();
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                
+            }else{
+                respuesta = "Error";
+            }
             return objectResponse.toString();
+            
         } catch (Exception e) {
 
-            return e.getMessage();
+            System.out.println(e.getMessage());
+            respuesta = "0";
 
         }
+         return respuesta;
     }
 
     
@@ -150,10 +159,18 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarCategoria")
     public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
-
+        String respuesta="";
         Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
-        Object objectResponse = c.ejecutar();
-        return objectResponse.toString();
+        c.ejecutar();
+        Entidad objectResponse = c.getResponse(); 
+        if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                
+            }else{
+                respuesta = "Error";
+            }
+        return respuesta;
     }
     
     
@@ -173,42 +190,20 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarCategoria")
     public String VisualizarCategoria(@QueryParam("datosCategoria") int usuario) {
-
+        
+            String respuesta ="";
+            
         try{
 
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
-            Object objectResponse = c.ejecutar();
-            
-            if (objectResponse != null ){
-                
-                ArrayList<Categoria> lista = (ArrayList<Categoria>) objectResponse;
-                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
-                JsonArrayBuilder list = Json.createArrayBuilder();
-                
-                for (Categoria categoria : lista) {
-                    
-                    categoriaBuilder.add("ca_id",categoria.getIdcategoria());
-                    categoriaBuilder.add("ca_nombre",categoria.getNombre());
-                    categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
-                    categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
-                    categoriaBuilder.add("ca_esingreso",categoria.isIngreso());
-                    categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
-                    JsonObject categoriaJsonObject = categoriaBuilder.build();  
-
-                    list.add( categoriaJsonObject.toString());
-                    
-                }
-                
-                JsonArray listJsonObject = list.build();
-                String resp = listJsonObject.toString();
-                
-                return resp;
-            }
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            respuesta = listaCategoria(objectResponse);
            }
         catch(Exception e) {
-            return e.getMessage();
+            respuesta = "Error :"+e.getMessage();
         }
-        return "Error";
+        return respuesta;
     }
 
      /**
@@ -228,22 +223,28 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/modificarCategoria")
     public String modificarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
-        String decodifico = URLDecoder.decode(datosCategoria);
-
+        String respuesta="";
+      
         try {
            
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject categoriaJSON = reader.readObject();       
-            reader.close();
-            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            Entidad e = modCategoria(datosCategoria);
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
-            Object objectResponse = c.ejecutar();
-            return objectResponse.toString();
-        } catch (Exception e) {
+            c.ejecutar();
+            Object objectResponse = c.getResponse();
+           if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                
+            }else{
+                respuesta = "Error";
+            }
+           } catch (Exception e) {
 
-            return e.getMessage();
+            System.out.println(e.getMessage());
+            respuesta = "0";
 
         }
+        return respuesta;
         
     }
     
@@ -262,34 +263,107 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/buscarCategoria")
     public String buscarCategoria(@QueryParam("datosCategoria") int datosCategoria){
-        //String decodifico = URLDecoder.decode(datosCategoria);
+        String respuesta ="";
         try{
             
-            Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
-            Object objectResponse = c.ejecutar();
-            
-            if (objectResponse != null ){           
-                System.out.println("entro");
-                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
 
-                Categoria categoria = (Categoria) objectResponse;
+            Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse(); 
+            respuesta = verCategoria(objectResponse);
+        }
+        catch(Exception e) {
+            respuesta = "Error :"+e.getMessage();
+        }
+    return respuesta;
+    }
+    
+    
+    private String listaCategoria (Entidad objeto){
+        
+    String respuesta = "";
+        
+        if (objeto != null ){
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
+                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
+                JsonArrayBuilder list = Json.createArrayBuilder();
+                
+                for (Entidad enti : lista) {
+                    Categoria categoria = (Categoria) enti;
+                    categoriaBuilder.add("ca_id",categoria.getIdcategoria());
+                    categoriaBuilder.add("ca_nombre",categoria.getNombre());
+                    categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
+                    categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
+                    categoriaBuilder.add("ca_esingreso",categoria.isIngreso());
+                    categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
+                    JsonObject categoriaJsonObject = categoriaBuilder.build();  
+                    list.add( categoriaJsonObject.toString());
+                    
+                }
+                
+                JsonArray listJsonObject = list.build();
+                respuesta = listJsonObject.toString();
+        
+    }
+        
+        else {
+            System.out.println("Error");   
+        }
+        
+        return respuesta;
+    }
+    
+    private Entidad registroCategoria (@QueryParam("datosCategoria") String datosCategorias){
+        try {
+            String decodifico = URLDecoder.decode(datosCategorias,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject categoriaJSON = reader.readObject();           
+            reader.close();
+            Entidad ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            return ex;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    private Entidad modCategoria (@QueryParam("datosCategoria") String datosCategorias){
+        try {
+            String decodifico = URLDecoder.decode(datosCategorias,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject categoriaJSON = reader.readObject();           
+            reader.close();
+            Entidad ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            return ex;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    private String verCategoria(Entidad Objeto){
+        
+         String respuesta ="";
+          if (Objeto != null ){
+                
+                JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
+                
+                 Categoria categoria = (Categoria) Objeto;                  
                 categoriaBuilder.add("ca_id",categoria.getIdcategoria());
                 categoriaBuilder.add("ca_nombre",categoria.getNombre());
                 categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
                 categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
                 categoriaBuilder.add("ca_esingreso",categoria.isIngreso());
                 categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
-                JsonObject categoriaJsonObject = categoriaBuilder.build();  
-                String  respuesta = categoriaJsonObject.toString();
-                System.out.println(respuesta);
-                return respuesta;
-            }
-        }
-        catch(Exception e) {
-            return e.getMessage();
-        }
-    return "Error";
+                 JsonObject categoriaJsonObject = categoriaBuilder.build(); 
+                respuesta = categoriaJsonObject.toString();
+                       
     }
+            return respuesta;
+    }
+    
 
     /**
      * POST method for creating an instance of Modulo4Resource

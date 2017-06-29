@@ -8,38 +8,26 @@ package BaseDatosDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
-import java.io.StringReader;
 import java.sql.CallableStatement;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author MariPerez
  */
-public class DAOCategoria extends DAO implements IDAOCategoria {   
+public class DAOCategoria extends DAO implements IDAOCategoria { 
     
     private Connection conn = Conexion.conectarADb();
     
-    
-    public int agregar(Entidad e) {
-        int respuesta = 0;
+    public Entidad agregar(Entidad e) {
         try {
             Categoria ca = (Categoria) e;
             Statement st = conn.createStatement();
@@ -55,8 +43,12 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return respuesta;
+            }
+              catch (Exception ex) {
+
+            return FabricaEntidad.obtenerSimpleResponseStatus(2);
+       }
+        return FabricaEntidad.obtenerSimpleResponse(1);
     }              
                    
          
@@ -118,42 +110,39 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
-        
+    public ListaEntidad consultarTodos(int idUsuario) {
+              
         ArrayList<Entidad> listaCategorias = new ArrayList<>();
-        
         try {
             Statement st = conn.createStatement();
-            
             CallableStatement a = conn.prepareCall("{ call ConsultarTodos(?) }");
             a.setInt(1, idUsuario);
             a.executeQuery();
-  
            ResultSet rs = a.getResultSet();
                      
             while (rs.next())
             {
                Categoria ca = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
                 listaCategorias.add(ca);
-                
-            }
-            
+            }            
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
+          catch(Exception e) {
+            return null;
+        }
+            ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategorias);
+            System.out.println(listaEntidad);
+            return listaEntidad;
+        }
         
-        return listaCategorias;
-        
-    }
 
     @Override 
-    public int eliminarCategoria(int idCategoria){
-        int respuesta=0;
+    public Entidad eliminarCategoria(int idCategoria){
         try {
             Statement st = conn.createStatement();
             EliminarCategoria2(idCategoria, "presupuesto");
             EliminarCategoria2(idCategoria,"pago");
-            Categoria ca = null;
             CallableStatement cat = conn.prepareCall("{ call EliminarCategoria(?) }");
             cat.setInt(1,idCategoria);
             cat.executeQuery();
@@ -163,7 +152,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponse(1);
     }        
 
     
