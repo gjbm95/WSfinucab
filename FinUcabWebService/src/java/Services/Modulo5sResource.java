@@ -7,13 +7,18 @@ package Services;
 
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -68,15 +73,21 @@ public class Modulo5sResource {
     
     private Entidad registroPago (@QueryParam("datosPago") String datosPagos)
     {
-           String decodifico = URLDecoder.decode(datosPagos);
+        try {
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
-           JsonObject pagoJSON = reader.readObject();           
+            JsonObject pagoJSON = reader.readObject();           
             reader.close();
-        Entidad ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-        return ex;
+            Entidad ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            return ex;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
     
-    private String verPago(Object Objeto){
+    private String verPago(Entidad Objeto){
         
          String respuesta ="";
           if (Objeto != null ){
@@ -96,18 +107,18 @@ public class Modulo5sResource {
             return respuesta;
     }
     
-    private String listaPago (Object objeto){
+    private String listaPago (Entidad objeto){
         
     String respuesta = "";
         
         if (objeto != null ){
                 
-                ArrayList<Pago> lista = (ArrayList<Pago>) objeto;
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
                 
-                for (Pago pago : lista) {
-                    
+                for (Entidad enti : lista) {
+                    Pago pago = (Pago) enti;
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
@@ -168,7 +179,6 @@ public class Modulo5sResource {
             }else{
                 respuesta = "Error";
             }
-            
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -250,12 +260,13 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
-        String decodifico = URLDecoder.decode(datosPagos);
         String respuesta = "";
 
         try {
+            
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
            
-          JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
            
             reader.close();
