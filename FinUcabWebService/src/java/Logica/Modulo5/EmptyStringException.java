@@ -9,17 +9,14 @@ package Logica.Modulo5;
  *
  * @author Juan
  */
-public class EmptyEntityException extends Exception{
-    
-    public EmptyEntityException(){
+public class EmptyStringException extends Exception{
+    public EmptyStringException(){
         super();
     };
     
     
-    public String EmptyEntity(){
-        return "Error se tiene una Entidad Vacia";
+    public String EmptyString(){
+        return "Error se tiene una Cadena Vacia";
     }
-    
-    
     
 }

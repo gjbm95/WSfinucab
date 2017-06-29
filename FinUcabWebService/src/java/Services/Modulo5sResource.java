@@ -13,6 +13,7 @@ import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
+import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -76,7 +77,7 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-    private Entidad CrearJSONagregarPago (@QueryParam("datosPago") String datosPagos)    {
+    private Entidad CrearJSONagregarPago (@QueryParam("datosPago") String datosPagos) throws EmptyEntityException, UnsupportedEncodingException    {
         
         Entidad ex = null;
         
@@ -90,10 +91,10 @@ public class Modulo5sResource {
             JsonObject pagoJSON = reader.readObject();           
             reader.close();
             ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-            }
-            
-            catch (Exception e){
-                System.out.println("Error Entidad Vacia"+e.getMessage()); 
+            throw new EmptyEntityException();
+        }
+            catch(EmptyEntityException e){
+                System.out.println(e.EmptyEntity());
             }
         }
         
@@ -110,7 +111,7 @@ public class Modulo5sResource {
      * @param Objeto
      * @return String
      */
-    private String CrearJSONverPago(Entidad Objeto){
+    private String CrearJSONverPago(Entidad Objeto) throws EmptyStringException{
        
          String respuesta ="";
          
@@ -128,10 +129,10 @@ public class Modulo5sResource {
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                  JsonObject pagoJsonObject = pagoBuilder.build(); 
                 respuesta = pagoJsonObject.toString();
-                  
-                    }
-                    catch(Exception e){
-                        System.out.println("Error Cadena Vacia"+e.getMessage());
+                 throw new EmptyStringException();
+        }
+            catch(EmptyStringException e){
+                System.out.println(e.EmptyString());
                     }
     }
           else{
@@ -148,7 +149,7 @@ public class Modulo5sResource {
      * @param objeto
      * @return String
      */
-    private String CrearJSONlistaPago (Entidad objeto){
+    private String CrearJSONlistaPago (Entidad objeto) throws EmptyStringException{
        
     String respuesta = "";
         
@@ -175,11 +176,11 @@ public class Modulo5sResource {
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-                System.out.println(respuesta);
-            }
+                 throw new EmptyStringException();
+        }
+            catch(EmptyStringException e){
+                System.out.println(e.EmptyString());
             
-            catch (Exception e){
-                 System.out.println("Error Lista Vacia"+e.getMessage());
             }
     }
         
@@ -197,7 +198,7 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-    private Entidad CrearJSONmodificarPago(@QueryParam("datosPago") String datosPagos){
+    private Entidad CrearJSONmodificarPago(@QueryParam("datosPago") String datosPagos)throws EmptyEntityException{
         
         Entidad ex = null;
         
@@ -212,7 +213,7 @@ public class Modulo5sResource {
              throw new EmptyEntityException();
         }
             catch(EmptyEntityException e){
-                System.out.println(e.EntityEmpty());
+                System.out.println(e.EmptyEntity());
             } catch (UnsupportedEncodingException ex1) {
                 Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
             }
