@@ -6,6 +6,7 @@
 package IndentityMap;
 
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,16 @@ public class IdentityMap {
     
      public ListaEntidad getListaEntidad(String id){
         
-        ListaEntidad salida  = (ListaEntidad) this._cache.get(id);
-        return salida;
+        Entidad salida  = this._cache.get(id);
+        
+        if (salida != null ){
+            return (ListaEntidad) salida;
+        }else{
+            ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(new ArrayList<Entidad>());
+            setEntidad(id, listaEntidad);
+            
+            return listaEntidad;
+        }
     }
      
       public void setListaEntidad(String id, ListaEntidad listaEntidad){

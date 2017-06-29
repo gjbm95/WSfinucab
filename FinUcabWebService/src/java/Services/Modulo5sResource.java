@@ -12,12 +12,10 @@ import Dominio.Pago;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo5.EmptyEntityException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -69,27 +67,53 @@ public class Modulo5sResource {
         JsonObject usuarioJsonObject = usuarioBuilder.build();
        return usuarioJsonObject.toString();
     }
-    
-    private Entidad registroPago (@QueryParam("datosPago") String datosPagos)
-    {
-        try {
-            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+
+    /**
+     * Metodo encargado de la construccion de los JSON para agregar un pago
+     * @param datosPagos
+     * @return Entidad
+     */
+    private Entidad CrearJSONagregarPago (@QueryParam("datosPago") String datosPagos)    {
+        
+        Entidad ex = null;
+        
+        
+        if( (datosPagos != null) || (datosPagos.equals("")) ){
+            
+            try{
+        
+            String decodifico = URLDecoder.decode(datosPagos);
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();           
             reader.close();
-            Entidad ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-            return ex;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+            ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            }
+            
+            catch (Exception e){
+                System.out.println("Error Entidad Vacia"+e.getMessage()); 
+            }
         }
         
-        return null;
+        else {
+          System.out.println("Parametro de entrada nulo o vacio");    
+        }
+        return ex;
     }
     
-    private String verPago(Entidad Objeto){
-        
+    
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para ver un pago
+     * @param Objeto
+     * @return String
+     */
+    private String CrearJSONverPago(Object Objeto){
+       
          String respuesta ="";
+         
           if (Objeto != null ){
+              
+                    try{
                 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 
@@ -101,21 +125,38 @@ public class Modulo5sResource {
                  pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                  JsonObject pagoJsonObject = pagoBuilder.build(); 
                 respuesta = pagoJsonObject.toString();
-                       
+                  
+                    }
+                    catch(Exception e){
+                        System.out.println("Error Cadena Vacia"+e.getMessage());
+                    }
     }
+          else{
+               System.out.println("Parametro de entrada nulo o vacio");
+          }
             return respuesta;
     }
     
-    private String listaPago (Entidad objeto){
-        
+
+    
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para listar los pagos
+     * @param objeto
+     * @return String
+     */
+    private String CrearJSONlistaPago (Object objeto){
+       
     String respuesta = "";
         
         if (objeto != null ){
-                
+               
+            try{
+      
                 ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
-                
+              
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
                     pagoBuilder.add("pg_id",pago.getId());
@@ -124,14 +165,19 @@ public class Modulo5sResource {
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
-
+                                                  
                     list.add( pagoJsonObject.toString());
                     
                 }
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-        
+                System.out.println(respuesta);
+            }
+            
+            catch (Exception e){
+                 System.out.println("Error Lista Vacia"+e.getMessage());
+            }
     }
         
         else {
@@ -141,12 +187,49 @@ public class Modulo5sResource {
         return respuesta;
     }
     
+    
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para modificar un pago
+     * @param datosPagos
+     * @return Entidad
+     */
+    private Entidad CrearJSONmodificarPago(@QueryParam("datosPago") String datosPagos){
+        
+        Entidad ex = null;
+        
+        if( (datosPagos != null) || (datosPagos.equals("")) ){
+            
+            try {
+            String decodifico = URLDecoder.decode(datosPagos);
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject pagoJSON = reader.readObject();
+            reader.close();
+             ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ; 
+             throw new EmptyEntityException();
+        }
+            catch(EmptyEntityException e){
+                System.out.println(e.EntityEmpty());
+            }
+        }
+        else {
+           System.out.println("Parametro de entrada nulo o vacio");  
+        }
+        return ex;
+        
+    }
+    
+    
+    
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/pruebaDB")
     public String getPruebaDataBase() {
         return null;
     }
+    
+    
+    
     
     /**
      * Función que registra un pago en la base de datos.
@@ -164,28 +247,40 @@ public class Modulo5sResource {
     public String registrarPago(@QueryParam("datosPago") String datosPagos) {
         
          String respuesta = "";
-        try {
+         
+       if( (datosPagos != null) || (datosPagos.equals("")) ){
+                        try {
             
-            Entidad e = registroPago(datosPagos);
-            Comando c = FabricaComando.instanciarComandoAgregarPago(e);
-            c.ejecutar();
-            Entidad objectResponse = c.getResponse();
+                        Entidad e = CrearJSONagregarPago(datosPagos);
+                        Comando c = FabricaComando.instanciarComandoAgregarPago(e);
+                        c.ejecutar();
+                        Entidad objectResponse = c.getResponse();
           
-            if (objectResponse != null ){
-                
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                
-            }else{
-                respuesta = "Error";
-            }
+                                if (objectResponse != null ){
+                                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                                                            }
+                                
+                                else{
+                                respuesta = "Error";
+                                       }
             
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            respuesta = "0";
-        }
+
+            
+                               } catch (Exception e) {
+                                respuesta = "0"+e.getMessage();
+                                                     }
+
         
+       }
+       
+       else {
+         System.out.println("Parametro de entrada nulo o vacio");  
+                         
+       }
         return respuesta;
     }
+    
+    
     
     
     
@@ -202,21 +297,30 @@ public class Modulo5sResource {
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
         String respuesta ="";
+        
+        if (idPago !=0){
           
-        try { 
-            Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-            c.ejecutar();
-            Entidad objectResponse = c.getResponse();
-            respuesta = verPago(objectResponse);
+                           try { 
+                            Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
+                            c.ejecutar();
+                            Entidad objectResponse = c.getResponse();
+                            respuesta = CrearJSONverPago(objectResponse);
 
-        } catch (Exception e) {
-            respuesta = "Error :"+e.getMessage();
+                                 } catch (Exception e) {
+                                    respuesta = "Error :"+e.getMessage();
+                                                       }
+        
         }
         
+        else {
+            System.out.println("Parametro de entrada nulo o vacio");  
+        }
          return respuesta;
     }
 
    
+    
+    
     /**
      * Función que visualiza los pagos.
      *
@@ -228,23 +332,35 @@ public class Modulo5sResource {
      @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
-    public String visualizarPago(@QueryParam("datosPago") int idUsuario) {
+    public String visualizarPago(@QueryParam("datosPago") int idPago) {
         
         String respuesta ="";
         
-        try{
+        if (idPago != 0)  {
+        
+                        try{
             
-            Comando c = FabricaComando.instanciarComandoListarPagos(idUsuario);
-            c.ejecutar();
-            Entidad objectResponse = c.getResponse();
-            respuesta = listaPago(objectResponse);
+                        Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
+                        c.ejecutar();
+                        Entidad objectResponse = c.getResponse();
+                        respuesta = CrearJSONlistaPago(objectResponse);
+                            }
+                        
+                         catch(Exception e) {
+                         respuesta = "Error Objeto Vacio :"+e.getMessage();
+                                             }
+                        
         }
-        catch(Exception e) {
-            respuesta = "Error :"+e.getMessage();
+        else {
+          System.out.println("Parametro de entrada nulo o vacio");  
+            
         }
         
         return respuesta;
     }
+    
+    
+    
       
     /**
      * Función que modificar un pago.
@@ -260,6 +376,9 @@ public class Modulo5sResource {
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
         String respuesta = "";
+        
+     if( (datosPagos != null) || (datosPagos.equals("")) ){
+
 
         try {
             
@@ -267,29 +386,41 @@ public class Modulo5sResource {
            
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
-           
-            reader.close();
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-            Comando c = FabricaComando.instanciarComandoModificarPago(e);
+            reader.close();             
+            Entidad ex = CrearJSONmodificarPago(datosPagos);
+            Comando c = FabricaComando.instanciarComandoModificarPago(ex);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
 
-            if (objectResponse != null ){
+
+                                    if (objectResponse != null ){
                 
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                                    respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                           
+                                    }
+                                    else { 
+                                    respuesta = "Error Objeto Vacio";
+                                            }
+                        
+                    } 
                 
-            }else{
-                respuesta = "Error";
-            }
+                      catch (Exception e) {
+                      System.out.println(e.getMessage());
+                      respuesta = "0";
+                                          }
+                
+                
+                                }
+        
+        else {
+          System.out.println("Parametro de entrada nulo o vacio");  
             
-            
-            //resultado = 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            respuesta = "0";
         }
         return respuesta;
     }
+    
+    
+    
     
     
     /**
