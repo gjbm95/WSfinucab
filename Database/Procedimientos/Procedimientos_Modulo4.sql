@@ -72,7 +72,7 @@ CREATE OR REPLACE FUNCTION ConsultarCategoria(
     OUT ca_eshabilitado boolean,
 	OUT ca_esingreso boolean,
 	OUT usuariou_id integer)
-    RETURNS record
+    RETURNS setof record
     LANGUAGE 'sql'
     
 AS $function$
