@@ -12,6 +12,7 @@ import Dominio.Pago;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo5.EmptyEntityException;
 import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -168,9 +169,7 @@ public class Modulo5sResource {
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
-                        
-                       System.out.println(pago.getDescripcion());
-                               
+                                                  
                     list.add( pagoJsonObject.toString());
                     
                 }
@@ -210,11 +209,11 @@ public class Modulo5sResource {
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
             reader.close();
-             ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-          
+             ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ; 
+             throw new EmptyEntityException();
         }
-            catch(Exception e){
-                System.out.println("Error Entidad Vacia"+e.getMessage());
+            catch(EmptyEntityException e){
+                System.out.println(e.EntityEmpty());
             }
         }
         else {
