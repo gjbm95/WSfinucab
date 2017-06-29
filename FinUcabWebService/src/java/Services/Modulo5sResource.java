@@ -5,7 +5,6 @@
  */
 package Services;
 
-import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
@@ -13,12 +12,13 @@ import Dominio.Pago;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -70,6 +70,7 @@ public class Modulo5sResource {
         JsonObject usuarioJsonObject = usuarioBuilder.build();
        return usuarioJsonObject.toString();
     }
+
     /**
      * Metodo encargado de la construccion de los JSON para agregar un pago
      * @param datosPagos
@@ -110,7 +111,7 @@ public class Modulo5sResource {
      * @return String
      */
     private String CrearJSONverPago(Object Objeto){
-        
+       
          String respuesta ="";
          
           if (Objeto != null ){
@@ -120,7 +121,7 @@ public class Modulo5sResource {
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 
                 Pago pago = (Pago) Objeto;                  
-                 pagoBuilder.add("pg_id",pago.getIdPago());
+                 pagoBuilder.add("pg_id",pago.getId());
                  pagoBuilder.add("pg_monto",pago.getTotal());
                  pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                  pagoBuilder.add("pg_categoria",pago.getCategoria());
@@ -139,6 +140,7 @@ public class Modulo5sResource {
             return respuesta;
     }
     
+
     
     
     /**
@@ -147,21 +149,20 @@ public class Modulo5sResource {
      * @return String
      */
     private String CrearJSONlistaPago (Object objeto){
-        
+       
     String respuesta = "";
         
         if (objeto != null ){
                
             try{
-               ArrayList<Pago> lista = (ArrayList<Pago>) objeto;
-               JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-               JsonArrayBuilder list = Json.createArrayBuilder();
-                
-                System.out.println("ando aca");
-                
-                for (Pago pago : lista) {
-                    
-                    pagoBuilder.add("pg_id",pago.getIdPago());
+      
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
+                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
+                JsonArrayBuilder list = Json.createArrayBuilder();
+              
+                for (Entidad enti : lista) {
+                    Pago pago = (Pago) enti;
+                    pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
@@ -268,10 +269,12 @@ public class Modulo5sResource {
                                 respuesta = "Error";
                                        }
             
+
             
                                } catch (Exception e) {
                                 respuesta = "0"+e.getMessage();
                                                      }
+
         
        }
        
@@ -381,12 +384,19 @@ public class Modulo5sResource {
         
      if( (datosPagos != null) || (datosPagos.equals("")) ){
 
-                try {
-                      
-                    Entidad ex = CrearJSONmodificarPago(datosPagos);
-                    Comando c = FabricaComando.instanciarComandoModificarPago(ex);
-                    c.ejecutar();
-                    Entidad objectResponse = c.getResponse();
+
+        try {
+            
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+           
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject pagoJSON = reader.readObject();
+            reader.close();             
+            Entidad ex = CrearJSONmodificarPago(datosPagos);
+            Comando c = FabricaComando.instanciarComandoModificarPago(ex);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+
 
                                     if (objectResponse != null ){
                 
