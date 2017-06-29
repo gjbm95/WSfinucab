@@ -75,11 +75,13 @@ public class Modulo2sResource {
             usuario.jsonToUsuario(usuarioJSON);
             Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
             command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
         }
+        
+        
         return resultado;
     }
 
@@ -110,7 +112,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -143,7 +145,7 @@ public class Modulo2sResource {
                     Integer.parseInt(cuentaJSON.getString("usuariou_id")));
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -172,7 +174,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -208,7 +210,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -244,7 +246,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
             command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -273,7 +275,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -301,7 +303,7 @@ public class Modulo2sResource {
 
             Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -330,7 +332,7 @@ public class Modulo2sResource {
           
             Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -356,7 +358,7 @@ public class Modulo2sResource {
           
             Comando command = FabricaComando.instanciarComandoConsultarEstadisticas(id);
             resultado = command.ejecutar();
-
+            Conexion.conectarADb().close();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";

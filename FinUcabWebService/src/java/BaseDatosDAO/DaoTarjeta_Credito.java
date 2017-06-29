@@ -58,6 +58,8 @@ public class DaoTarjeta_Credito extends DAO {
             rs.next();
             idtarjeta = rs.getInt(1);
             System.out.printf("id de: " + rs.getString(1));
+            cstmt.close();
+           
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -82,6 +84,8 @@ public class DaoTarjeta_Credito extends DAO {
             cstmt.setFloat(4, obj.getSaldo());
             cstmt.setInt(5, obj.getId());
             cstmt.execute();
+            cstmt.close();
+           
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -107,6 +111,8 @@ public class DaoTarjeta_Credito extends DAO {
             rs.next();
             idtarjeta = rs.getInt(1);
             System.out.printf("id de: " + rs.getString(1));
+            cstmt.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,6 +142,8 @@ public class DaoTarjeta_Credito extends DAO {
             }
             JsonArray array = arrayBuilder.build();
             respuesta = array.toString();
+            cstm.close();   
+            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -156,6 +164,8 @@ public class DaoTarjeta_Credito extends DAO {
             } else {
                 respuesta = "";
             }
+            cstm.close();
+            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";

@@ -68,7 +68,8 @@ public class DaoPlanificacion extends DAO {
                 arrayBuilder.add(cuentaJsonObject);
             }
             array = arrayBuilder.build();
-
+            cstm.close();
+            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 

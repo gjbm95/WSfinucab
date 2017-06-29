@@ -168,7 +168,8 @@ public class DAOPago extends DAO implements IDAOPago {
                 arrayBuilder.add(cuentaJsonObject);
             }
             array = arrayBuilder.build();
-
+            cstm.close();
+            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -198,6 +199,8 @@ public class DAOPago extends DAO implements IDAOPago {
                 cuentaBuilder.add("est_egreso", Float.toString(egresos));
                 cuentaJsonObject = cuentaBuilder.build();
             }
+            cstm.close();
+            st.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 
