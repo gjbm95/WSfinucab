@@ -67,17 +67,9 @@ public class Categoria  extends Entidad implements Serializable{
     private boolean estaHabilitado;
     private boolean esIngreso;
 
-    public Categoria() {
-        this.idcategoria = 0;
-        this.nombre = "";
-        this.descripcion = "";
-        this.estaHabilitado = false;
-        this.esIngreso = false;
-    }
-
-
-    public Categoria(int idusuario,int idcategoria, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
-        super(idcategoria);
+    public Categoria(int idcategoria, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso,int idusuario) {
+        //super(idcategoria);
+        this.idcategoria=idcategoria;
         this.idusuario=idusuario;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -85,7 +77,7 @@ public class Categoria  extends Entidad implements Serializable{
         this.esIngreso = esIngreso;
     }
 
-    public Categoria(int idusuario, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso) {
+    public Categoria( String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso,int idusuario) {
         this.idusuario=idusuario;
         this.nombre = nombre;
         this.descripcion = descripcion;

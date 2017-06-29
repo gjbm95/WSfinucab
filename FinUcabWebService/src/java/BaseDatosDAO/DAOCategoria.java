@@ -22,13 +22,7 @@ import java.util.logging.Logger;
  *
  * @author MariPerez
  */
-public class DAOCategoria extends DAO implements IDAOCategoria {
-    
-    @Override
-    public String eliminarCategria(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+public class DAOCategoria extends DAO implements IDAOCategoria {   
     
     public Entidad agregar(Entidad e) {
         
@@ -84,26 +78,26 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
         } catch (Exception ex) {
 
             return null;
-
+            
         }
     }
 
     @Override
     public Entidad consultar(int id) {
-        
-        String respuesta ="";
+         Entidad entidad = null;
              
              try {
                  
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            
-             //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
-            
-                Categoria categoria = new Categoria(  rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
-           
-            return categoria;
+                Connection conn = Conexion.conectarADb();
+                Statement st = conn.createStatement();
+
+                 //Se coloca el query
+                ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
+                while (rs.next()){
+                entidad = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4),rs.getInt(6) );
+                }
+                
+                return entidad;
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,7 +121,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
             while (rs.next())
             {
-                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4) );
+                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4), rs.getInt(6) );
                 listaCategoria.add(categoria);
                 
             }
@@ -138,6 +132,53 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
         }
         catch(Exception e) {
             return null;
+        }
+    }
+    
+    @Override 
+    public int eliminarCategoria(int idCategoria){
+        try {
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            EliminarCategoria2(idCategoria, "presupuesto");
+            EliminarCategoria2(idCategoria,"pago");
+           
+            String query = "DELETE FROM categoria WHERE ca_id =" + idCategoria  + ";";
+            
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return 1;
+            } else {
+                st.close();
+                return 0;
+            }
+
+        } catch (Exception e) {
+
+            return 2;
+
+        }
+    }
+    
+    public boolean EliminarCategoria2 (int id, String tabla){
+        try{
+            Connection conn = Conexion.conectarADb();
+            Statement st = conn.createStatement();
+            String query = "UPDATE "+tabla+" SET "
+                    + "categoriaca_id = " + -1 + 
+                    " WHERE "
+                    + "categoriaca_id = " + id + ";";
+            if (st.executeUpdate(query) > 0) {
+                st.close();
+                return true;
+            } else {
+                st.close();
+                return false;
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false ;
+
         }
     }
    

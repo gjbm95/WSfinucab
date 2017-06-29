@@ -24,8 +24,8 @@ public class ComandoConsultarPago extends Comando {
     @Override
     public void ejecutar() {
         IDAOPago dao = SingletonDAOPago.getInstance();
-        Object response = dao.consultar(idPago);        
-        
+        this.response = dao.consultar(idPago);        
+
     }
     
 }

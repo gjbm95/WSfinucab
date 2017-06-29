@@ -126,8 +126,9 @@ public class Modulo4sResource {
             Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
-            Object objectResponse = null; //
+            Entidad objectResponse = c.getResponse(); 
             return objectResponse.toString();
+            
         } catch (Exception e) {
 
             return e.getMessage();
@@ -150,65 +151,14 @@ public class Modulo4sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarCategoria")
-    public String eliminarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
+    public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
 
-        String decodifico = URLDecoder.decode(datosCategoria);
-        EliminarCategoria2(decodifico, "presupuesto");
-        EliminarCategoria2(decodifico,"pago");
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-           
-            String query = "DELETE FROM categoria WHERE ca_id =" + decodifico  + ";";
-            
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return "Borrado exitoso";
-            } else {
-                st.close();
-                return "No se pudo borrar";
-            }
-
-        } catch (Exception e) {
-
-            return e.getMessage();
-
-        }
+        Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
+        c.ejecutar();
+        Entidad objectResponse = c.getResponse(); 
+        return objectResponse.toString();
     }
     
-        /**
-     * Función que modifica todas las tablas donde aparecia la categoria a eliminar
-     * 
-     *
-     * @param  id, tabla
-     * 
-     * 
-     *
-     * @return si se modifica las tablas donde aparecia la categoria a eliminar
-     * devuelve un boolean true, en caso contrario devuelve false
-     * 
-     */
-    public boolean EliminarCategoria2 (String id, String tabla){
-        try{
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            String query = "UPDATE "+tabla+" SET "
-                    + "categoriaca_id = " + -1 + 
-                    " WHERE "
-                    + "categoriaca_id = " + id + ";";
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return true;
-            } else {
-                st.close();
-                return false;
-            }
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false ;
-
-        }
-    }
     
       /**
      * Función que permite visualizar todas las categoria que posee un usuaria
@@ -226,9 +176,7 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarCategoria")
     public String VisualizarCategoria(@QueryParam("datosCategoria") int usuario) {
-              
-        String respuesta ="";
-        
+
         try{
 
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
@@ -260,7 +208,7 @@ public class Modulo4sResource {
                 
                 return resp;
             }
-            }
+           }
         catch(Exception e) {
             return e.getMessage();
         }
@@ -291,8 +239,7 @@ public class Modulo4sResource {
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject categoriaJSON = reader.readObject();       
             reader.close();
-            
-            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            Entidad e = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
             c.ejecutar();
             Object objectResponse = null;
@@ -319,16 +266,17 @@ public class Modulo4sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/buscarCategoria")
-    public String buscarCategoria(@QueryParam("datosCategoria") String datosCategoria){
-        String decodifico = URLDecoder.decode(datosCategoria);
+    public String buscarCategoria(@QueryParam("datosCategoria") int datosCategoria){
+        //String decodifico = URLDecoder.decode(datosCategoria);
         try{
             
-            Comando c = FabricaComando.instanciarComandoConsultarCategoria(0);
+
+            Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
             c.ejecutar();
-            Object objectResponse = null;
+            Entidad objectResponse = c.getResponse(); 
             
             if (objectResponse != null ){           
-                
+                System.out.println("entro");
                 JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
 
                 Categoria categoria = (Categoria) objectResponse;
@@ -340,14 +288,14 @@ public class Modulo4sResource {
                 categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
                 JsonObject categoriaJsonObject = categoriaBuilder.build();  
                 String  respuesta = categoriaJsonObject.toString();
-            System.out.println(respuesta);
-            return respuesta;
+                System.out.println(respuesta);
+                return respuesta;
             }
         }
         catch(Exception e) {
             return e.getMessage();
         }
-        return null;
+    return "Error";
     }
 
     /**
@@ -370,5 +318,4 @@ public class Modulo4sResource {
     public Modulo4Resource getModulo4Resource(@PathParam("id") String id) {
         return Modulo4Resource.getInstance(id);
     }
-
 }

@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BaseDatosDAO.Interfaces;
+package IndentityMap;
 
 /**
  *
- * @author MariPerez
+ * @author Ramon
  */
-public interface IDAOCategoria extends IDAO{
+public class FabricaIdentityMap {
     
-    int eliminarCategoria(int id);
-    
+    public static IdentityMap obtenerIdentityMap(){
+       return new IdentityMap();
+    }   
 }
