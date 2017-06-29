@@ -59,7 +59,8 @@ public class Modulo3sResource {
         usuarioBuilder.add("Usuario", "jose123");
         JsonObject usuarioJsonObject = usuarioBuilder.build();
         log.debug("Devolviendo objeto:"+usuarioJsonObject.toString());
-        log.info("HOLA");
+        log.info("INFO");
+        log.error("ESTO ES UN ERROR");
         return usuarioJsonObject.toString();
     }
 

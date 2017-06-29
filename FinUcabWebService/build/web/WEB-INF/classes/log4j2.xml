@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
+<Configuration status="warn">
+    <Properties>
+        <Property name="basePath">C:\\logs</Property>
+    </Properties>
  
-<!-- Author:  Crunchify.com  -->
-	<Appenders>
-		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
-		</Console>
- 
-		<RollingFile name="RollingFile" filename="log/CrunchifyTest.log"
-			filepattern="${logPath}/%d{YYYYMMddHHmmss}-fargo.log">
-			<PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
+    <Appenders>
+        <RollingFile name="fileLogger" fileName="${basePath}/FinUcab.log" filePattern="${basePath}/FinUcab-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="error-log" fileName="${basePath}/FinUcab-error.log" filePattern="${basePath}/FinUcab-error-%d{yyyy-MM-dd}.log">
+		
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			
 			<Policies>
-				<SizeBasedTriggeringPolicy size="100 MB" />
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 			</Policies>
-			<DefaultRolloverStrategy max="20" />
+
 		</RollingFile>
  
-	</Appenders>
-	<Loggers>
-		<Root level="info">
-			<AppenderRef ref="Console" />
-			<AppenderRef ref="RollingFile" />
-		</Root>
-	</Loggers>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout   pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.howtodoinjava" level="debug" additivity="true">
+            <appender-ref ref="fileLogger" level="debug" />
+        </Logger>
+        <Root level="debug" additivity="false">
+            <appender-ref ref="console" />
+            <appender-ref ref="fileLogger" level="debug"/>
+            <appender-ref ref="error-log" level="error"/>
+        </Root>
+    </Loggers>
 </Configuration>
