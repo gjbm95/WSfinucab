@@ -32,10 +32,10 @@ public class ComandoAgregarCuenta extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        return daoCuenta.agregar(cuenta);
+        //return daoCuenta.agregar(cuenta);
     }
     
     

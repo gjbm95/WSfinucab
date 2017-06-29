@@ -1,7 +1,7 @@
-DROP FUNCTION ConsultarPago(integer , integer);
+DROP FUNCTION ConsultarPago(integer);
 DROP FUNCTION ListaPagos(integer);
-DROP FUNCTION AgregarPago(integer, real, character varying, character varying, integer, integer );
-DROP FUNCTION ModificarPago(real, character varying, character varying, integer, integer);
+DROP FUNCTION AgregarPago(integer, real, character varying, character varying, integer );
+DROP FUNCTION ModificarPago(real, character varying, character varying, integer);
 
 
 
@@ -10,8 +10,7 @@ CREATE OR REPLACE FUNCTION AgregarPago(
 	monto real,
 	descripcion character varying,
 	transaccion character varying,
-	categoria integer,
-	usuario integer)
+	categoria integer)
     RETURNS integer
     LANGUAGE 'plpgsql'
     
@@ -21,8 +20,8 @@ DECLARE
  result integer;
 
 BEGIN
-  INSERT INTO Pago (pg_monto ,pg_descripcion , pg_tipotransaccion , categoriaca_id, usuariou_id) VALUES
-      (monto,descripcion,transaccion,categoria,usuario);
+  INSERT INTO Pago (pg_monto ,pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
+      (monto,descripcion,transaccion,categoria);
 
     if found then
   result := 1;
@@ -37,8 +36,7 @@ $function$;
 CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto real,
 	descripcion character varying,
 	transaccion character varying,
-	categoria integer,
-	usuario integer)
+	categoria integer)
     RETURNS integer LANGUAGE 'plpgsql'
     AS $$
 DECLARE
@@ -51,7 +49,7 @@ UPDATE pago SET
 					pg_descripcion=descripcion , 
 					pg_tipotransaccion=transaccion , 
 					categoriaca_id= categoria
-				    where usuariou_id=usuario and pg_id = pago;
+				    where pg_id = pago;
     if found then
 	result := 1;
 	else result := 0;
@@ -68,15 +66,14 @@ CREATE OR REPLACE FUNCTION ConsultarPago(
 	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipoTransaccion character varying,
-	OUT categoriaca_id integer,
-	OUT usuariou_id integer)
+	OUT categoriaca_id integer)
     RETURNS record
     LANGUAGE 'sql'
     
 AS $function$
 
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id , p.usuariou_id from Pago p
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p
 where ( p.pg_id = idpago)
 $function$;
 
@@ -89,14 +86,13 @@ CREATE OR REPLACE FUNCTION ListaPagos(
 	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipotransaccion character varying,
-	OUT categoriaca_id integer,
-	OUT usuariou_id integer)
+	OUT categoriaca_id integer)
     RETURNS SETOF record 
     LANGUAGE 'sql'
     
 AS $function$
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id , p.usuariou_id from Pago p
-where (p.usuariou_id = idusuario)
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c , Usuario u
+where (p.categoriaca_id = c.ca_id and c.usuariou_id =idusuario )
 
 $function$;

@@ -5,18 +5,20 @@
  */
 package Services;
 
-import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Pago;
+import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -69,36 +71,82 @@ public class Modulo5sResource {
        return usuarioJsonObject.toString();
     }
     
+    private Entidad registroPago (@QueryParam("datosPago") String datosPagos)
+    {
+        try {
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject pagoJSON = reader.readObject();           
+            reader.close();
+            Entidad ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            return ex;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    private String verPago(Entidad Objeto){
+        
+         String respuesta ="";
+          if (Objeto != null ){
+                
+                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
+                
+                Pago pago = (Pago) Objeto;                  
+                 pagoBuilder.add("pg_id",pago.getId());
+                 pagoBuilder.add("pg_monto",pago.getTotal());
+                 pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                 pagoBuilder.add("pg_categoria",pago.getCategoria());
+                 pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                 JsonObject pagoJsonObject = pagoBuilder.build(); 
+                respuesta = pagoJsonObject.toString();
+                       
+    }
+            return respuesta;
+    }
+    
+    private String listaPago (Entidad objeto){
+        
+    String respuesta = "";
+        
+        if (objeto != null ){
+                
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
+                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
+                JsonArrayBuilder list = Json.createArrayBuilder();
+                
+                for (Entidad enti : lista) {
+                    Pago pago = (Pago) enti;
+                    pagoBuilder.add("pg_id",pago.getId());
+                    pagoBuilder.add("pg_monto",pago.getTotal());
+                    pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                    pagoBuilder.add("pg_categoria",pago.getCategoria());
+                    pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                    JsonObject pagoJsonObject = pagoBuilder.build();  
+
+                    list.add( pagoJsonObject.toString());
+                    
+                }
+                
+                JsonArray listJsonObject = list.build();
+                respuesta = listJsonObject.toString();
+        
+    }
+        
+        else {
+            System.out.println("Error");   
+        }
+        
+        return respuesta;
+    }
+    
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/pruebaDB")
     public String getPruebaDataBase() {
-        //TODO return proper representation object
-        String respuesta ="";
-        try{
-
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Usuario;");
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                 usuarioBuilder.add("Nombre",rs.getString(3));
-                 usuarioBuilder.add("Apellido",rs.getString(4));
-                 usuarioBuilder.add("Usuario",rs.getString(2));
-                 JsonObject usuarioJsonObject = usuarioBuilder.build();  
-                 respuesta = usuarioJsonObject.toString();
-            }
-            rs.close();
-            st.close();
-
-            return respuesta;
-        }
-        catch(Exception e) {
-            return e.getMessage();
-        }
+        return null;
     }
     
     /**
@@ -118,24 +166,19 @@ public class Modulo5sResource {
         
          String respuesta = "";
         try {
-            String decodifico = URLDecoder.decode(datosPagos);
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject pagoJSON = reader.readObject();           
-
-            reader.close();
             
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
-            Comando command = FabricaComando.instanciarComandoAgregarPago(e);
-            Object resultado = command.ejecutar();
-            
-            if (resultado != null){
-                               
-                respuesta = String.valueOf(resultado);
+            Entidad e = registroPago(datosPagos);
+            Comando c = FabricaComando.instanciarComandoAgregarPago(e);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+          
+            if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
                 
             }else{
                 respuesta = "Error";
             }
-            
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -144,6 +187,8 @@ public class Modulo5sResource {
         
         return respuesta;
     }
+    
+    
     
     /**
      * Función que consulta un pago seleccionado en la base de datos.
@@ -157,39 +202,18 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-
         String respuesta ="";
-
-        try {
-            
+          
+        try { 
             Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-            Object objectResponse = c.ejecutar();
-           System.out.println("despues de ejecutar"); 
-            if (objectResponse != null ){
-                
-                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-                
-                Pago pago = (Pago) objectResponse;                  
-                 pagoBuilder.add("pg_id",pago.getIdPago());
-                 pagoBuilder.add("pg_monto",pago.getTotal());
-                 pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
-                 pagoBuilder.add("pg_categoria",pago.getCategoria());
-                 pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                 pagoBuilder.add("usuariou_id",pago.getIdUsario());
-                JsonObject pagoJsonObject = pagoBuilder.build(); 
-                respuesta = pagoJsonObject.toString();
-                System.out.println(respuesta);
-                System.out.println("ANDO ACAAA");
-
-            }else{
-                respuesta = "Error";
-            }
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            respuesta = verPago(objectResponse);
 
         } catch (Exception e) {
-
             respuesta = "Error :"+e.getMessage();
-
         }
+        
          return respuesta;
     }
 
@@ -212,35 +236,9 @@ public class Modulo5sResource {
         try{
             
             Comando c = FabricaComando.instanciarComandoListarPagos(idUsuario);
-            Object objectResponse = c.ejecutar();
-            
-            if (objectResponse != null ){
-                
-                ArrayList<Pago> lista = (ArrayList<Pago>) objectResponse;
-                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-                JsonArrayBuilder list = Json.createArrayBuilder();
-                
-                for (Pago pago : lista) {
-                    
-                    pagoBuilder.add("pg_id",pago.getIdPago());
-                    pagoBuilder.add("pg_monto",pago.getTotal());
-                    pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
-                    pagoBuilder.add("pg_categoria",pago.getCategoria());
-                    pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                    pagoBuilder.add("usuariou_id",pago.getIdUsario());
-                    JsonObject pagoJsonObject = pagoBuilder.build();  
-
-                    list.add( pagoJsonObject.toString());
-                    
-                }
-                
-                JsonArray listJsonObject = list.build();
-                respuesta = listJsonObject.toString();
-                
-            }else{
-                respuesta = "Error";
-            }
-
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            respuesta = listaPago(objectResponse);
         }
         catch(Exception e) {
             respuesta = "Error :"+e.getMessage();
@@ -262,23 +260,36 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
-        String decodifico = URLDecoder.decode(datosPagos);
-        Object resultado = "";
+        String respuesta = "";
 
         try {
+            
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
            
-          JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
            
             reader.close();
-            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getInt("usuariou_id")) ;
-            Comando command = FabricaComando.instanciarComandoModificarPago(e);
-            resultado = command.ejecutar();
+            Entidad e = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+            Comando c = FabricaComando.instanciarComandoModificarPago(e);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+
+            if (objectResponse != null ){
+                
+                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                
+            }else{
+                respuesta = "Error";
+            }
+            
+            
+            //resultado = 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            resultado = "0";
+            respuesta = "0";
         }
-        return resultado.toString();
+        return respuesta;
     }
     
     

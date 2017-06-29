@@ -7,6 +7,7 @@ package Logica.Modulo4;
 
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Logica.Comando;
 
@@ -23,11 +24,11 @@ public class ComandoConsultarCategoria extends Comando{
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
      
-        DAO dao = FabricaDAO.instanciasDaoCategoria();
-        Object response = dao.consultar(idcategoria);
-        return response;
+        IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        this.response = dao.consultar(idcategoria);
+
         
     }
     

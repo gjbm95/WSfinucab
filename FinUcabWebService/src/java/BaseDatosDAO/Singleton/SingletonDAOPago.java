@@ -7,6 +7,7 @@ package BaseDatosDAO.Singleton;
 
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOPago;
 
 /**
  *
@@ -17,13 +18,13 @@ public class SingletonDAOPago {
     private SingletonDAOPago() {
     }
     
-    public static DAO getInstance() {
+    public static IDAOPago getInstance() {
         
         return SingletonDAOPagoHolder.INSTANCE;
     }
     
     private static class SingletonDAOPagoHolder {
 
-        private static final DAO INSTANCE = FabricaDAO.instanciasDAOPago();
+        private static final IDAOPago INSTANCE = FabricaDAO.instanciasDAOPago();
     }
 }

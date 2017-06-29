@@ -7,6 +7,8 @@ package BaseDatosDAO;
 
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -32,7 +34,7 @@ public class DaoCuenta_Bancaria extends DAO {
     private Connection conn = Conexion.conectarADb();
 
     @Override
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
         Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
         CallableStatement cstmt;
         int idCuenta = 0;
@@ -51,7 +53,7 @@ public class DaoCuenta_Bancaria extends DAO {
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return idCuenta;
+        return FabricaEntidad.obtenerSimpleResponse(idCuenta);
     }
 
     public Entidad modificar(Entidad e) {
@@ -135,7 +137,7 @@ public class DaoCuenta_Bancaria extends DAO {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
        return null;
     }
     

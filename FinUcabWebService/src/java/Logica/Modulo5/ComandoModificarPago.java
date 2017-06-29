@@ -5,8 +5,8 @@
  */
 package Logica.Modulo5;
 
-import BaseDatosDAO.DAOPago;
-import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOPago;
+import BaseDatosDAO.Singleton.SingletonDAOPago;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -25,15 +25,9 @@ public class ComandoModificarPago extends Comando{
     
 
  @Override
-    public Object ejecutar() {
-        DAOPago dao = FabricaDAO.instanciasDAOPago();
-        Entidad respuesta = dao.modificar(pago);
-        
-        if (respuesta != null)
-        return respuesta;
-        
-        else
-            return "Modificacion no exitosa";
+    public void ejecutar() {
+        IDAOPago dao = SingletonDAOPago.getInstance();
+        this.response = dao.modificar(pago);
         
     }
     
