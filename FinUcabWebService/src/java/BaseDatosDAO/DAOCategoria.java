@@ -9,6 +9,7 @@ import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
 import java.io.StringReader;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,161 +35,150 @@ import javax.ws.rs.core.MediaType;
  */
 public class DAOCategoria extends DAO implements IDAOCategoria {   
     
+    private Connection conn = Conexion.conectarADb();
+    
+    
     public int agregar(Entidad e) {
-        
+        int respuesta = 0;
         try {
             Categoria ca = (Categoria) e;
-            Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            String query = "INSERT INTO categoria (usuariou_id, ca_nombre , c_descripcion , ca_esingreso , ca_eshabilitado  ) "
-                    + "VALUES ( " + ca.getIdUsario()+ " , '" + ca.getNombre() + "' , '" + ca.getDescripcion()
-                    + "' , " + "'" + ca.isIngreso() + "' , '" + ca.isEstaHabilitado()  + "');";
-                       
-            System.out.println(query);
-           
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return 1;
-            } else {
-                st.close();
-                return 0;
-            }
-
-        } catch (Exception ex) {
-
-            return 2;
-
+            CallableStatement cat = conn.prepareCall("{ call AgregarCategoria(?,?,?,?,?) }");
+            cat.setInt(1, ca.getIdUsario());
+            cat.setString(2, ca.getNombre());
+            cat.setString(3, ca.getDescripcion());
+            cat.setBoolean(4, ca.isIngreso());
+            cat.setBoolean(5, ca.isEstaHabilitado());
+             cat.executeQuery();
+            ResultSet rs = cat.getResultSet();
+            rs.next();
+            
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        return respuesta;
+    }              
+                   
+         
+        
+
 
     @Override
     public Entidad modificar(Entidad e) {
+        Categoria ca = (Categoria) e;        
         try {
-           
-            Categoria ca = (Categoria) e;
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            String query = "UPDATE categoria SET "
-                    + "ca_nombre = '" + ca.getNombre()
-                    + "', c_descripcion = '" + ca.getDescripcion()
-                    + "', ca_esingreso = " + ca.isIngreso()
-                    + ",ca_eshabilitado = " + ca.isEstaHabilitado() +
-                    " WHERE "
-                    + "ca_id = " + ca.getIdcategoria() + ";";
-           
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return null;
-            } else {
-                st.close();
-                return null;
-                
-            }
-
-        } catch (Exception ex) {
-
-            return null;
-            
+            CallableStatement cstmt;
+            cstmt = conn.prepareCall("{ call ModificarCategoria(?,?,?,?,?) }");
+            cstmt.setString(1,ca.getNombre());
+            cstmt.setString(2,ca.getDescripcion());
+            cstmt.setBoolean(3,ca.isIngreso());
+            cstmt.setBoolean(4,ca.isEstaHabilitado());
+            cstmt.setInt(5, ca.getIdcategoria());
+            cstmt.execute();
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return ca;
     }
-
+        
+        
+        
+       
+        
     @Override
-    public Entidad consultar(int id) {
-         Entidad entidad = null;
-             
-             try {
-                 
-                Connection conn = Conexion.conectarADb();
-                Statement st = conn.createStatement();
+    public Entidad consultar(int idcategoria) {
+         Categoria ca = null;
+         
+         try {
 
-                 //Se coloca el query
-                ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id = '" + id + "';");
-                while (rs.next()){
-                entidad = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4),rs.getInt(6) );
-                }
-                
-                return entidad;
+            Statement st = conn.createStatement();
+                                   
+            CallableStatement a = conn.prepareCall("{ call ConsultarCategoria(?) }");
+            a.setInt(1, idcategoria);
+            a.executeQuery();
+                        
+            ResultSet rs = a.getResultSet();
+            while (rs.next()){
+                ca = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
+               
+               
+            }
+            
+            return ca;
+
             
         } catch (SQLException ex) {
             Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return null;
+        return ca;
+        
     }
+   
+
 
     @Override
     public ArrayList<Entidad> consultarTodos(int idUsuario) {
-              
-        String respuesta ="";
-        ArrayList<Entidad> listaCategoria = new ArrayList<>();
         
-        try{
-                    
-            Connection conn = Conexion.conectarADb();
+        ArrayList<Entidad> listaCategorias = new ArrayList<>();
+        
+        try {
             Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id <> -1  AND usuariou_id = '" + idUsuario + "';");
-
+            
+            CallableStatement a = conn.prepareCall("{ call ConsultarTodos(?) }");
+            a.setInt(1, idUsuario);
+            a.executeQuery();
+  
+           ResultSet rs = a.getResultSet();
+                     
             while (rs.next())
             {
-                Categoria categoria = new  Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(5), rs.getBoolean(4), rs.getInt(6) );
-                listaCategoria.add(categoria);
+               Categoria ca = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
+                listaCategorias.add(ca);
                 
             }
             
-            return listaCategoria;
+        } catch (SQLException ex) {
+            Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception e) {
-            return null;
-        }
+        
+        return listaCategorias;
+        
     }
-    
+
     @Override 
     public int eliminarCategoria(int idCategoria){
+        int respuesta=0;
         try {
-            Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             EliminarCategoria2(idCategoria, "presupuesto");
             EliminarCategoria2(idCategoria,"pago");
-           
-            String query = "DELETE FROM categoria WHERE ca_id =" + idCategoria  + ";";
+            Categoria ca = null;
+            CallableStatement cat = conn.prepareCall("{ call EliminarCategoria(?) }");
+            cat.setInt(1,idCategoria);
+            cat.executeQuery();
+            ResultSet rs = cat.getResultSet();
+            rs.next();
             
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return 1;
-            } else {
-                st.close();
-                return 0;
-            }
-
-        } catch (Exception e) {
-
-            return 2;
-
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+        return respuesta;
+    }        
+
     
-    public boolean EliminarCategoria2 (int id, String tabla){
-        try{
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            String query = "UPDATE "+tabla+" SET "
-                    + "categoriaca_id = " + -1 + 
-                    " WHERE "
-                    + "categoriaca_id = " + id + ";";
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return true;
-            } else {
-                st.close();
-                return false;
-            }
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false ;
-
+    public boolean EliminarCategoria2 (int idcat, String tabla){
+        boolean respuesta = false;
+        try {
+            CallableStatement cstmt;
+            cstmt = conn.prepareCall("{ call EliminarCategoria2(?,?) }");
+            cstmt.setInt(1, idcat);
+            cstmt.setString(2, tabla);
+            cstmt.execute();
+            
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return respuesta;
     }
-   
 }
-
