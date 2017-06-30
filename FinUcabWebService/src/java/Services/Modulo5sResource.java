@@ -81,12 +81,16 @@ public class Modulo5sResource {
      */
     private boolean validadorString(String valor){
         
-        return ( (valor != null) && (valor.equals("")) );
+        return ( (valor != null) && (!valor.equals("")) );
     }
     
     
     
-    
+    /**
+     * Metodo para validar que un integer no sea cero , ni nulo
+     * @param valor
+     * @return boolean
+     */
     private boolean validadorInteger(int valor){
         
         return (valor!=0);
@@ -94,11 +98,16 @@ public class Modulo5sResource {
     
    
     
-    
+    /**
+     * Metodo para validar que una entidad no sea nula ni vacia
+     * @param valor
+     * @return boolean
+     */
     private boolean validadorEntidad(Entidad valor){
         
-        return (valor!= null) && (valor.equals(""));
+        return (valor!= null) && (!valor.equals(""));
     }
+    
     
     
 
