@@ -22,7 +22,6 @@ public class ComandoModificarPago extends Comando{
          this.pago=pago;
      }
     
-    
 
  @Override
     public void ejecutar() {

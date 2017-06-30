@@ -6,6 +6,7 @@
 package IndentityMap;
 
 import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +39,22 @@ public class IdentityMap {
     
      public ListaEntidad getListaEntidad(String id){
         
-        ListaEntidad salida  = (ListaEntidad) this._cache.get(id);
-        return salida;
+        Entidad salida  = this._cache.get(id);
+        
+        if (salida != null ){
+            return (ListaEntidad) salida;
+        }else{
+            ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(new ArrayList<Entidad>());
+            setEntidad(id, listaEntidad);
+            
+            return listaEntidad;
+        }
+    }
+     
+      public void setListaEntidad(String id, ListaEntidad listaEntidad){
+        
+        this._cache.put(id, listaEntidad);
+        
     }
     
      public void addEntidadEnLista(String id, Entidad entidad){
@@ -54,7 +69,7 @@ public class IdentityMap {
         ListaEntidad listaEntidad  = getListaEntidad(id);       
         ArrayList<Entidad> lista = listaEntidad.getLista();
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < lista.size(); i++) {
             if(lista.get(i).getId() == idEntidad){
                 listaEntidad.getLista().remove(i);
             }
@@ -77,7 +92,7 @@ public class IdentityMap {
         ListaEntidad listaEntidad  = getListaEntidad(id);       
         ArrayList<Entidad> lista = listaEntidad.getLista();
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < lista.size(); i++) {
             if(lista.get(i).getId() == idEntidad){
                 return listaEntidad.getLista().get(i);
             }

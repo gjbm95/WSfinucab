@@ -21,7 +21,10 @@ import Logica.Modulo5.ComandoAgregarPago;
 import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
 import Logica.Modulo5.ComandoModificarPago;
-import Logica.Modulo6.ComandoAgregarPresupuesto;
+import Logica.Modulo3.ComandoAgregarPresupuesto;
+import Logica.Modulo3.ComandoListarPresupuestos;
+import Logica.Modulo3.ComandoModificarPresupuesto;
+import Logica.Modulo3.ComandoObtenerPresupuesto;
 
 
 /**
@@ -143,9 +146,25 @@ public class FabricaComando {
      public static ComandoConsultarCuentas instanciarComandoConsultarCuentas(int id){
         return new ComandoConsultarCuentas(id);
     }
+    
+     public static ComandoConsultarEstadisticasHome instanciarComandoConsultarEstadisticas(int id){
+        return new ComandoConsultarEstadisticasHome(id);
+    }
 
      
-     public static ComandoAgregarPresupuesto instanciarComandoAgregarPresupuesto(Entidad e){
-         return new ComandoAgregarPresupuesto(e);
-     }
+    public static ComandoAgregarPresupuesto instanciarComandoAgregarPresupuesto(Entidad e) {
+        return new ComandoAgregarPresupuesto(e);
+    }
+
+    public static ComandoModificarPresupuesto instanciarComandoModificarPresupuesto(Entidad e) {
+        return new ComandoModificarPresupuesto(e);
+    }
+     
+    public static ComandoListarPresupuestos instanciarComandoListarPresupuestos(int idUsuario) {
+        return new ComandoListarPresupuestos(idUsuario);
+    }
+
+    public static ComandoObtenerPresupuesto instanciarComandoObtenerPresupuesto(int idPresupuesto) {
+        return new ComandoObtenerPresupuesto(idPresupuesto);
+    }
 }

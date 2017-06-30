@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class Pago  extends Entidad implements Serializable{
-    private int idPago;
+
     private int categoria;
     private String descripcion;
     private float total;
