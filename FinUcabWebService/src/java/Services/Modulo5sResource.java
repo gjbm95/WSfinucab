@@ -15,8 +15,11 @@ import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
 import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -69,15 +72,68 @@ public class Modulo5sResource {
        return usuarioJsonObject.toString();
     }
     
+    private String obtenerRespuestaAgregar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    private String obtenerRespuestaConsultar(Entidad enti) throws EmptyStringException{
+         
+        if(validadorEntidad(enti)) 
+        
+        return stringVerPago(enti);
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+     
+     
+    
+    private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
+         
+        if(validadorEntidad(enti)) 
+        
+        return stringListaPago(enti);
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    private String obtenerRespuestaModificar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
     
     /**
      * Metodo para validar un string
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor){
+    private boolean validadorString(String valor) throws EmptyEntityException, NullPointerException{
         
-        return ( (valor != null) && (!valor.equals("")) );
+        if (valor == null) {
+            throw new NullPointerException();
+        }else if(valor.equals("")) {
+            throw new EmptyEntityException();
+        }else{
+            return true;
+        }
+
     }
     
     
@@ -112,34 +168,31 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-
     private Entidad entidadAgregarPago (@QueryParam("datosPago") String datosPagos)  throws EmptyEntityException  {
 
         Entidad ex = null;
-        
-                boolean validador  =validadorString(datosPagos);
+                 
+            try{       
                 
-        if( validador ){
+                boolean validador  =validadorString(datosPagos);
+                if( validador ){
+         
+                    String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+                    JsonReader reader = Json.createReader(new StringReader(decodifico));
+                    JsonObject pagoJSON = reader.readObject();           
+                    reader.close();
+                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+
+                }else {
+
+                    throw new EmptyEntityException();   
+                }
             
-            try{
-        
-            String decodifico = URLDecoder.decode(datosPagos);
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject pagoJSON = reader.readObject();           
-            reader.close();
-            ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-
-           throw new EmptyEntityException();
-
-        }
-            catch(EmptyEntityException e){
+            }catch(EmptyEntityException e){
                 System.out.println(e.EmptyEntity());
+            } catch (UnsupportedEncodingException ex1) {
+                
             }
-        }
-        
-        else {
-          System.out.println("Parametro de entrada nulo o vacio");    
-        }
         return ex;
     }
     
@@ -151,7 +204,6 @@ public class Modulo5sResource {
      * @param Objeto
      * @return String
      */
-
     private String stringVerPago(Entidad Objeto) throws EmptyStringException{
 
        
@@ -160,34 +212,29 @@ public class Modulo5sResource {
          
          
         boolean validador  =validadorEntidad(Objeto);
-                
-        if( validador ){
+        
+           try{     
+                if( validador ){
               
-                    try{
-                
-                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-                
-                Pago pago = (Pago) Objeto;                  
-                 pagoBuilder.add("pg_id",pago.getId());
-                 pagoBuilder.add("pg_monto",pago.getTotal());
-                 pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
-                 pagoBuilder.add("pg_categoria",pago.getCategoria());
-                 pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                 JsonObject pagoJsonObject = pagoBuilder.build(); 
-                respuesta = pagoJsonObject.toString();
+                    JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
 
-                 throw new EmptyStringException();
+                    Pago pago = (Pago) Objeto;                  
+                     pagoBuilder.add("pg_id",pago.getId());
+                     pagoBuilder.add("pg_monto",pago.getTotal());
+                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                     pagoBuilder.add("pg_categoria",pago.getCategoria());
+                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                     JsonObject pagoJsonObject = pagoBuilder.build(); 
+                    respuesta = pagoJsonObject.toString();
+
+                }else{
+                    
+                    throw new EmptyEntityException();  
+                }
+           } catch (EmptyEntityException ex) {
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-            catch(EmptyStringException e){
-                System.out.println(e.EmptyString());
-                    }
-
-    }
           
-         
-          else{
-               System.out.println("Parametro de entrada nulo o vacio");
-          }
             return respuesta;
     } 
     
@@ -199,7 +246,6 @@ public class Modulo5sResource {
      * @param objeto
      * @return String
      */
-
     private String stringListaPago (Entidad objeto) throws EmptyStringException{
 
        
@@ -254,7 +300,6 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-
     private Entidad entidadModificarPago(@QueryParam("datosPago") String datosPagos)throws EmptyEntityException{
 
         
@@ -265,10 +310,10 @@ public class Modulo5sResource {
         if( validador ){
             
             try {
-            String decodifico = URLDecoder.decode(datosPagos);
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
-            reader.close();
+            reader.close();  
              ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ; 
              throw new EmptyEntityException();
         }
@@ -277,6 +322,8 @@ public class Modulo5sResource {
 
           
 
+            } catch (UnsupportedEncodingException ex1) {
+                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
         else {
@@ -316,39 +363,25 @@ public class Modulo5sResource {
         
          String respuesta = "";
          
-       boolean validador  =validadorString(datosPagos);
                 
-        if( validador ){
-                        try {
-            
-                        Entidad e = entidadAgregarPago(datosPagos);
-                        Comando c = FabricaComando.instanciarComandoAgregarPago(e);
-                        c.ejecutar();
-                        Entidad objectResponse = c.getResponse();
-          
-                                 validador  =validadorEntidad(objectResponse);
-                                    
-                                if (validador ){
-                                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                                                            }
-                                
-                                else{
-                                respuesta = "Error Entidad ";
-                                       }
-            
-
-            
-                               } catch (Exception e) {
-                                respuesta = "0"+e.getMessage();
-                                                     }
-
         
-       }
-       
-       else {
-         System.out.println("Parametro de entrada nulo o vacio");  
+           try {
+                if( validadorString(datosPagos) ){
+                    Entidad e = entidadAgregarPago(datosPagos);
+                    Comando c = FabricaComando.instanciarComandoAgregarPago(e);
+                    c.ejecutar();
+                    Entidad objectResponse = c.getResponse();
+                    System.out.println(objectResponse);
+                    respuesta = obtenerRespuestaAgregar(objectResponse);
+                                   
+                    
+               }       
                          
-       }
+            } catch (EmptyEntityException ex) { 
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         return respuesta;
     }
     
@@ -369,30 +402,17 @@ public class Modulo5sResource {
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
         String respuesta ="";
-        
-        boolean validador  =validadorInteger(idPago);
                 
-            if( validador ){
-        
-          
-                           try { 
-                            Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-                            c.ejecutar();
-                            Entidad objectResponse = c.getResponse();
-                            
-                            validador = validadorEntidad(objectResponse);
-                            if(validador){
-                            respuesta = stringVerPago(objectResponse);
-                            }
-                            else {
-                                System.out.println("Error Entidad Vacia");
-                            }
-
-                                 } catch (Exception e) {
-                                    respuesta = "Error :"+e.getMessage();
-                                                       }
-        
-        }
+            if( validadorInteger(idPago)){
+                try { 
+                    Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
+                    c.ejecutar();
+                    Entidad objectResponse = c.getResponse();
+                    respuesta =obtenerRespuestaConsultar(objectResponse);
+                } catch (Exception e) {
+                    respuesta = "Error :"+e.getMessage();
+                  }
+            }
         
         else {
             System.out.println("Parametro de entrada nulo o vacio");  
@@ -418,35 +438,22 @@ public class Modulo5sResource {
         
         String respuesta ="";
        
-        boolean validador  =validadorInteger(idPago);
                 
-            if( validador ){
+            if( validadorInteger(idPago) ){
+                try{
+                Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
+                c.ejecutar();
+                Entidad objectResponse = c.getResponse();
+                respuesta =obtenerRespuestaLista(objectResponse);
+                }
+                catch(Exception e) {
+                    respuesta = "Error Objeto Vacio :"+e.getMessage();
+                }
+            }
         
-                        try{
-            
-                        Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
-                        c.ejecutar();
-                        Entidad objectResponse = c.getResponse();
-                        
-                        validador = validadorEntidad(objectResponse);
-                        
-                        if(validador){
-                        respuesta = stringListaPago(objectResponse);
-                        }
-                        else {
-                            System.out.println("Error Entidad Vacia");
-                        }
-                            }
-                        
-                         catch(Exception e) {
-                         respuesta = "Error Objeto Vacio :"+e.getMessage();
-                                             }
-                        
-        }
-        else {
-          System.out.println("Parametro de entrada nulo o vacio");  
-            
-        }
+            else {
+                System.out.println("Parametro de entrada nulo o vacio");  
+            }
         
         return respuesta;
     }
@@ -468,49 +475,29 @@ public class Modulo5sResource {
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
         String respuesta = "";
-        
-        boolean validador  = validadorString(datosPagos);
                 
-        if( validador ){
 
 
-        try {
-            
-            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+            try {
+                if( validadorString(datosPagos) ){
+                    Entidad ex = entidadModificarPago(datosPagos);
+                    Comando c = FabricaComando.instanciarComandoModificarPago(ex);
+                    c.ejecutar();
+                    Entidad objectResponse = c.getResponse();
+                       respuesta = obtenerRespuestaModificar(objectResponse);
+                } 
+                        else {
+                            System.out.println("Parametro de entrada nulo o vacio");  
            
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject pagoJSON = reader.readObject();
-            reader.close();             
-            Entidad ex = entidadModificarPago(datosPagos);
-            Comando c = FabricaComando.instanciarComandoModificarPago(ex);
-            c.ejecutar();
-            Entidad objectResponse = c.getResponse();
+                        }
+                } 
 
-                                   validador  = validadorEntidad(objectResponse); 
-                                    if (validador){
-                
-                                    respuesta = String.valueOf(((SimpleResponse) objectResponse).getId());
-                           
-                                    }
-                                    else { 
-                                    respuesta = "Error Entidad Vacia";
-                                            }
-                        
+                    catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        respuesta = "0";
                     } 
-                
-                      catch (Exception e) {
-                      System.out.println(e.getMessage());
-                      respuesta = "0";
-                                          }
-                
-                
-                                }
-        
-        else {
-          System.out.println("Parametro de entrada nulo o vacio");  
             
-        }
-        return respuesta;
+       return respuesta;
     }
     
     
