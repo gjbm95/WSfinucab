@@ -13,10 +13,10 @@ public class Presupuesto extends Entidad{
     private String _clasificacion;
     private Integer _duracion;
     private Integer _usuario;
-    private Integer _categoria;
+    private String _categoria;
     private String _tipo;
 
-    public Presupuesto(int id, String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, Integer _categoria) {
+    public Presupuesto(int id, String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, String _categoria) {
         super(id);
         this._nombre = _nombre;
         this._monto = _monto;
@@ -26,7 +26,7 @@ public class Presupuesto extends Entidad{
         this._categoria = _categoria;
     }
 
-    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, Integer _categoria) {
+    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, String _categoria) {
         this._nombre = _nombre;
         this._monto = _monto;
         this._clasificacion = _clasificacion;
@@ -35,7 +35,7 @@ public class Presupuesto extends Entidad{
         this._categoria = _categoria;
     }
 
-    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, Integer _categoria, String _tipo) {
+    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, String _categoria, String _tipo) {
         this._nombre = _nombre;
         this._monto = _monto;
         this._clasificacion = _clasificacion;
@@ -45,7 +45,7 @@ public class Presupuesto extends Entidad{
         this._tipo = _tipo;
     }
 
-    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, Integer _categoria, String _tipo, int id) {
+    public Presupuesto(String _nombre, Double _monto, String _clasificacion, Integer _duracion, Integer _usuario, String _categoria, String _tipo, int id) {
         super(id);
         this._nombre = _nombre;
         this._monto = _monto;
@@ -56,6 +56,15 @@ public class Presupuesto extends Entidad{
         this._tipo = _tipo;
     }
 
+    public Presupuesto(int id, String _nombre, Double _monto, String _clasificacion, Integer _duracion, String _categoria, String _tipo) {
+        super(id);
+        this._nombre = _nombre;
+        this._monto = _monto;
+        this._clasificacion = _clasificacion;
+        this._duracion = _duracion;
+        this._categoria = _categoria;
+        this._tipo = _tipo;
+    }
     
     
     public Presupuesto() {
@@ -101,11 +110,11 @@ public class Presupuesto extends Entidad{
         this._usuario = _usuario;
     }
 
-    public Integer getCategoria() {
+    public String getCategoria() {
         return _categoria;
     }
 
-    public void setCategoria(Integer _categoria) {
+    public void setCategoria(String _categoria) {
         this._categoria = _categoria;
     }
 
