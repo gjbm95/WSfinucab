@@ -8,25 +8,15 @@ package BaseDatosDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
-import java.io.StringReader;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -34,7 +24,7 @@ import javax.ws.rs.core.MediaType;
  */
 public class DAOCategoria extends DAO implements IDAOCategoria {   
     
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
         
         try {
             Categoria ca = (Categoria) e;
@@ -48,15 +38,15 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
            
             if (st.executeUpdate(query) > 0) {
                 st.close();
-                return 1;
+                return FabricaEntidad.obtenerSimpleResponseStatus(1);
             } else {
                 st.close();
-                return 0;
+                return FabricaEntidad.obtenerSimpleResponseStatus(0);
             }
 
         } catch (Exception ex) {
 
-            return 2;
+            return FabricaEntidad.obtenerSimpleResponseStatus(2);
 
         }
     }
@@ -117,7 +107,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     }
 
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) {
               
         String respuesta ="";
         ArrayList<Entidad> listaCategoria = new ArrayList<>();
@@ -136,7 +126,9 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                 
             }
             
-            return listaCategoria;
+            ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategoria);
+        
+            return listaEntidad;
         }
         catch(Exception e) {
             return null;

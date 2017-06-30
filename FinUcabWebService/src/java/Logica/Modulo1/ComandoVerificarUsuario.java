@@ -22,7 +22,7 @@ public class ComandoVerificarUsuario extends Comando{
     }
     
     @Override
-    public Object ejecutar(){
+    public void ejecutar(){
         DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
         int respuesta = dao.verificarUsuario(usuario);
         if(respuesta == 4){
@@ -30,6 +30,6 @@ public class ComandoVerificarUsuario extends Comando{
         }else if(respuesta == 3){
             Modulo1sResource.resultado = "3";//DISPONIBLE
         }
-        return null;
+        //return null;
     }
 }

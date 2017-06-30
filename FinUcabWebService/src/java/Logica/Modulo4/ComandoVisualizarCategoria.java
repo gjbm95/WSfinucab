@@ -23,11 +23,12 @@ public class ComandoVisualizarCategoria extends Comando {
      }
 
     @Override
-    public Object ejecutar() {
-        DAO dao = FabricaDAO.instanciasDaoCategoria();
-        Object response = dao.consultarTodos(usuario);
+    public void ejecutar() {
         
-        return response;
+        DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        this.response = dao.consultarTodos(usuario);
+        
+
     }
     
 }

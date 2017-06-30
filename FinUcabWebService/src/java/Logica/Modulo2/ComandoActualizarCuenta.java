@@ -32,10 +32,10 @@ public class ComandoActualizarCuenta extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        return daoCuenta.modificar(cuenta);
+        //return daoCuenta.modificar(cuenta);
     }
     
     

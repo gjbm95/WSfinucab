@@ -53,14 +53,48 @@ public class FabricaEntidad {
       new Categoria(nombre,descripcion,estaHabilitado,esIngreso,idusuario);
      
     }
-     
-    public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo, int usuario){
+    
+        public static Categoria obtenerCategoria(int idcategoria,int idusuario,
+            String nombre, String descripcion,boolean estaHabilitado, boolean esIngreso){
        return 
-      new Pago( categoria, descripcion, total, tipo, usuario);
+      new Categoria(idcategoria,nombre,descripcion,estaHabilitado,esIngreso,idusuario);
+     
+    }
+     
+    public static Pago obtenerPago(  int categoria, String descripcion, float total, String tipo){
+       return 
+      new Pago( categoria, descripcion, total, tipo);
+    } 
+    
+    public static Pago obtenerPago(  int pago, int categoria, String descripcion, float total, String tipo){
+       return 
+      new Pago(  pago ,categoria, descripcion, total, tipo);
     }   
     
-    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, Integer categoria, String tipo) {
-        return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria, tipo);
+    public static ListaEntidad obtenerListaEntidad(ArrayList<Entidad> lista){
+       return new ListaEntidad(lista);
+    }     
+    
+    public static SimpleResponse obtenerSimpleResponseStatus(int status){
+       SimpleResponse sr = new SimpleResponse();
+       sr.setStatus(status);
+       return sr;
+    } 
+    
+    public static SimpleResponse obtenerSimpleResponse(int id){
+       return new SimpleResponse(id);
+    } 
+     
+    public static SimpleResponse obtenerSimpleResponse(int id, int status){
+       return new SimpleResponse(id, status);
+    } 
+     
+    public static SimpleResponse obtenerSimpleResponse(int id, int status, String descripcion){
+       return new SimpleResponse(id,status, descripcion);
+    } 
+    
+    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, Integer categoria) {
+        return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
 
 }

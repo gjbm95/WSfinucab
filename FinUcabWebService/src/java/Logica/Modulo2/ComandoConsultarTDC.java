@@ -34,10 +34,10 @@ public class ComandoConsultarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return dao.getTarjetasXUsuario(user);
+        //return dao.getTarjetasXUsuario(user);
       
     }
     

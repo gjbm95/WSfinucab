@@ -27,9 +27,9 @@ public class ComandoEliminarCuenta extends Comando {
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        return daoCuenta.eliminar(id);
+        //return daoCuenta.eliminar(id);
     }
 
 }

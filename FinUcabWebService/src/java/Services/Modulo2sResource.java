@@ -98,7 +98,7 @@ public class Modulo2sResource {
     public String agregarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
 
         String decodifico = URLDecoder.decode(datosCuenta);
-        Object resultado;
+        Object resultado = null;
 //        String decodifico = "{ \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"9900120\" , \"ct_nombrebanco\" : \"AND BANK\""
 //                + ", \"ct_saldoactual\" : \"522\", \"usuariou_id\" : \"1\" }";
 
@@ -111,8 +111,8 @@ public class Modulo2sResource {
                     Integer.parseInt(cuentaJSON.getString("usuariou_id")));
 
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
-            resultado = command.ejecutar();
-            Conexion.conectarADb().close();
+            //resultado = command.ejecutar();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -195,7 +195,7 @@ public class Modulo2sResource {
     public String agregarTDC(@QueryParam("datosTDC") String datosTDC) {
 
        String decodifico = URLDecoder.decode(datosTDC);
-        Object resultado;
+        Object resultado = null;
 //        String decodifico = "{ \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
 //                + " \"tc_numero\" : \"12234\""
 //                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
@@ -209,8 +209,8 @@ public class Modulo2sResource {
                     Integer.parseInt(tdcJSON.getString("usuariou_id")));
 
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
-            resultado = command.ejecutar();
-            Conexion.conectarADb().close();
+            //resultado = command.ejecutar();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -274,8 +274,8 @@ public class Modulo2sResource {
             int id = Integer.parseInt(decodifico);
 
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
-            resultado = command.ejecutar();
-            Conexion.conectarADb().close();
+            //resultado = command.ejecutar();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -302,8 +302,8 @@ public class Modulo2sResource {
             int id = Integer.parseInt(decodifico);
 
             Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
-            resultado = command.ejecutar();
-            Conexion.conectarADb().close();
+            //resultado = command.ejecutar();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             resultado = "0";
@@ -331,14 +331,7 @@ public class Modulo2sResource {
             int id = Integer.parseInt(decodifico);
           
             Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
-            resultado = command.ejecutar();
-            Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            resultado = "0";
-        }
-        return resultado.toString();
-    }
+            //resultado = command.ejecutar();
 
     /**
      * Función que busca todas las tarjetas de credito de un usuario

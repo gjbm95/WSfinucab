@@ -32,10 +32,10 @@ public class ComandoAgregarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito daoTDC = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return daoTDC.agregar(tdc);
+        //return daoTDC.agregar(tdc);
     }
     
     

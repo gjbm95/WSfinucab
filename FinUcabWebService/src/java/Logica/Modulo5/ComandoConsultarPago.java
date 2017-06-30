@@ -5,7 +5,7 @@
  */
 package Logica.Modulo5;
 
-import BaseDatosDAO.DAO;
+import BaseDatosDAO.Interfaces.IDAOPago;
 import BaseDatosDAO.Singleton.SingletonDAOPago;
 import Logica.Comando;
 
@@ -22,11 +22,10 @@ public class ComandoConsultarPago extends Comando {
     }
     
     @Override
-    public Object ejecutar() {
-        DAO dao = SingletonDAOPago.getInstance();
-        Object response = dao.consultar(idPago);
-        System.out.println("despues consultar");
-        return response;
+    public void ejecutar() {
+        IDAOPago dao = SingletonDAOPago.getInstance();
+        this.response = dao.consultar(idPago);        
+
     }
     
 }
