@@ -92,7 +92,7 @@ CREATE OR REPLACE FUNCTION ListaPagos(
     
 AS $function$
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c , Usuario u
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c 
 where (p.categoriaca_id = c.ca_id and c.usuariou_id =idusuario )
 
 $function$;
