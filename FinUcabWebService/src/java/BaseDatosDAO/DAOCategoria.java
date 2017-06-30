@@ -8,101 +8,178 @@ package BaseDatosDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
-import java.io.StringReader;
+import java.sql.CallableStatement;
+import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
+import IndentityMap.SingletonIdentityMap;
+import Registro.RegistroIdentityMap;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author MariPerez
  */
-public class DAOCategoria extends DAO implements IDAOCategoria {
+public class DAOCategoria extends DAO implements IDAOCategoria { 
     
-    @Override
-    public String eliminarCategria(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    private Connection conn = Conexion.conectarADb();
     
-    
-    public int agregar(Entidad e) {
+    public Entidad agregar(Entidad e) {
+        
+        Categoria categoria = (Categoria) e;            
+        int idCategoria = 0;
         
         try {
-            Categoria ca = (Categoria) e;
-            Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            String query = "INSERT INTO categoria (usuariou_id, ca_nombre , c_descripcion , ca_esingreso , ca_eshabilitado  ) "
-                    + "VALUES ( " + ca.getIdUsario()+ " , '" + ca.getNombre() + "' , '" + ca.getDescripcion()
-                    + "' , " + "'" + ca.isIngreso() + "' , '" + ca.isEstaHabilitado()  + "');";
-                       
-            System.out.println(query);
-           
-            if (st.executeUpdate(query) > 0) {
-                st.close();
-                return 1;
-            } else {
-                st.close();
-                return 0;
+            CallableStatement cat = conn.prepareCall("{ call AgregarCategoria(?,?,?,?,?) }");
+            cat.setInt(1, categoria.getIdUsario());
+            cat.setString(2, categoria.getNombre());
+            cat.setString(3, categoria.getDescripcion());
+            cat.setBoolean(4, categoria.isIngreso());
+            cat.setBoolean(5, categoria.isEstaHabilitado());
+             cat.executeQuery();
+            ResultSet rs = cat.getResultSet();
+            rs.next();
+            idCategoria = rs.getInt(1);
+            
+            categoria.setId(idCategoria);
+            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
+              catch (Exception ex) {
 
-        } catch (Exception ex) {
-
-            return 2;
-
-        }
+            return FabricaEntidad.obtenerSimpleResponseStatus(2);
+       }
+        return FabricaEntidad.obtenerSimpleResponse(idCategoria);
     }
-
+                           
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+        Categoria categoria = (Categoria) e;        
+        try {
+            CallableStatement cstmt;
+            cstmt = conn.prepareCall("{ call ModificarCategoria(?,?,?,?,?) }");
+            cstmt.setString(1,categoria.getNombre());
+            cstmt.setString(2,categoria.getDescripcion());
+            cstmt.setBoolean(3,categoria.isIngreso());
+            cstmt.setBoolean(4,categoria.isEstaHabilitado());
+            cstmt.setInt(5, categoria.getIdcategoria());
+            cstmt.execute();
+            
+            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return categoria;
+    } 
+    
     @Override
-    public Entidad consultar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public Entidad consultar(int idcategoria) {
+        
+         Entidad categoria = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.categoria_listado, idcategoria);          
 
+         if (categoria == null){
+                            
+                try {
+
+                   Statement st = conn.createStatement();
+
+                   CallableStatement a = conn.prepareCall("{ call ConsultarCategoria(?) }");
+                   a.setInt(1, idcategoria);
+                   a.executeQuery();
+
+                   ResultSet rs = a.getResultSet();
+                   while (rs.next()){
+                       
+                       categoria = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
+                       System.out.println(rs.getString(2));
+                   }
+
+               } catch (SQLException ex) {
+                   Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
+               }
+         }
+        
+        return categoria;
+        
+    }
+    
     @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
-              
-        try{
-                    
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Categoria WHERE ca_id <> -1  AND usuariou_id = '" + 1 + "';");
-            ArrayList<Entidad> list= null;
-            while (rs.next())
-            {
-                //Creo el objeto Json!             
-                 Categoria ca= new Categoria();
-                 ca.setIdcategoria(rs.getInt(1));
-                 ca.setNombre(rs.getString(2));
-                 ca.setDescripcion(rs.getString(3));
-                 ca.setEsIngreso(rs.getBoolean(5));
-                 ca.setEstaHabilitado(rs.getBoolean(4));
-                 list.add(ca);
-                 System.out.println(ca);
+    public ListaEntidad consultarTodos(int idUsuario) {
+        
+        ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.categoria_listado);
+        
+        if (listaEntidad.getLista().isEmpty() ){
+            
+            try {
+                ArrayList<Entidad> listaCategorias = new ArrayList<>();
+                Statement st = conn.createStatement();
+                CallableStatement a = conn.prepareCall("{ call ConsultarTodos(?) }");
+                a.setInt(1, idUsuario);
+                a.executeQuery();
+               ResultSet rs = a.getResultSet();
+
+                while (rs.next())
+                {
+                   Categoria ca = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
+                    listaCategorias.add(ca);
+                }            
+                
+                listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategorias);
+                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.categoria_listado, listaEntidad);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
             }
-             
-            return list;
+              catch(Exception e) {
+                return null;
+            }                
         }
-        catch(Exception e) {
-            return null;
-        }
+        
+        return listaEntidad;
     }
-   
+    
+    @Override 
+    public Entidad eliminarCategoria(int idCategoria){
+        try {
+            Statement st = conn.createStatement();
+            EliminarCategoria2(idCategoria, "presupuesto");
+            EliminarCategoria2(idCategoria,"pago");
+            CallableStatement cat = conn.prepareCall("{ call EliminarCategoria(?) }");
+            cat.setInt(1,idCategoria);
+            cat.executeQuery();
+            ResultSet rs = cat.getResultSet();
+            rs.next();
+            
+            SingletonIdentityMap.getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
+            
+            } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return FabricaEntidad.obtenerSimpleResponse(1);
+    }        
+    
+    public boolean EliminarCategoria2 (int idcat, String tabla){
+        boolean respuesta = false;
+        try {
+            CallableStatement cstmt;
+            cstmt = conn.prepareCall("{ call EliminarCategoria2(?,?) }");
+            cstmt.setInt(1, idcat);
+            cstmt.setString(2, tabla);
+            cstmt.execute();
+            
+           } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return respuesta;
+    }
 }
-

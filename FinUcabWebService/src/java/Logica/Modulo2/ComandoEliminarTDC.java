@@ -8,6 +8,7 @@ package Logica.Modulo2;
 import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import Dominio.FabricaEntidad;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -31,10 +32,10 @@ public class ComandoEliminarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito daoTarjeta_credito = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return daoTarjeta_credito.eliminar(tdc);
+        super.response = FabricaEntidad.obtenerSimpleResponse(daoTarjeta_credito.eliminar(tdc));
     }
     
     

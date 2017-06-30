@@ -14,7 +14,14 @@ import Dominio.Cuenta_Bancaria;
 import Dominio.Tarjeta_Credito;
 import Dominio.Usuario;
 import Logica.Modulo2.*;
+import Logica.Modulo4.ComandoConsultarCategoria;
+import Logica.Modulo4.ComandoEliminarCategoria;
+import Logica.Modulo4.ComandoModificarCategoria;
+import Logica.Modulo5.ComandoAgregarPago;
+import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
+import Logica.Modulo5.ComandoModificarPago;
+import Logica.Modulo6.ComandoAgregarPresupuesto;
 
 
 /**
@@ -50,10 +57,21 @@ public class FabricaComando {
      public static ComandoAgregarCategoria instanciarComandoAgregarCategoria(Entidad categoria){
         return new ComandoAgregarCategoria(categoria);
     }
+     public static ComandoEliminarCategoria instanciarComandoEliminarCategoria(int categoria){
+        return new ComandoEliminarCategoria(categoria);
+    }
      
-     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(String usuario){
+     public static ComandoModificarCategoria instanciarComandoModificarCategoria(Entidad categoria){
+        return new ComandoModificarCategoria(categoria);
+    }
+     
+     public static ComandoVisualizarCategoria instanciarComandoVisualizarCategoria(int usuario){
          return new ComandoVisualizarCategoria(usuario);
      }
+     
+      public static ComandoConsultarCategoria instanciarComandoConsultarCategoria(int idCategoria){
+        return new ComandoConsultarCategoria(idCategoria);
+    }
     
      public static ComandoAgregarCuenta instanciarComandoAgregarCuenta(Cuenta_Bancaria cuenta){
         return new ComandoAgregarCuenta(cuenta);
@@ -76,7 +94,33 @@ public class FabricaComando {
      public static ComandoListarPagos instanciarComandoListarPagos(int idUsuario){
         return new ComandoListarPagos(idUsuario);
     }
+    
+     /**
+      * Fabrica inicializadora del ComandoAgregarPago
+      * @param pago 
+      * @return 
+      */
+     public static ComandoAgregarPago instanciarComandoAgregarPago(Entidad pago){
+        return new ComandoAgregarPago(pago);
+     }
      
+     /**
+      * Fabrica inicializadora del ComandoAgregarPago
+      * @param pago 
+      * @return 
+      */
+     public static ComandoModificarPago instanciarComandoModificarPago(Entidad pago){
+        return new ComandoModificarPago(pago);
+     }
+     
+     /**
+      * Fabrica inicializadora del ComandoConsultarPago
+      * @param idPago Identificador de pago en base de datos
+      * @return 
+      */
+      public static ComandoConsultarPago instanciarComandoConsultarPago(int idPago){
+        return new ComandoConsultarPago(idPago);
+    }
      
      /*---------------------------   Gestion de Cuentas y Tarjetas      ------------------------------------*/
 
@@ -99,5 +143,13 @@ public class FabricaComando {
      public static ComandoConsultarCuentas instanciarComandoConsultarCuentas(int id){
         return new ComandoConsultarCuentas(id);
     }
+    
+     public static ComandoConsultarEstadisticasHome instanciarComandoConsultarEstadisticas(int id){
+        return new ComandoConsultarEstadisticasHome(id);
+    }
 
+     
+     public static ComandoAgregarPresupuesto instanciarComandoAgregarPresupuesto(Entidad e){
+         return new ComandoAgregarPresupuesto(e);
+     }
 }

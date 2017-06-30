@@ -1,3 +1,4 @@
-﻿FinUcabWebService\build\web\WEB-INF\classes
-FinUcabWebService\nbproject\private\private.properties
-FinUcabWebService\dist\
+﻿FinUcabWebService/dist/
+FinUcabWebService/build/
+FinUcabWebService/nbproject/private/
+/FinUcabWebService/dist/

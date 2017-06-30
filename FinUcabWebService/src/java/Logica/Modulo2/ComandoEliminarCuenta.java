@@ -8,6 +8,7 @@ package Logica.Modulo2;
 import BaseDatosDAO.DaoCuenta_Bancaria;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import Dominio.FabricaEntidad;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -27,9 +28,10 @@ public class ComandoEliminarCuenta extends Comando {
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        return daoCuenta.eliminar(id);
+        
+        super.response = FabricaEntidad.obtenerSimpleResponse(daoCuenta.eliminar(id));
     }
 
 }

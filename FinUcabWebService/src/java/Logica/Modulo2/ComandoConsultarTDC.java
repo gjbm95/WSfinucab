@@ -8,6 +8,7 @@ package Logica.Modulo2;
 import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import Dominio.FabricaEntidad;
 import Dominio.Tarjeta_Credito;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -34,10 +35,10 @@ public class ComandoConsultarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return dao.getTarjetasXUsuario(user);
+        super.response = FabricaEntidad.obtenerSimpleResponse(0,0,dao.getTarjetasXUsuario(user));
       
     }
     

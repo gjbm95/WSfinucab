@@ -7,20 +7,11 @@ import java.io.Serializable;
  */
 
 public class Pago  extends Entidad implements Serializable{
-    private int idPago;
+
     private int categoria;
     private String descripcion;
     private float total;
     private String tipo;
-
-    
-    public int getIdPago() {
-        return idPago;
-    }
-
-    public void setIdPago(int idPago) {
-        this.idPago = idPago;
-    }
 
     public int getCategoria() {
         return categoria;
@@ -54,21 +45,21 @@ public class Pago  extends Entidad implements Serializable{
         this.tipo = tipo;
     }
 
-    public Pago(int idPago, int categoria, String descripcion, float total, String tipo) {
-        this.idPago = idPago;
+    public Pago( int categoria, String descripcion, float total, String tipo) {
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.total = total;
         this.tipo = tipo;
+        
     }
     
-    public Pago(int _id, int idPago, int categoria, String descripcion, float total, String tipo) {
-        super(_id);
-        this.idPago = idPago;
+    public Pago( int id, int categoria, String descripcion, float total, String tipo) {
+        super(id);
         this.categoria = categoria;
         this.descripcion = descripcion;
         this.total = total;
         this.tipo = tipo;
+        
     }
 
     public Pago(){

@@ -5,12 +5,14 @@
  */
 package BaseDatosDAO.Interfaces;
 
+import Dominio.Entidad;
+
 /**
  *
  * @author MariPerez
  */
 public interface IDAOCategoria extends IDAO{
     
-    String eliminarCategria(int id);
+    Entidad eliminarCategoria(int id);
     
 }

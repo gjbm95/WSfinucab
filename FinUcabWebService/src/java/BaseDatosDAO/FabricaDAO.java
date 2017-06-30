@@ -32,5 +32,14 @@ public class FabricaDAO {
     public static DAOPago instanciasDAOPago() {
         return new DAOPago();
     }
+    
+    public static DaoPresupuesto instanciasDAOPresupuesto() {
+        return new DaoPresupuesto();
+    }
+    
+    public static DaoPlanificacion instanciasDAOPlanificacion() {
+        return new DaoPlanificacion();
+    }
+    
    
 }

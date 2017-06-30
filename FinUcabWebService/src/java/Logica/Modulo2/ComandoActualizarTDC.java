@@ -30,10 +30,10 @@ public class ComandoActualizarTDC extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoTarjeta_Credito daoTarjeta_Credito = FabricaDAO.instanciasDaoTarjeta_Credito();
-        return daoTarjeta_Credito.modificar(tdc);
+        daoTarjeta_Credito.modificar(tdc);
     }
     
     

@@ -20,7 +20,7 @@ import javax.json.JsonObject;
 public class ComandoActualizarDatosUsuario extends Comando {
 
     private Usuario user ;
- 
+    private String result;
     
     
     public ComandoActualizarDatosUsuario(Usuario user) {
@@ -30,10 +30,10 @@ public class ComandoActualizarDatosUsuario extends Comando {
     
     
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
 
         DaoUsuario daoUsuario = FabricaDAO.instanciasDaoUsuario();
-        return daoUsuario.modificar(user);
+        daoUsuario.modificar(user);
     }
     
     
