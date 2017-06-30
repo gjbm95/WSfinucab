@@ -41,6 +41,12 @@ public class IdentityMap {
         ListaEntidad salida  = (ListaEntidad) this._cache.get(id);
         return salida;
     }
+     
+     public void setListaEntidad(String listaNombre,ListaEntidad listaEntidad){
+         
+        this._cache.put(listaNombre, listaEntidad);
+     
+     }
     
      public void addEntidadEnLista(String id, Entidad entidad){
          
