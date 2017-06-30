@@ -265,7 +265,7 @@ public class Modulo3sResource {
         Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
                 Double.valueOf(presupuestoJSON.getString("pr_monto")), 
                 presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
-                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
+                presupuestoJSON.getInt("pr_usuarioid"), Integer.toString(presupuestoJSON.getInt("categoriaca_id")));
         
         Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
         command.ejecutar();
