@@ -148,20 +148,20 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
     public int verificarNombre(String nombre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public int eliminarPresupuesto(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     public JsonArray getUltimosPresupuestos(int id) {
         CallableStatement cstm;
         JsonArray array = null;
         try {
-            Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerUltimosPresupuestos(?)}");
+            Statement st = Conexion.conectarADb().createStatement();
+            cstm = Conexion.conectarADb().prepareCall("{ call obtenerUltimosPresupuestos(?)}");
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

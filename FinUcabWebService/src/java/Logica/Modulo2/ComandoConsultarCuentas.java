@@ -4,6 +4,7 @@ import BaseDatosDAO.DaoCuenta_Bancaria;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
 import Dominio.Cuenta_Bancaria;
+import Dominio.FabricaEntidad;
 import Dominio.Usuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
@@ -34,7 +35,8 @@ public class ComandoConsultarCuentas extends Comando {
     public void ejecutar() {
 
         DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        //return dao.getCuentasXUsuario(idusuario);
+        super.response = FabricaEntidad.obtenerSimpleResponse(0,0,
+                dao.getCuentasXUsuario(idusuario));
     }
     
     
