@@ -6,6 +6,7 @@
 package BaseDatosDAO;
 
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,26 +29,6 @@ public class DaoPlanificacion extends DAO {
 
     private Connection conn = Conexion.conectarADb();
     
-    @Override
-    public int agregar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Entidad consultar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public JsonArray getUltimasPlanificaciones(int id) {
         CallableStatement cstm;
         JsonArray array = null;
@@ -76,5 +57,25 @@ public class DaoPlanificacion extends DAO {
 
         }
         return array;
+    }
+
+    @Override
+    public Entidad agregar(Entidad e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Entidad modificar(Entidad e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Entidad consultar(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ListaEntidad consultarTodos(int idUsuario) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

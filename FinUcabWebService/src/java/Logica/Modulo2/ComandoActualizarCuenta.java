@@ -22,7 +22,6 @@ import javax.json.JsonObject;
 public class ComandoActualizarCuenta extends Comando {
 
     private Cuenta_Bancaria cuenta ;
- 
     
     
     public ComandoActualizarCuenta(Cuenta_Bancaria cuenta) {
@@ -35,7 +34,7 @@ public class ComandoActualizarCuenta extends Comando {
     public void ejecutar() {
 
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        //return daoCuenta.modificar(cuenta);
+        daoCuenta.modificar(cuenta);
     }
     
     

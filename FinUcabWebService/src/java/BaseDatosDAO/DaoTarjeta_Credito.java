@@ -59,6 +59,7 @@ public class DaoTarjeta_Credito extends DAO {
             ResultSet rs = cstmt.getResultSet();
             rs.next();
             idtarjeta = rs.getInt(1);
+            obj.setId(idtarjeta);
             System.out.printf("id de: " + rs.getString(1));
             cstmt.close();
             rs.close();
@@ -66,7 +67,7 @@ public class DaoTarjeta_Credito extends DAO {
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return FabricaEntidad.obtenerSimpleResponse(idtarjeta);
+        return obj;
     }
 
     @Override

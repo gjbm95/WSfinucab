@@ -49,13 +49,14 @@ public class DaoCuenta_Bancaria extends DAO {
             ResultSet rs = cstmt.getResultSet();
             rs.next();
             idCuenta = rs.getInt(1);
+            obj.setId(idCuenta);
             System.out.printf("id de: " + rs.getString(1));
             cstmt.close();
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return FabricaEntidad.obtenerSimpleResponse(idCuenta);
+        return obj;
     }
 
     public Entidad modificar(Entidad e) {
@@ -83,12 +84,6 @@ public class DaoCuenta_Bancaria extends DAO {
         return null;
     }
 
-    public ArrayList<Entidad> consultarTodos() {
-        CallableStatement cstmt;
-        int idCuenta = 0;
-
-        return null;
-    }
 
     public int eliminar(int id) {
         CallableStatement cstmt;
@@ -143,10 +138,7 @@ public class DaoCuenta_Bancaria extends DAO {
         return respuesta;
     }
 
-    @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
-        return null;
-    }
+
 
     public String getSaldoTotal(int id) {
         CallableStatement cstm;
@@ -173,5 +165,11 @@ public class DaoCuenta_Bancaria extends DAO {
         }
         return respuesta;
     }
+
+    @Override
+    public ListaEntidad consultarTodos(int idUsuario) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
 }

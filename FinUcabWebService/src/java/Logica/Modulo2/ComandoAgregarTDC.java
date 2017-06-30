@@ -35,7 +35,7 @@ public class ComandoAgregarTDC extends Comando {
     public void ejecutar() {
 
         DaoTarjeta_Credito daoTDC = FabricaDAO.instanciasDaoTarjeta_Credito();
-        //return daoTDC.agregar(tdc);
+        super.response = daoTDC.agregar(tdc);
     }
     
     
