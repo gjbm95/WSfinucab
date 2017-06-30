@@ -122,7 +122,7 @@ public class DAOPago extends DAO implements IDAOPago{
         
         ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
         
-        if (listaEntidad == null ){
+        if (listaEntidad.getLista().isEmpty()){
             try {
                 
                 ArrayList<Entidad> listaPagos = new ArrayList<>();

@@ -14,13 +14,9 @@ import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
 import Logica.Modulo5.EmptyStringException;
-import com.sun.xml.internal.stream.writers.UTF8OutputStreamWriter;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -421,7 +417,7 @@ public class Modulo5sResource {
 
                                     if (objectResponse != null ){
                 
-                                    respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                                    respuesta = String.valueOf(((SimpleResponse) objectResponse).getId());
                            
                                     }
                                     else { 
