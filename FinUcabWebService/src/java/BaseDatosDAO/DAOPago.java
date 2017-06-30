@@ -34,7 +34,10 @@ public class DAOPago extends DAO implements IDAOPago{
             CallableStatement pag;
             
         int idPago = 0;
-        try {
+        try {                
+            
+            System.out.println(pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
+        
             pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
@@ -49,8 +52,8 @@ public class DAOPago extends DAO implements IDAOPago{
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
                         
             } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                System.out.println("ERROR");
+            }
         
         return FabricaEntidad.obtenerSimpleResponse(idPago);
 

@@ -1,13 +1,13 @@
 DROP FUNCTION ConsultarPago(integer);
 DROP FUNCTION ListaPagos(integer);
-DROP FUNCTION AgregarPago(integer, real, character varying, character varying, integer );
-DROP FUNCTION ModificarPago(real, character varying, character varying, integer);
+DROP FUNCTION AgregarPago(integer, float, character varying, character varying, integer );
+DROP FUNCTION ModificarPago(float, character varying, character varying, integer);
 
 
 
 
 CREATE OR REPLACE FUNCTION AgregarPago(
-	monto real,
+	monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -33,7 +33,7 @@ END;
 $function$;
 
 
-CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto real,
+CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION ConsultarPago(
 	idpago integer,
     
 	OUT pg_id integer,
-	OUT pg_monto real,
+	OUT pg_monto float,
 	OUT pg_descripcion character varying,
 	OUT pg_tipoTransaccion character varying,
 	OUT categoriaca_id integer)
@@ -83,7 +83,7 @@ $function$;
 CREATE OR REPLACE FUNCTION ListaPagos(
 	idusuario integer,
 	OUT pg_id integer,
-	OUT pg_monto real,
+	OUT pg_monto float,
 	OUT pg_descripcion character varying,
 	OUT pg_tipotransaccion character varying,
 	OUT categoriaca_id integer)

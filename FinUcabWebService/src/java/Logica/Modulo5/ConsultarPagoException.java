@@ -5,10 +5,16 @@
  */
 package Logica.Modulo5;
 
+import Exceptions.FinUCABException;
+
 /**
  *
  * @author Ramon
  */
-public class AgregarPagoException {
+public class ConsultarPagoException extends FinUCABException {
+    
+    public ConsultarPagoException(int code, String message){
+        super(code, message,ConsultarPagoException.class);
+    }
     
 }

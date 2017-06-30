@@ -15,8 +15,11 @@ import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
 import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -116,30 +119,28 @@ public class Modulo5sResource {
     private Entidad entidadAgregarPago (@QueryParam("datosPago") String datosPagos)  throws EmptyEntityException  {
 
         Entidad ex = null;
-        
-                boolean validador  =validadorString(datosPagos);
+                 
+            try{       
                 
-        if( validador ){
+                boolean validador  =validadorString(datosPagos);
+                if( validador ){
+         
+                    String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
+                    JsonReader reader = Json.createReader(new StringReader(decodifico));
+                    JsonObject pagoJSON = reader.readObject();           
+                    reader.close();
+                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+
+                }else {
+
+                    throw new EmptyEntityException();   
+                }
             
-            try{
-        
-            String decodifico = URLDecoder.decode(datosPagos);
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject pagoJSON = reader.readObject();           
-            reader.close();
-            ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
-
-           throw new EmptyEntityException();
-
-        }
-            catch(EmptyEntityException e){
+            }catch(EmptyEntityException e){
                 System.out.println(e.EmptyEntity());
+            } catch (UnsupportedEncodingException ex1) {
+                
             }
-        }
-        
-        else {
-          System.out.println("Parametro de entrada nulo o vacio");    
-        }
         return ex;
     }
     
@@ -160,34 +161,28 @@ public class Modulo5sResource {
          
          
         boolean validador  =validadorEntidad(Objeto);
-                
-        if( validador ){
+           try{     
+                if( validador ){
               
-                    try{
-                
-                JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
-                
-                Pago pago = (Pago) Objeto;                  
-                 pagoBuilder.add("pg_id",pago.getId());
-                 pagoBuilder.add("pg_monto",pago.getTotal());
-                 pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
-                 pagoBuilder.add("pg_categoria",pago.getCategoria());
-                 pagoBuilder.add("pg_descripcion",pago.getDescripcion());
-                 JsonObject pagoJsonObject = pagoBuilder.build(); 
-                respuesta = pagoJsonObject.toString();
+                    JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
 
-                 throw new EmptyStringException();
+                    Pago pago = (Pago) Objeto;                  
+                     pagoBuilder.add("pg_id",pago.getId());
+                     pagoBuilder.add("pg_monto",pago.getTotal());
+                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                     pagoBuilder.add("pg_categoria",pago.getCategoria());
+                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
+                     JsonObject pagoJsonObject = pagoBuilder.build(); 
+                    respuesta = pagoJsonObject.toString();
+
+                }else{
+                    
+                    throw new EmptyEntityException();  
+                }
+           } catch (EmptyEntityException ex) {
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-            catch(EmptyStringException e){
-                System.out.println(e.EmptyString());
-                    }
-
-    }
           
-         
-          else{
-               System.out.println("Parametro de entrada nulo o vacio");
-          }
             return respuesta;
     } 
     
@@ -265,7 +260,7 @@ public class Modulo5sResource {
         if( validador ){
             
             try {
-            String decodifico = URLDecoder.decode(datosPagos);
+            String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject pagoJSON = reader.readObject();
             reader.close();
@@ -277,6 +272,8 @@ public class Modulo5sResource {
 
           
 
+            } catch (UnsupportedEncodingException ex1) {
+                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
         else {
@@ -316,20 +313,22 @@ public class Modulo5sResource {
         
          String respuesta = "";
          
-       boolean validador  =validadorString(datosPagos);
                 
-        if( validador ){
+        if( validadorString(datosPagos) ){
                         try {
             
+                        System.out.println("aquiii");
                         Entidad e = entidadAgregarPago(datosPagos);
+                        
                         Comando c = FabricaComando.instanciarComandoAgregarPago(e);
                         c.ejecutar();
                         Entidad objectResponse = c.getResponse();
           
-                                 validador  =validadorEntidad(objectResponse);
+                            System.out.println(objectResponse);
                                     
-                                if (validador ){
-                                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
+                                if (validadorEntidad(objectResponse) ){
+                                    System.out.println(String.valueOf(((SimpleResponse) objectResponse).getId()));
+                                respuesta = String.valueOf(((SimpleResponse) objectResponse).getId());
                                                             }
                                 
                                 else{
@@ -369,10 +368,8 @@ public class Modulo5sResource {
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
         String respuesta ="";
-        
-        boolean validador  =validadorInteger(idPago);
                 
-            if( validador ){
+            if( validadorInteger(idPago)){
         
           
                            try { 
@@ -380,8 +377,7 @@ public class Modulo5sResource {
                             c.ejecutar();
                             Entidad objectResponse = c.getResponse();
                             
-                            validador = validadorEntidad(objectResponse);
-                            if(validador){
+                            if(validadorEntidad(objectResponse)){
                             respuesta = stringVerPago(objectResponse);
                             }
                             else {
@@ -418,19 +414,16 @@ public class Modulo5sResource {
         
         String respuesta ="";
        
-        boolean validador  =validadorInteger(idPago);
                 
-            if( validador ){
+            if( validadorInteger(idPago) ){
         
                         try{
             
                         Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
                         c.ejecutar();
                         Entidad objectResponse = c.getResponse();
-                        
-                        validador = validadorEntidad(objectResponse);
-                        
-                        if(validador){
+                                                
+                        if(validadorEntidad(objectResponse)){
                         respuesta = stringListaPago(objectResponse);
                         }
                         else {
@@ -468,10 +461,8 @@ public class Modulo5sResource {
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
         String respuesta = "";
-        
-        boolean validador  = validadorString(datosPagos);
                 
-        if( validador ){
+        if( validadorString(datosPagos) ){
 
 
         try {
@@ -486,8 +477,7 @@ public class Modulo5sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
 
-                                   validador  = validadorEntidad(objectResponse); 
-                                    if (validador){
+                                    if (validadorEntidad(objectResponse)){
                 
                                     respuesta = String.valueOf(((SimpleResponse) objectResponse).getId());
                            
