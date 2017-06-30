@@ -11,6 +11,8 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import IndentityMap.SingletonIdentityMap;
+import Logica.Modulo5.AgregarPagoException;
+import Registro.RegistroError;
 import Registro.RegistroIdentityMap;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -33,12 +35,12 @@ import javax.json.JsonObjectBuilder;
 public class DAOPago extends DAO implements IDAOPago{
 
     @Override
-    public Entidad agregar(Entidad e) {
+    public Entidad agregar(Entidad e)  {
 
-            Pago pago = (Pago) e;
-            CallableStatement pag;
-            
+        Pago pago = (Pago) e;
+        CallableStatement pag;
         int idPago = 0;
+
         try {                
             
             Connection conn = Conexion.conectarADb();
@@ -49,8 +51,11 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.setInt(4, 1);
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
-            rs.next();            
-            idPago = rs.getInt(1);
+            if (rs.next()){
+                idPago = rs.getInt(1); 
+            }else{
+                //throw new AgregarPagoException(100,RegistroError.error_parametros);
+            }
            
             pago.setId(idPago);
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
