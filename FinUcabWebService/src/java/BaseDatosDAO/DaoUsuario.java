@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOUsuario;
@@ -26,9 +22,16 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 /**
- *
- * @author AlejandroNegrin
- */
+*Modulo 1 - Modulo de DaoUsuario.
+*Desarrolladores:
+*Mariangel Perez / Oswaldo Lopez / Aquiles Pulido
+*Descripción de la clase:
+*Clase encargada de contener todos los metodos que manejan la informacion del
+*usuario.
+*@Params
+*
+**/
+
 public class DaoUsuario extends DAO implements IDAOUsuario{
 
     private Connection conn = Conexion.conectarADb();
@@ -36,6 +39,17 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
     DaoUsuario() {
     }
 
+    
+    
+    
+     /**
+     * Funcion encargada de agregar el usuario en la BD.
+     *
+     * @param e entidad que posee los datos a agregar en la BD.
+     *
+     * @return 0 de retorna esto no se puedo agregar correctamente el usuario,
+     * 1 en este caso el usuario es agregado correctamente.
+     */
     @Override
     public Entidad agregar(Entidad e) {
         Usuario usuario = (Usuario) e;
@@ -53,10 +67,10 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             a.setString(7, usuario.getContrasena());
             if (a.execute()) {
                 st.close();
-                respuesta = 1;
+                respuesta = 1;//Se agrego correctamente el usuario
             } else {
                 st.close();
-                respuesta = 0;
+                respuesta = 0;//No se agrega el usuario
             }
 
         } catch (Exception ex) {
@@ -66,7 +80,16 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
-    
+     /**
+     * Funcion encargada de actualizar la clave del usuario en la BD por medio 
+     * de la opcion olvido su contraseña.
+     *
+     * @param entidad entidad que posee los datos para modificar la clave del
+     * usuario.
+     *
+     * @return 5 la clave de usuario se modifico correctamente, 6 no se logro
+     * modificar la clave del usuario.
+     */
     @Override
     public Entidad ActualizarClave(Entidad entidad){
     Usuario usuario = (Usuario) entidad;
@@ -83,10 +106,10 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             while(rs.next()){
                 if (rs.getString(1).equals("1")){
                     st.close();
-                    respuesta =  5; 
+                    respuesta =  5; //Se modifica correctamente la clave
                 }else{ 
                    st.close();
-                   respuesta =  6; 
+                   respuesta =  6; //No se modifica la clave
                 }
             }
          
@@ -98,6 +121,16 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
+    
+     /**
+     * Funcion encargada de verificar si el usuario existe en la BD.
+     *
+     * @param usuario string que posee los datos para verificar la clave del
+     * usuario.
+     *
+     * @return 4 El usuario no se encuentra disponible, 5 el usuario se 
+     * encuentra disponible.
+     */
     @Override
     public Entidad verificarUsuario(String usuario){
         int respuesta = 0;
@@ -128,6 +161,19 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
          return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
+    /**
+     * Funcion encargada de verificar existencia de un usuario en el sistema 
+     * y de existir verifica si el password recibido es igual al que está 
+     * almacenado en la BD
+     *
+     * @param usuario entidad que posee los datos para verificar el inicio 
+     * sesion del usuario.
+     *
+     * @return De validar correctamente el usuario y password retorna un JSON en
+     * String con todos los datos del usuario,7 Se valido inicio de sesion del 
+     * usuario correctamente,
+     * 
+     */
     @Override
     public Entidad obtenerInicioSesion(Entidad usuario){
         Usuario objeto = (Usuario) usuario;
@@ -168,8 +214,20 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             respuesta= "ERROR";
         }
         
-    return FabricaEntidad.obtenerSimpleResponse(0, 0, respuesta);
+    return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
+    
+      /**
+     * Función que verifica existencia de un usuario en el sistema y de existir
+     * verifica si el password recibido es igual al que está almacenado en la BD
+     *
+     * @param usuario string que posee los datos para verificar la clave del
+     * usuario.
+     *
+     * @return De existir el usuario y la contraseña coincide retorna un JSON en
+     * String con todos los datos del usuario. De lo contrario retorna el String
+     * "ERROR"
+     */
     
     @Override
     public Entidad obtenerXRecuperarClave(String usuario){
@@ -205,7 +263,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         } catch (Exception e) {
             respuesta = e.getMessage();
         }
-        return FabricaEntidad.obtenerSimpleResponse(0, 0, respuesta);
+        return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
     
 

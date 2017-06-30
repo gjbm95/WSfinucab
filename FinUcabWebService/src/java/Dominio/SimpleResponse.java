@@ -30,6 +30,10 @@ public class SimpleResponse extends Entidad{
         this._status = status;
     }
     
+    public SimpleResponse (String descripcion){
+        this._descripcion = descripcion;
+    }
+    
     public SimpleResponse (int id, int status, String descripcion){
         super(id);
         this._status = status;

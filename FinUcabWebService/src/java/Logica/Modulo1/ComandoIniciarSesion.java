@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package Logica.Modulo1;
 
 
@@ -11,24 +5,28 @@ import Logica.Comando;
 import BaseDatosDAO.*;
 import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
-import Services.Modulo1sResource;
 
 /**
- *
- * @author Oswaldo
+ * Modulo 1 - Modulo de Inicio de Sesion 
+ * Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido 
+ * Descripción de la clase: Clase encargada de realizar la llamada al DAOUsuario
+ * para verificar si los datos de inicio de sesion son correctos o incorrectos
  */
 public class ComandoIniciarSesion extends Comando{
-    
     Entidad usuario;
-
+    
+    //Constructor
     public ComandoIniciarSesion(Entidad usuario) {
         this.usuario = usuario;
     }
     
+    /**
+     * Procedimiento que se encarga de realizar la llamada al DAOUsuario
+     * para verificar los datos ingresados por el usuario.
+     */
     @Override
     public void ejecutar(){
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.obtenerInicioSesion(usuario);
-        //return null;
     }
 }

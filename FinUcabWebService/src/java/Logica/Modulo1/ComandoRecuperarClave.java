@@ -1,33 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo1;
 
-import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Logica.Comando;
-import Services.Modulo1sResource;
 
 /**
- *
- * @author Oswaldo
+ * Modulo 1 - Modulo de Inicio de Sesion 
+ * Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido 
+ * Descripción de la clase: Clase encargada de realizar la llamada al DAOUsuario
+ * para obtener datos del usuario que desea recuperar su clave
  */
 public class ComandoRecuperarClave extends Comando{
-    
     String usuario;
-
+    
+    //Constructor
     public ComandoRecuperarClave(String usuario) {
         this.usuario = usuario;
     }
     
-    
+    /**
+     * Procedimiento que se encarga de realizar la llamada al DAOUsuario
+     * para obtener datos del usuario que desea recuperar su clave
+     */
     @Override
     public void ejecutar(){
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.obtenerXRecuperarClave(usuario);
-        //return null;
     }
 }
