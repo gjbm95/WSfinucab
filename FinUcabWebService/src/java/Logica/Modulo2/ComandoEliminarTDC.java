@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo2;
-
 import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
@@ -14,11 +8,15 @@ import Logica.Comando;
 import Services.Modulo1sResource;
 import Services.Modulo2sResource;
 import javax.json.JsonObject;
-
 /**
- *
- * @author AlejandroNegrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class ComandoEliminarTDC extends Comando {
 
     private int tdc ;

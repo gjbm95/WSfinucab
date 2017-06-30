@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Services;
 
 import BaseDatosDAO.Conexion;
@@ -14,7 +9,10 @@ import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -32,10 +30,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * REST Web Service
- *
- * @author AlejandroNegrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 @Path("/Modulo2")
 public class Modulo2sResource {
 
@@ -54,33 +56,32 @@ public class Modulo2sResource {
      *
      * @return int 1 si se pudo actualizar, int 0 si no logro actualizar
      * @param String Json String con los atributos: u_id , u_uduario , u_nombre
-     * ,u_apellido, u_correo , u_pregunta , u_respuesta , u_password
-     *
+     * ,u_apellido, u_correo , u_pregunta , u_respuesta , u_password  
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarDatosUsuario")
     public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
-
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
-//        String decodifico = "{ \"u_id\" : \"4\" , \"u_usuario\" : \"Eoeooeoe\" , \"u_nombre\" : \"Alejandro\""
-//                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" : \"aledavid21@hotmail.com\", "
-//                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/alejandra\", "
-//                + "\"u_password\" : \"123456\" }";
-
         try {
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
             Usuario usuario = FabricaEntidad.obtenerUsuario();
             usuario.jsonToUsuario(usuarioJSON);
-            Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
-            command.ejecutar();
+            Comando command = 
+            FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
+            command.ejecutar(); 
             Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
-
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
+        
         return resultado;
     }
 
@@ -95,28 +96,31 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/agregarCuentaBancaria")
     public String agregarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
-
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = null;
-//        String decodifico = "{ \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"9900120\" , \"ct_nombrebanco\" : \"AND BANK\""
-//                + ", \"ct_saldoactual\" : \"522\", \"usuariou_id\" : \"1\" }";
-
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
-
-            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria(cuentaJSON.getString("ct_tipocuenta"),
-                    cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
-                    Float.parseFloat(cuentaJSON.getString("ct_saldoactual")), 0,
-                    Integer.parseInt(cuentaJSON.getString("usuariou_id")));
-
+            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
+            (cuentaJSON.getString("ct_tipocuenta"),
+            cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+            Float.parseFloat(cuentaJSON.getString("ct_saldoactual")), 0,
+            Integer.parseInt(cuentaJSON.getString("usuariou_id")));
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
             command.ejecutar();
             cuenta = (Cuenta_Bancaria) command.getResponse();
             resultado = Integer.toString(cuenta.getId());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        
+            Conexion.conectarADb().close();
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }    
+            
         return resultado.toString();
     }
 
@@ -131,26 +135,29 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarCuentaBancaria")
     public String actualizarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
-
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
-//        String decodifico = "{ \"ct_id\" : \"8\" , \"ct_tipocuenta\" : \"4\" , \"ct_numcuenta\" : \"15946\" ,"
-//                + " \"ct_nombrebanco\" : \"OKOKN BANK\", \"ct_saldoactual\" : \"522\" , \"usuariou_id\" : \"1\"}";
-
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
-            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria(cuentaJSON.getString("ct_tipocuenta"),
-                    cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
-                    Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
-                    Integer.parseInt(cuentaJSON.getString("ct_id")),
-                    Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
+            (cuentaJSON.getString("ct_tipocuenta"),
+            cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+            Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
+            Integer.parseInt(cuentaJSON.getString("ct_id")),
+            Integer.parseInt(cuentaJSON.getString("usuariou_id")));
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
             Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
+        
         return resultado;
     }
 
@@ -165,22 +172,23 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarCuentaBancaria")
     public String eliminarCuentaBancaria(@QueryParam("idCuenta") String idCuenta) {
-
         String decodifico = URLDecoder.decode(idCuenta);
         int resultado = 1;
-//        String decodifico = "3";
-
         try {
             int id = Integer.parseInt(decodifico);
-
             Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
             command.ejecutar();
             resultado = command.getResponse().getId();
             Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = 0;
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        } 
         return Integer.toString(resultado);
     }
 
@@ -196,13 +204,8 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/agregarTDC")
     public String agregarTDC(@QueryParam("datosTDC") String datosTDC) {
-
         String decodifico = URLDecoder.decode(datosTDC);
         int resultado = 0;
-//        String decodifico = "{ \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
-//                + " \"tc_numero\" : \"12234\""
-//                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
-
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
 
@@ -215,10 +218,16 @@ public class Modulo2sResource {
             command.ejecutar();
             tdc = (Tarjeta_Credito) command.getResponse();
             resultado = tdc.getId();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Conexion.conectarADb().close();
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = 0;
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        } 
         return Integer.toString(resultado);
     }
 
@@ -234,31 +243,29 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarTDC")
     public String actualizarTDC(@QueryParam("datosTDC") String datosTDC) {
-
         String decodifico = datosTDC;
         String resultado = "1";
-//        String decodifico = "{ \"tc_id\" : \"1\" , \"tc_tipo\" : \"4\" , \"tc_fechavencimiento\" : \"21/11/1995\" ,"
-//                + " \"tc_numero\" : \"12234\""
-//                + ", \"tc_saldo\" : \"522\", \"usuariou_id\" : \"1\" }";
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
-
             Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
-                    tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
-                    Float.parseFloat(tdcJSON.getString("tc_saldo")),
-                    Integer.parseInt(tdcJSON.getString("tc_id")),
-                    Integer.parseInt(tdcJSON.getString("usuariou_id")));
-
+            tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+            Float.parseFloat(tdcJSON.getString("tc_saldo")),
+            Integer.parseInt(tdcJSON.getString("tc_id")),
+            Integer.parseInt(tdcJSON.getString("usuariou_id")));
             Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
             command.ejecutar();
             Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
         return resultado;
     }
-
     /**
      * Función que agrega una nueva Cuenta Bancaria para un Usuario
      *
@@ -270,24 +277,26 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarTDC")
     public String eliminarTDC(@QueryParam("idtdc") String idtdc) {
-
-//        String decodifico = URLDecoder.decode(idtdc);
         int resultado = 0;
         String decodifico = idtdc;
-
         try {
             int id = Integer.parseInt(decodifico);
 
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
             command.ejecutar();
             resultado = command.getResponse().getId();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Conexion.conectarADb().close();
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = 0;
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        } 
         return Integer.toString(resultado);
     }
-
     /**
      * Función que busca todas las tarjetas de credito de un usuario
      *
@@ -298,22 +307,24 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarTDC")
     public String consultarTDC(@QueryParam("idUsuario") String idUsuario) {
-
         String decodifico = idUsuario;
         String resultado = "1";
-//        String decodifico = "1";
-
         try {
             int id = Integer.parseInt(decodifico);
-
             Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
             command.ejecutar();
             SimpleResponse simple = (SimpleResponse) command.getResponse();
             resultado = simple.getDescripcion();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Conexion.conectarADb().close();
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
         System.out.println(resultado.toString());
         return resultado;
     }
@@ -328,17 +339,24 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarCuentas")
     public String consultarCuentas(@QueryParam("idUsuario") String idUsuario) {
-
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
-//        String decodifico = "1";
-
+        try{
         int id = Integer.parseInt(decodifico);
-
         Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
         command.ejecutar();
         SimpleResponse simple = (SimpleResponse) command.getResponse();
         resultado = simple.getDescripcion();
+        Conexion.conectarADb().close();
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
         return resultado;
     }
 
@@ -352,21 +370,24 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarEstadisticas")
     public String consultarEstadisticas(@QueryParam("idUsuario") String idUsuario) {
-
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
         try {
             int id = Integer.parseInt(decodifico);
-
             Comando command = FabricaComando.instanciarComandoConsultarEstadisticas(id);
             command.ejecutar();
             SimpleResponse simple = (SimpleResponse) command.getResponse();
             resultado = simple.getDescripcion();
             Conexion.conectarADb().close();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
             resultado = "0";
-        }
+        }catch (Exception ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        } 
         return resultado;
     }
 

@@ -1,10 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package BaseDatosDAO;
 
+package BaseDatosDAO;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
@@ -30,9 +25,14 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 /**
- *
- * @author AlejandroNegrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class DaoTarjeta_Credito extends DAO {
 
     private Connection conn = Conexion.conectarADb();
@@ -66,6 +66,8 @@ public class DaoTarjeta_Credito extends DAO {
            
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;
     }
@@ -91,6 +93,8 @@ public class DaoTarjeta_Credito extends DAO {
             cstmt.close();
            
         } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;
@@ -119,13 +123,15 @@ public class DaoTarjeta_Credito extends DAO {
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idtarjeta;
     }
 
     public String getTarjetasXUsuario(int id) {
         CallableStatement cstm;
-        String respuesta;
+        String respuesta ="";
         try {
             Statement st = conn.createStatement();
             cstm = conn.prepareCall("{ call obtenerTarjetasCredito(?,?)}");
@@ -152,6 +158,9 @@ public class DaoTarjeta_Credito extends DAO {
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
+        }catch (Exception ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            respuesta = "0";
         }
         return respuesta;
     }
@@ -173,6 +182,9 @@ public class DaoTarjeta_Credito extends DAO {
             st.close();
             rs.close();
         } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            respuesta = "e";
+        }catch (Exception ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";
         }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BaseDatosDAO;
 
 import Dominio.Entidad;
@@ -20,11 +15,15 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-
 /**
- *
- * @author Alejandro Negrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class DaoPlanificacion extends DAO {
 
     private Connection conn = Conexion.conectarADb();
@@ -54,7 +53,8 @@ public class DaoPlanificacion extends DAO {
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
-
+        }catch (Exception ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
         return array;
     }

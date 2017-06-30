@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
@@ -25,11 +20,15 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-
 /**
- *
- * @author AlejandroNegrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
 
     private Connection conn = Conexion.conectarADb();
@@ -56,7 +55,10 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             rs.close();
         } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return obj;
     }
 
@@ -76,6 +78,8 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             
           
         } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;
@@ -100,6 +104,8 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             cstmt.close();
           
         } catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idCuenta;
@@ -135,6 +141,9 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
+        }catch (Exception ex) {
+            respuesta = "0";
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return respuesta;
     }
@@ -163,13 +172,16 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";
+        }catch (Exception ex) {
+            respuesta = "e";
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return respuesta;
     }
 
     @Override
     public ListaEntidad consultarTodos(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
 

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
@@ -30,10 +25,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import jdk.nashorn.internal.codegen.types.Type;
 
-/**
- *
- * @author Junior
- */
 public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
