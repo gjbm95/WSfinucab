@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica.Modulo6;
+package Logica.Modulo3;
 
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAO;
@@ -15,19 +15,21 @@ import Logica.Comando;
  *
  * @author William
  */
-public class ComandoAgregarPresupuesto extends Comando{
-
+public class ComandoModificarPresupuesto extends Comando{
+    
     private Entidad presupuesto;
 
-    public ComandoAgregarPresupuesto(Entidad presupuesto) {
+    public ComandoModificarPresupuesto(Entidad presupuesto) {
         this.presupuesto = presupuesto;
     }
-    
+
     @Override
     public void ejecutar() {
         
-//        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
-//        this.response = dao.agregar(presupuesto);
+        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        this.response = dao.modificar(presupuesto);
+        
     }
+    
     
 }
