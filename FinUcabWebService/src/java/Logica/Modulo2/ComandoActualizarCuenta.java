@@ -8,6 +8,7 @@ package Logica.Modulo2;
 import BaseDatosDAO.DaoCuenta_Bancaria;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
 import Logica.Comando;
@@ -33,7 +34,7 @@ public class ComandoActualizarCuenta extends Comando {
     @Override
     public void ejecutar() {
 
-        DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
+        IDAOCuentaBancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         daoCuenta.modificar(cuenta);
     }
     

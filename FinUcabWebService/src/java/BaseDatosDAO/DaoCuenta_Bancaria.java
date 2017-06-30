@@ -5,6 +5,7 @@
  */
 package BaseDatosDAO;
 
+import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
@@ -29,7 +30,7 @@ import javax.json.JsonObjectBuilder;
  *
  * @author AlejandroNegrin
  */
-public class DaoCuenta_Bancaria extends DAO {
+public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
 
     private Connection conn = Conexion.conectarADb();
 
