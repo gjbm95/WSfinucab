@@ -69,7 +69,7 @@ public class IdentityMap {
         ListaEntidad listaEntidad  = getListaEntidad(id);       
         ArrayList<Entidad> lista = listaEntidad.getLista();
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < lista.size(); i++) {
             if(lista.get(i).getId() == idEntidad){
                 listaEntidad.getLista().remove(i);
             }
@@ -92,7 +92,7 @@ public class IdentityMap {
         ListaEntidad listaEntidad  = getListaEntidad(id);       
         ArrayList<Entidad> lista = listaEntidad.getLista();
         
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < lista.size(); i++) {
             if(lista.get(i).getId() == idEntidad){
                 return listaEntidad.getLista().get(i);
             }
