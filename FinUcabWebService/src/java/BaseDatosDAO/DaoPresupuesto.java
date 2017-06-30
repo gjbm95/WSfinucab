@@ -7,6 +7,7 @@ package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -32,10 +33,6 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
     DaoPresupuesto() {
     }
 
-    @Override
-    public int agregar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public Entidad modificar(Entidad e) {
@@ -47,10 +44,6 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public ArrayList<Entidad> consultarTodos(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public int verificarNombre(String nombre) {
@@ -88,6 +81,16 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
 
         }
         return array;
+    }
+
+    @Override
+    public Entidad agregar(Entidad e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ListaEntidad consultarTodos(int idUsuario) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

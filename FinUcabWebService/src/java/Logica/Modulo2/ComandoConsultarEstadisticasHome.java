@@ -8,7 +8,7 @@ package Logica.Modulo2;
 import BaseDatosDAO.DAOPago;
 import BaseDatosDAO.DaoCuenta_Bancaria;
 import BaseDatosDAO.DaoPlanificacion;
-import BaseDatosDAO.DAOPresupuesto;
+import BaseDatosDAO.DaoPresupuesto;
 import BaseDatosDAO.DaoTarjeta_Credito;
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
@@ -51,7 +51,7 @@ public class ComandoConsultarEstadisticasHome extends Comando {
 
         DaoCuenta_Bancaria daoCueta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         DaoTarjeta_Credito daotcd = FabricaDAO.instanciasDaoTarjeta_Credito();
-        DAOPresupuesto daopre = FabricaDAO.instanciasDAOPresupuesto();
+        DaoPresupuesto daopre = FabricaDAO.instanciasDAOPresupuesto();
         DaoPlanificacion daopla = FabricaDAO.instanciasDAOPlanificacion();
         DAOPago daoPago = FabricaDAO.instanciasDAOPago();
         JsonObjectBuilder saldoBuilder = Json.createObjectBuilder();
