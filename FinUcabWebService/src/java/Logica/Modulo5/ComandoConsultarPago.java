@@ -25,7 +25,6 @@ public class ComandoConsultarPago extends Comando {
     public void ejecutar() {
         IDAOPago dao = SingletonDAOPago.getInstance();
         this.response = dao.consultar(idPago);            
-        System.out.println("Comando");  
 
     }
     

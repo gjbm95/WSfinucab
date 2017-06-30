@@ -26,7 +26,7 @@ public class ComandoEliminarCategoria extends Comando {
     public void ejecutar() {
         
         IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        //this.response = dao.eliminarCategoria(idCategoria);
+        this.response = dao.eliminarCategoria(idCategoria);
     
     }
     

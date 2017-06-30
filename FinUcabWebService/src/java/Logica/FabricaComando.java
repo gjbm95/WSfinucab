@@ -143,6 +143,10 @@ public class FabricaComando {
      public static ComandoConsultarCuentas instanciarComandoConsultarCuentas(int id){
         return new ComandoConsultarCuentas(id);
     }
+    
+     public static ComandoConsultarEstadisticasHome instanciarComandoConsultarEstadisticas(int id){
+        return new ComandoConsultarEstadisticasHome(id);
+    }
 
      
      public static ComandoAgregarPresupuesto instanciarComandoAgregarPresupuesto(Entidad e){

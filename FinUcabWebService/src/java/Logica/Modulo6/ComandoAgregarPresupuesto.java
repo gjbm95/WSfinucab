@@ -26,8 +26,8 @@ public class ComandoAgregarPresupuesto extends Comando{
     @Override
     public void ejecutar() {
         
-        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
-        this.response = dao.agregar(presupuesto);
+//        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+//        this.response = dao.agregar(presupuesto);
     }
     
 }
