@@ -7,6 +7,7 @@ package Services;
 
 import BaseDatosDAO.Conexion;
 import Dominio.*;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
@@ -15,6 +16,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -328,17 +331,23 @@ public class Modulo2sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarCuentas")
     public String consultarCuentas(@QueryParam("idUsuario") String idUsuario) {
-
-        String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
+        try {
+            String decodifico = URLDecoder.decode(idUsuario);
+            
 //        String decodifico = "1";
 
-        int id = Integer.parseInt(decodifico);
+            int id = Integer.parseInt(decodifico);
 
-        Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
-        command.ejecutar();
-        SimpleResponse simple = (SimpleResponse) command.getResponse();
-        resultado = simple.getDescripcion();
+            Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
+            command.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command.getResponse();
+            resultado = simple.getDescripcion();
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return resultado;
     }
 

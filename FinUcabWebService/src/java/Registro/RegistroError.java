@@ -12,5 +12,7 @@ package Registro;
 public class RegistroError {
     
     public static final String error_parametros = "Ha ocurrido un error con los datos proporcionados";
-    
+    public static final String error_respuesta_vacia = "No se ha encontrado la entidad con el id proposionado";
+     
+     
 }

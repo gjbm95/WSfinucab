@@ -9,6 +9,7 @@ import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -24,7 +25,7 @@ public class ComandoConsultarCategoria extends Comando{
     }
 
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws FinUCABException {
      
         IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
         this.response = dao.consultar(idcategoria);

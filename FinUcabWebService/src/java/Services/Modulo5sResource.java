@@ -10,6 +10,7 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Dominio.SimpleResponse;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
@@ -391,6 +392,9 @@ public class Modulo5sResource {
         } 
         catch (EmptyEntityException ex) { 
                 Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FinUCABException ex) {
+            
+            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return respuesta;

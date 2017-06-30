@@ -4,6 +4,7 @@ import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.Presupuesto;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
@@ -14,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -255,25 +258,31 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
-        String decodifico = URLDecoder.decode(datosPresupuesto);
+        
         String respuesta = "0";
-        System.out.println(decodifico);
-        JsonReader reader = Json.createReader(new StringReader(decodifico));
-        JsonObject presupuestoJSON = reader.readObject();
-        reader.close();
+        try {
+            String decodifico = URLDecoder.decode(datosPresupuesto);
+            System.out.println(decodifico);
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject presupuestoJSON = reader.readObject();
+            reader.close();
+            
+            Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"),
+                    Double.valueOf(presupuestoJSON.getString("pr_monto")),
+                    presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
+                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
+            
+            Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
+            command.ejecutar();
+            Entidad objectResponse = command.getResponse();
+            respuesta = objectResponse.toString();
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo3sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
-                Double.valueOf(presupuestoJSON.getString("pr_monto")), 
-                presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
-                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
-        
-        Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
-        command.ejecutar();
-        Entidad objectResponse = command.getResponse();
-        respuesta = objectResponse.toString();
         
         return respuesta;
-        
     }
 
     /**
