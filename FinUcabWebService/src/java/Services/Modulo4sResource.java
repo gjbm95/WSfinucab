@@ -8,6 +8,8 @@ import Dominio.ListaEntidad;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo5.EmptyEntityException;
+import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -125,20 +127,11 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            if (objectResponse != null ){
-                
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                
-            }else{
-                respuesta = "Error";
-            }
-            return objectResponse.toString();
+            respuesta = obtenerRespuestaAgregar(objectResponse);
             
-        } catch (Exception e) {
-
-            System.out.println(e.getMessage());
-            respuesta = "0";
-
+        } catch (EmptyEntityException ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
          return respuesta;
     }
@@ -362,6 +355,115 @@ public class Modulo4sResource {
                        
     }
             return respuesta;
+    }
+    
+        /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaAgregar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaConsultar(Entidad enti) throws EmptyStringException{
+         
+        if(validadorEntidad(enti)) 
+        
+        return verCategoria(enti);
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+     
+     
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
+         
+        if(validadorEntidad(enti)) 
+        
+        return listaCategoria(enti);
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaModificar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    /**
+     * Metodo para validar un string
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorString(String valor) throws EmptyEntityException, NullPointerException{
+        
+        if (valor == null) {
+            throw new NullPointerException();
+        }else if(valor.equals("")) {
+            throw new EmptyEntityException();
+        }else{
+            return true;
+        }
+
+    }
+    
+    
+    
+    /**
+     * Metodo para validar que un integer no sea cero , ni nulo
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorInteger(int valor){
+        
+        return (valor!=0);
+    }
+    
+   
+    
+    /**
+     * Metodo para validar que una entidad no sea nula ni vacia
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorEntidad(Entidad valor){
+        
+        return (valor!= null) && (!valor.equals(""));
     }
     
 
