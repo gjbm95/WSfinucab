@@ -114,9 +114,10 @@ public class Modulo5sResource {
      */
     private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
          
-        if(validadorEntidad(enti)) 
+        if(validadorEntidad(enti)) {
         
         return stringListaPago(enti);
+        }
         else {
             return "Error Entidad nula o Vacia";
         }
@@ -412,20 +413,16 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                        System.out.println("Parametro");  
+                        
         String respuesta ="";
                 try { 
-                        System.out.println("Parametro");  
+                         
                     if( validadorInteger(idPago)){
-                        System.out.println("Parametro");  
+                        
                         Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-                        System.out.println("Parametro");  
                         c.ejecutar();
-                        System.out.println("Parametro");  
                         Entidad objectResponse = c.getResponse();
-                        System.out.println("Parametro");  
                         respuesta =obtenerRespuestaConsultar(objectResponse);
-                        System.out.println("Parametro");  
                     }
                     else {
                         System.out.println("Parametro de entrada nulo o vacio");  
