@@ -3,10 +3,13 @@ package Services;
 import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -14,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -59,41 +63,19 @@ public class Modulo3sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/ObtenerPresupuesto")
-    public String getObtenerPresupuesto(@QueryParam("nombrePresupuesto") String nombrePresupuesto) {
-        //TODO return proper representation object
+    public String getObtenerPresupuesto(@QueryParam("idPresupuesto") int idPresupuesto) {
+
         String respuesta = "";
         try {
-            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
+            Comando comando = FabricaComando.instanciarComandoObtenerPresupuesto(idPresupuesto);
+            comando.ejecutar();
+            Entidad objectResponse = comando.getResponse();
+            respuesta = creaPresupuestoJson(objectResponse);
 
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT p.pr_nombre,c.ca_id,"
-                    + "p.pr_monto,p.pr_duracion,p.pr_clasificacion,"
-                    + "c.ca_esingreso FROM Presupuesto p,Categoria c "
-                    + "where p.categoriaca_id=c.ca_id and "
-                    + "pr_nombre='" + nombrePresupuesto + "';");
-            while (rs.next()) {
-                //Creo el objeto Json!             
-                JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                usuarioBuilder.add("Nombre", rs.getString(1));
-                usuarioBuilder.add("IdCategoria", rs.getString(2));
-                usuarioBuilder.add("Monto", rs.getString(3));
-                usuarioBuilder.add("Duracion", rs.getString(4));
-                usuarioBuilder.add("Clasificacion", rs.getString(5));
-                usuarioBuilder.add("Tipo", rs.getString(6));
-
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                respuesta = usuarioJsonObject.toString();
-            }
-
-            rs.close();
-            st.close();
-
-            return respuesta;
         } catch (Exception e) {
-            return e.getMessage();
+            e.printStackTrace();
         }
+        return respuesta;
     }
 
     /**
@@ -148,45 +130,20 @@ public class Modulo3sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/ListaPresupuesto")
-    public String getListaPresupuesto(@QueryParam("idUsuario") String Usuario) {
+    public String getListaPresupuesto(@QueryParam("idUsuario") int idUsuario) {
 
-        String respuesta = "";
-        Integer idUsuario = 0;
+        String respuesta = "0";
         try {
 
-            idUsuario = Integer.parseInt(Usuario);
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
+            Comando comando = FabricaComando.instanciarComandoListarPresupuestos(idUsuario);
+            comando.ejecutar();
+            Entidad objectResponse = comando.getResponse();
+            respuesta = creaListaPresupuestos(objectResponse);
 
-            ResultSet rs = st.executeQuery("SELECT p.pr_nombre,c.ca_nombre,"
-                    + "p.pr_monto,p.pr_duracion,p.pr_clasificacion,c.ca_esIngreso "
-                    + "FROM Presupuesto p,Categoria c "
-                    + "where p.categoriaca_id=c.ca_id and "
-                    + "p.usuariou_id=" + idUsuario + ";");
-
-            JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rs.next()) {
-                //Creo el objeto Json!
-                usuarioBuilder.add("Nombre", rs.getString(1));
-                usuarioBuilder.add("Categoria", rs.getString(2));
-                usuarioBuilder.add("Monto", rs.getString(3));
-                usuarioBuilder.add("Duracion", rs.getString(4));
-                usuarioBuilder.add("Clasificacion", rs.getString(5));
-                usuarioBuilder.add("Tipo", rs.getString(6));
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                arrayBuilder.add(usuarioJsonObject);
-            }
-            JsonArray array = arrayBuilder.build();
-            respuesta = array.toString();
-
-            rs.close();
-            st.close();
-
-            return respuesta;
         } catch (Exception e) {
-            return e.getMessage();
+            e.printStackTrace();
         }
+        return respuesta;
     }
 
     /**
@@ -255,25 +212,16 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
-        String decodifico = URLDecoder.decode(datosPresupuesto);
+
         String respuesta = "0";
-        System.out.println(decodifico);
-        JsonReader reader = Json.createReader(new StringReader(decodifico));
-        JsonObject presupuestoJSON = reader.readObject();
-        reader.close();
-        
-        Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
-                Double.valueOf(presupuestoJSON.getString("pr_monto")), 
-                presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
-                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
-        
+        Entidad e = creaPresupuesto(datosPresupuesto);
         Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
         command.ejecutar();
         Entidad objectResponse = command.getResponse();
-        respuesta = objectResponse.toString();
-        
+        respuesta = String.valueOf(objectResponse.getId());
+        System.out.println(respuesta + " respuesta");
         return respuesta;
-        
+
     }
 
     /**
@@ -289,24 +237,16 @@ public class Modulo3sResource {
     @Path("/ModificarPresupuesto")
     public String modificarPresupuesto(@QueryParam("nombrePresupuesto") String nombrePresupuesto, @QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
 
-        String decodifico = URLDecoder.decode(datosPresupuesto);
-        System.out.println(decodifico);
         String respuesta = "0";
-        JsonReader reader = Json.createReader(new StringReader((decodifico)));
-        JsonObject presupuestoJSON = reader.readObject();
-        reader.close();
-        
-        Entidad e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"), 
-                Double.valueOf(presupuestoJSON.getString("pr_monto")), 
-                presupuestoJSON.getString("pr_clasificacion"),presupuestoJSON.getInt("pr_duracion"),
-                presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getInt("categoriaca_id"));
-        
+        Entidad e = modificaPresupuesto(datosPresupuesto);
         Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
-        Entidad resultado = (Entidad) command.ejecutar();
-        
-        if (resultado != null)
+        command.ejecutar();
+        Entidad resultado = command.getResponse();
+
+        if (resultado != null) {
             respuesta = "1";
-       return respuesta;
+        }
+        return respuesta;
     }
 
     /**
@@ -408,5 +348,99 @@ public class Modulo3sResource {
     @Path("{id}")
     public Modulo3Resource getModulo3Resource(@PathParam("id") String id) {
         return Modulo3Resource.getInstance(id);
+    }
+
+    private Entidad modificaPresupuesto(@QueryParam("datosPresupuesto") String datosPresupuesto) {
+
+        Entidad e = null;
+        try {
+            String decodifico = URLDecoder.decode(datosPresupuesto, "UTF-8");
+            System.out.println(decodifico);
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject presupuestoJSON = reader.readObject();
+            reader.close();
+
+            e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getInt("pr_id"), presupuestoJSON.getString("pr_nombre"),
+                    Double.valueOf(presupuestoJSON.getString("pr_monto")),
+                    presupuestoJSON.getString("pr_clasificacion"), presupuestoJSON.getInt("pr_duracion"),
+                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"));
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+        }
+        return e;
+    }
+    
+    private Entidad creaPresupuesto(@QueryParam("datosPresupuesto") String datosPresupuesto) {
+
+        Entidad e = null;
+        try {
+            String decodifico = URLDecoder.decode(datosPresupuesto, "UTF-8");
+            System.out.println(decodifico);
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+            JsonObject presupuestoJSON = reader.readObject();
+            reader.close();
+
+            e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"),
+                    Double.valueOf(presupuestoJSON.getString("pr_monto")),
+                    presupuestoJSON.getString("pr_clasificacion"), presupuestoJSON.getInt("pr_duracion"),
+                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"));
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
+        }
+        return e;
+    }
+
+    private String creaListaPresupuestos(Entidad entidad) {
+        String respuesta = "";
+
+        if (entidad != null) {
+            ArrayList<Entidad> lista = ((ListaEntidad) entidad).getLista();
+            JsonObjectBuilder presupuestoBuilder = Json.createObjectBuilder();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+            for (Entidad e : lista) {
+                Presupuesto p = (Presupuesto) e;
+                presupuestoBuilder.add("Id", p.getId());
+                presupuestoBuilder.add("Nombre", p.getNombre());
+                presupuestoBuilder.add("Categoria", p.getCategoria());
+                presupuestoBuilder.add("Monto", p.getMonto());
+                presupuestoBuilder.add("Duracion", p.getDuracion());
+                presupuestoBuilder.add("Clasificacion", p.getClasificacion());
+                presupuestoBuilder.add("Tipo", p.getTipo());
+                JsonObject presupuestoJsonObject = presupuestoBuilder.build();
+                arrayBuilder.add(presupuestoJsonObject);
+            }
+            JsonArray array = arrayBuilder.build();
+            respuesta = array.toString();
+            System.out.println(respuesta);
+        } else {
+            System.out.println("Ha ocurrido un error");
+        }
+        return respuesta;
+
+    }
+    
+    private String creaPresupuestoJson(Entidad entidad) {
+
+        String respuesta = "";
+
+        if (entidad != null) {
+
+            JsonObjectBuilder presupuestoBuilder = Json.createObjectBuilder();
+            Presupuesto p = (Presupuesto) entidad;
+            
+            presupuestoBuilder.add("Id", p.getId());
+            presupuestoBuilder.add("Nombre", p.getNombre());
+            presupuestoBuilder.add("IdCategoria", p.getCategoria());
+            presupuestoBuilder.add("Monto", p.getMonto());
+            presupuestoBuilder.add("Duracion", p.getDuracion());
+            presupuestoBuilder.add("Clasificacion", p.getClasificacion());
+            presupuestoBuilder.add("Tipo", p.getTipo());
+
+            JsonObject presupuestoJsonObject = presupuestoBuilder.build();
+            respuesta = presupuestoJsonObject.toString();
+        }
+
+        return respuesta;
     }
 }

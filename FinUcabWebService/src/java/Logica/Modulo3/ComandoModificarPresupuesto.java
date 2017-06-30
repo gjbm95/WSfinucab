@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Logica.Modulo6;
+package Logica.Modulo3;
 
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAO;
+import BaseDatosDAO.Interfaces.IDAOPresupuesto;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -23,12 +24,11 @@ public class ComandoModificarPresupuesto extends Comando{
     }
 
     @Override
-    public Object ejecutar() {
+    public void ejecutar() {
         
-        Entidad respuesta;
-        IDAO dao = FabricaDAO.instanciarDAOPresupuesto();
-        respuesta = dao.modificar(presupuesto);
-        return respuesta;
+        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        this.response = dao.modificar(presupuesto);
+        
     }
     
     
