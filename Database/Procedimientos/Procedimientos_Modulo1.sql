@@ -118,19 +118,3 @@ CREATE OR REPLACE FUNCTION iniciarSesion(usuariom VARCHAR(50),clave varchar(1000
     
      LANGUAGE plpgsql;
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

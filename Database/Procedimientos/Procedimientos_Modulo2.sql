@@ -19,6 +19,12 @@ DROP FUNCTION obtenerBalanceEconomico(integer);
 DROP FUNCTION obtenertoppagos(integer);
 DROP FUNCTION obtenerTOPProximosPagos(integer);
 DROP FUNCTION obtenerTOPPresupuestos(integer);
+DROP FUNCTION obtenerUltimosPresupuestos(integer);
+DROP FUNCTION obtenerBalance(integer);
+DROP FUNCTION obtenerUltimosPlanificaciones(integer);
+DROP FUNCTION getSaldoTarjetas(integer);
+DROP FUNCTION getSaldoCuentas(integer);
+DROP FUNCTION obtenerUltimosPagos(integer);
 
 
 -------------------------------------GESTION DE CUENTAS BANCARIAS --------------------------------------
@@ -66,11 +72,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION obtenerCuentasBancarias
    ( IN PV_OPCION VARCHAR(50), filtrousuario integer,
    	 OUT ct_id integer, 
-     OUT ct_nombrebanco varchar(255), 
-     OUT ct_numcuenta varchar(255), 
      OUT ct_tipocuenta varchar(255), 
+     OUT ct_numcuenta varchar(255), 
+     OUT ct_nombrebanco varchar(255), 
      OUT ct_saldo float4,
-     OUT usuariou_id integer
+     OUT uusuariou_id integer
    ) RETURNS setof record AS
 $BODY$
 BEGIN
@@ -252,5 +258,98 @@ END;
 $BODY$
 LANGUAGE 'plpgsql';
 
+CREATE OR REPLACE FUNCTION getSaldoCuentas( IN idusuario int)
+ RETURNS int AS $$
+ DECLARE  total int ;
+begin
+
+  SELECT sum(ct_saldoactual) INTO total FROM cuenta_bancaria WHERE usuariou_id = idusuario;
+ return total;
+end;
+$$ LANGUAGE 'plpgsql';
 
 
+
+
+CREATE OR REPLACE FUNCTION getSaldoTarjetas( IN idusuario int)
+ RETURNS int AS $$
+ DECLARE  total int ;
+begin
+
+  SELECT sum(tc_saldo) INTO total FROM tarjeta_credito WHERE usuariou_id = idusuario;
+ return total;
+end;
+$$ LANGUAGE 'plpgsql';
+
+
+
+CREATE OR REPLACE FUNCTION obtenerUltimosPagos
+   ( IN idusuario integer,
+   	 OUT pg_fecha text, 
+     OUT pg_descripcion varchar(255)
+   ) RETURNS setof record AS
+$BODY$
+BEGIN
+
+   return query SELECT to_char(pa.pg_fecha,'DD-MM-YYYY') pg_fecha, pa.pg_descripcion FROM pago pa where usuariou_id = idusuario order by pa.pg_fecha desc LIMIT 3;
+
+return;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION obtenerUltimosPlanificaciones
+   ( IN idusuario integer,
+   	 OUT pa_fecha text, 
+     OUT pa_nombre varchar(255)
+   ) RETURNS setof record AS
+$BODY$
+BEGIN
+
+   return query SELECT to_char(pl.pa_fechainicio,'DD-MM-YYYY') pa_fecha, pl.pa_nombre FROM planificacion pl where pl.usuariou_id = idusuario order by pl.pa_fechainicio desc LIMIT 3;
+
+return;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+
+CREATE OR REPLACE FUNCTION obtenerBalance
+   ( IN idusuario integer,
+   	 OUT ingreso float4, 
+     OUT egreso float4
+   ) RETURNS setof record AS
+$BODY$
+BEGIN
+
+   return query SELECT 
+	(SELECT SUM(pg_monto) FROM Pago as Ingresos WHERE Ingresos.usuariou_id =u_id AND Ingresos.pg_tipotransaccion = 'ingreso') as ingreso,
+        (SELECT SUM(pg_monto) FROM Pago as Egresos WHERE Egresos.usuariou_id =u_id AND Egresos.pg_tipotransaccion = 'egreso') as egreso 
+                FROM Usuario WHERE u_id = idusuario;
+
+return;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION obtenerUltimosPresupuestos
+   ( IN idusuario integer,
+   	 OUT pr_fecha text, 
+     OUT pr_nombre varchar(255)
+   ) RETURNS setof record AS
+$BODY$
+BEGIN
+
+   return query SELECT to_char(pr.pr_fecha,'DD-MM-YYYY') pr_fecha, pr.pr_nombre FROM presupuesto pr where pr.usuariou_id = idusuario order by pr.pr_fecha desc LIMIT 3;
+
+return;
+END;
+$BODY$
+LANGUAGE 'plpgsql';
