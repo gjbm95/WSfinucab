@@ -7,6 +7,8 @@ package Logica.Modulo1;
 
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
+import Dominio.Entidad;
 import Logica.Comando;
 import Services.Modulo1sResource;
 
@@ -15,25 +17,15 @@ import Services.Modulo1sResource;
  * @author Oswaldo
  */
 public class ComandoActualizarClave extends Comando{
-    String usuario, clave;
+    Entidad usuario;
 
-    public ComandoActualizarClave(String usuario, String clave) {
+    public ComandoActualizarClave(Entidad usuario) {
         this.usuario = usuario;
-        this.clave = clave;
     }
     
     @Override
     public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-     
-        int respuesta = dao.ActualizarClave(usuario,clave);
-        if(respuesta == 5){
-            Modulo1sResource.resultado = "5";
-        }else {
-            Modulo1sResource.resultado = "6";
-        }
-       
-        
-        //return null;
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.ActualizarClave(usuario);
     }
 }

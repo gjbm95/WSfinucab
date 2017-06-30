@@ -7,6 +7,7 @@ package Logica.Modulo1;
 
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
 import Dominio.Usuario;
 import Logica.Comando;
@@ -18,16 +19,16 @@ import Services.Modulo1sResource;
  */
 public class ComandoRegistrarUsuario extends Comando{
     
-    Usuario usuario;
+    Entidad usuario;
 
-    public ComandoRegistrarUsuario(Usuario usuario) {
+    public ComandoRegistrarUsuario(Entidad usuario) {
         this.usuario = usuario;
     }
     
     
     public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-        Entidad respuesta = dao.agregar((Entidad)usuario);
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.agregar(usuario);
         
         /*if(respuesta == 1){
             Modulo1sResource.resultado = "1";

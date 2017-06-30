@@ -9,6 +9,8 @@ package Logica.Modulo1;
 
 import Logica.Comando;
 import BaseDatosDAO.*;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
+import Dominio.Entidad;
 import Services.Modulo1sResource;
 
 /**
@@ -17,17 +19,16 @@ import Services.Modulo1sResource;
  */
 public class ComandoIniciarSesion extends Comando{
     
-    String usuario, clave;
+    Entidad usuario;
 
-    public ComandoIniciarSesion(String usuario, String clave) {
+    public ComandoIniciarSesion(Entidad usuario) {
         this.usuario = usuario;
-        this.clave = clave;
     }
     
     @Override
     public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-        Modulo1sResource.resultado = dao.obtenerInicioSesion(usuario , clave);
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.obtenerInicioSesion(usuario);
         //return null;
     }
 }

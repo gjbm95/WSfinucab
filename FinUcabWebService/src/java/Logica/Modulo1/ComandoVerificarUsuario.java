@@ -7,6 +7,7 @@ package Logica.Modulo1;
 
 import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Logica.Comando;
 import Services.Modulo1sResource;
 
@@ -23,13 +24,7 @@ public class ComandoVerificarUsuario extends Comando{
     
     @Override
     public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-        int respuesta = dao.verificarUsuario(usuario);
-        if(respuesta == 4){
-            Modulo1sResource.resultado = "4";//EN USO
-        }else if(respuesta == 3){
-            Modulo1sResource.resultado = "3";//DISPONIBLE
-        }
-        //return null;
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.verificarUsuario(usuario);
     }
 }

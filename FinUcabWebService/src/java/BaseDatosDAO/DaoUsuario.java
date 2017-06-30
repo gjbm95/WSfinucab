@@ -5,6 +5,7 @@
  */
 package BaseDatosDAO;
 
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
@@ -28,7 +29,7 @@ import javax.json.JsonObjectBuilder;
  *
  * @author AlejandroNegrin
  */
-public class DaoUsuario extends DAO {
+public class DaoUsuario extends DAO implements IDAOUsuario{
 
     private Connection conn = Conexion.conectarADb();
 
@@ -66,16 +67,16 @@ public class DaoUsuario extends DAO {
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
-    public int ActualizarClave(String usuario, String clave){
-    String decodifico = URLDecoder.decode(usuario);
+    @Override
+    public Entidad ActualizarClave(Entidad entidad){
+    Usuario usuario = (Usuario) entidad;
     int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-           
             CallableStatement a = conn.prepareCall("{ call ActualizarClave(?,?) }");
-            a.setString(1,usuario);
-            a.setString(2,clave);
+            a.setString(1,usuario.getUsuario());
+            a.setString(2,usuario.getContrasena());
             a.execute();
             ResultSet rs = a.getResultSet();
            
@@ -94,10 +95,11 @@ public class DaoUsuario extends DAO {
             respuesta = 2;
 
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
-    public int verificarUsuario(String usuario){
+    @Override
+    public Entidad verificarUsuario(String usuario){
         int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
@@ -123,11 +125,12 @@ public class DaoUsuario extends DAO {
         } catch (Exception e) {
             respuesta =  2;//cambiar
         }
-        return respuesta;
+         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
-    public String obtenerInicioSesion(String usuario, String clave){
-        String decodifico = URLDecoder.decode(usuario);
+    @Override
+    public Entidad obtenerInicioSesion(Entidad usuario){
+        Usuario objeto = (Usuario) usuario;
         String respuesta="";
         int bandera=0;
         try {
@@ -135,8 +138,8 @@ public class DaoUsuario extends DAO {
             Statement st = conn.createStatement();
             
             CallableStatement a = conn.prepareCall("{ call iniciarSesion(?,?) }");
-            a.setString(1,  usuario);
-            a.setString(2,  clave);
+            a.setString(1,  objeto.getUsuario());
+            a.setString(2,  objeto.getContrasena());
             a.execute();
   
            ResultSet rs = a.getResultSet();
@@ -165,10 +168,11 @@ public class DaoUsuario extends DAO {
             respuesta= "ERROR";
         }
         
-    return respuesta;
+    return FabricaEntidad.obtenerSimpleResponse(0, 0, respuesta);
     }
     
-    public String obtenerXRecuperarClave(String usuario){
+    @Override
+    public Entidad obtenerXRecuperarClave(String usuario){
         String respuesta="";
         try {
             Connection conn = Conexion.conectarADb();
@@ -201,7 +205,7 @@ public class DaoUsuario extends DAO {
         } catch (Exception e) {
             respuesta = e.getMessage();
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponse(0, 0, respuesta);
     }
     
 

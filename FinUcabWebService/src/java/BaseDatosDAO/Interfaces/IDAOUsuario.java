@@ -5,10 +5,20 @@
  */
 package BaseDatosDAO.Interfaces;
 
+import Dominio.Entidad;
+
 /**
  *
  * @author Junior
  */
 public interface IDAOUsuario extends IDAO {
     
+    public Entidad ActualizarClave(Entidad entidad);
+    
+    public Entidad verificarUsuario(String usuario);
+    
+    public Entidad obtenerInicioSesion(Entidad usuario);
+    
+    public Entidad obtenerXRecuperarClave(String usuario);
+ 
 }

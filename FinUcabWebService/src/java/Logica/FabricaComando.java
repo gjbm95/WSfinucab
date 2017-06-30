@@ -30,8 +30,8 @@ import Logica.Modulo6.ComandoAgregarPresupuesto;
  */
 public class FabricaComando {
     
-    public static ComandoIniciarSesion instanciarComandoIniciarSesion(String usuario,String clave){
-        return new ComandoIniciarSesion(usuario, clave);
+    public static ComandoIniciarSesion instanciarComandoIniciarSesion(Entidad usuario){
+        return new ComandoIniciarSesion(usuario);
     }
     
      public static ComandoVerificarUsuario instanciarComandoVerificarUsuario(String usuario){
@@ -42,11 +42,11 @@ public class FabricaComando {
         return new ComandoRecuperarClave(usuario);
     }
      
-     public static ComandoActualizarClave instanciarComandoActualizarClave(String usuario,String clave){
-        return new ComandoActualizarClave(usuario, clave);
+     public static ComandoActualizarClave instanciarComandoActualizarClave(Entidad usuario){
+        return new ComandoActualizarClave(usuario);
     }
      
-     public static ComandoRegistrarUsuario instanciarComandoRegistrarUsuario(Usuario usuario){
+     public static ComandoRegistrarUsuario instanciarComandoRegistrarUsuario(Entidad usuario){
         return new ComandoRegistrarUsuario(usuario);
     }
     

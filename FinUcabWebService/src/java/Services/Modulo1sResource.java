@@ -3,13 +3,19 @@ package Services;
 
 import Dominio.Usuario;
 import BaseDatosDAO.Conexion;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.SimpleResponse;
+import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo1.ComandoActualizarClave;
 import Logica.Modulo1.ComandoIniciarSesion;
 import Logica.Modulo1.ComandoRecuperarClave;
 import Logica.Modulo1.ComandoRegistrarUsuario;
 import Logica.Modulo1.ComandoVerificarUsuario;
+import Logica.Modulo5.EmptyEntityException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -131,16 +137,72 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarUsuario")
     public String registrarUsuario(@QueryParam("datosUsuario") String datosCuenta) {
-
-        String decodifico = URLDecoder.decode(datosCuenta);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        Usuario usuario = new Usuario(0,usuarioJSON.getString("u_nombre"),usuarioJSON.getString("u_apellido"),
-        usuarioJSON.getString("u_correo"),usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"),
-        usuarioJSON.getString("u_pregunta"),usuarioJSON.getString("u_respuesta"),null,null);
-        
-        ComandoRegistrarUsuario cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
+        Entidad usuario = entidadAgregarUsuario(datosCuenta);
+        Comando cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
         cru.ejecutar();
+        Entidad respuesta = cru.getResponse();
+        String resultado = obtenerRespuestaAgregar(respuesta);
         return resultado;
+    }
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para agregar un usuario
+     * @param datosUsuario
+     * @return Entidad
+     */
+    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") String datosCuenta)  /*throws EmptyEntityException  */{
+
+        Entidad usuario = null;
+                 
+            /*try{       
+                
+                boolean validador  = validadorString(datosPagos);
+                if( validador ){
+         */
+                    String decodifico;
+        try {
+            decodifico = URLDecoder.decode(datosCuenta,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+                    JsonObject usuarioJSON = reader.readObject();           
+                    reader.close();
+                    usuario = FabricaEntidad.obtenerUsuario(0,
+                    usuarioJSON.getString("u_nombre"),
+                    usuarioJSON.getString("u_apellido"),
+                    usuarioJSON.getString("u_correo"),
+                    usuarioJSON.getString("u_usuario"),
+                    usuarioJSON.getString("u_password"),
+                    usuarioJSON.getString("u_pregunta"),
+                    usuarioJSON.getString("u_respuesta"),null,null);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
+                    /*
+                }else {
+
+                    throw new EmptyEntityException();   
+                }
+            
+            }catch(EmptyEntityException e){
+                System.out.println(e.EmptyEntity());
+            } catch (UnsupportedEncodingException ex1) {
+                
+            }*/
+        return usuario;
+    }
+    
+    private String obtenerRespuestaAgregar(Entidad enti){
+          String respuesta;
+        //if(validadorEntidad(enti)) 
+        if(((SimpleResponse) enti).getStatus() == 1){
+            respuesta = "1";
+        }else{
+            respuesta = "0";
+        }
+        return respuesta;
+        //else {
+        //    return "Error Entidad nula o Vacia";
+        //}
     }
 
     /**
@@ -154,11 +216,29 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
     public String verificarUsuario(@QueryParam("nombreUsuario") String usuario) {
-        ComandoVerificarUsuario cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
+        Comando cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
         cvu.ejecutar();
+        Entidad respuesta = cvu.getResponse();
+        String resultado = obtenerRespuestaVerificarUsuario(respuesta);        
         return resultado;
     }
 
+    
+  
+    private String obtenerRespuestaVerificarUsuario(Entidad enti){
+          String respuesta = "";
+        //if(validadorEntidad(enti)) 
+               if(((SimpleResponse) enti).getStatus() == 4){
+            respuesta = "4";//EN USO
+        }else if(((SimpleResponse) enti).getStatus() == 3){
+            respuesta = "3";//DISPONIBLE
+        }
+        return respuesta;
+        
+        //else {
+        //    return "Error Entidad nula o Vacia";
+        //}
+    }
     /**
      * Función que verifica existencia de un usuario en el sistema y de existir
      * verifica si el password recibido es igual al que está almacenado en la BD
@@ -172,12 +252,63 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/iniciarSesion")
     public String iniciarSesion(@QueryParam("datosUsuario") String usuario) {
-        String decodifico = URLDecoder.decode(usuario);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        ComandoIniciarSesion cis = FabricaComando.instanciarComandoIniciarSesion(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
-        cis.ejecutar();
+         Entidad usuarioi = entidadiniciarSesion(usuario);
+        Comando cru = FabricaComando.instanciarComandoIniciarSesion(usuarioi);
+        cru.ejecutar();
+        Entidad respuesta = cru.getResponse();
+        String resultado = obtenerRespuestaIniciarsesion(respuesta);
         return resultado;
+        
+      
     }
+    
+    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") String usuario)  /*throws EmptyEntityException  */{
+
+        Entidad usuarioi = null;
+                 
+            /*try{       
+                
+                boolean validador  = validadorString(datosPagos);
+                if( validador ){
+         */
+                    String decodifico;
+        try {
+            decodifico = URLDecoder.decode(usuario,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+                    JsonObject usuarioJSON = reader.readObject();           
+                    reader.close();
+                    usuarioi = FabricaEntidad.obtenerUsuario(0,
+                    null,null,null,
+                    usuarioJSON.getString("u_usuario"),
+                    usuarioJSON.getString("u_password"),null,null,null,null);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
+                    /*
+                }else {
+
+                    throw new EmptyEntityException();   
+                }
+            
+            }catch(EmptyEntityException e){
+                System.out.println(e.EmptyEntity());
+            } catch (UnsupportedEncodingException ex1) {
+                
+            }*/
+        return usuarioi;
+    }
+    
+     private String obtenerRespuestaIniciarsesion(Entidad enti){
+          String respuesta;
+        //if(validadorEntidad(enti)) 
+        
+        return ((SimpleResponse) enti).getDescripcion();
+        //else {
+        //    return "Error Entidad nula o Vacia";
+        //}
+    }
+    
 
     /**
      * Funcion que convierte un string con estructura JSON en JsonObject
@@ -232,9 +363,23 @@ public class Modulo1sResource {
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
 
-        ComandoRecuperarClave crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
+        Comando crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
         crc.ejecutar();
+        Entidad respuesta = crc.getResponse();
+        String resultado = obtenerRespuestaRecuperarClave(respuesta);        
         return resultado;
+        
+        
+    }
+    
+    private String obtenerRespuestaRecuperarClave(Entidad enti){
+          String respuesta = "";
+        //if(validadorEntidad(enti)) 
+        return ((SimpleResponse) enti).getDescripcion();
+        
+        //else {
+        //    return "Error Entidad nula o Vacia";
+        //}
     }
     
     
@@ -251,11 +396,62 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarClave")
     public String actualizarClave(@QueryParam("datosUsuario") String datosUsuario) {
-        String decodifico = URLDecoder.decode(datosUsuario);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        ComandoActualizarClave cis = FabricaComando.instanciarComandoActualizarClave(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
+        Entidad usuario = entidadActualizarClave(datosUsuario);
+        Comando cis = FabricaComando.instanciarComandoActualizarClave(usuario);
         cis.ejecutar();
+        Entidad respuesta = cis.getResponse();
+        String resultado = obtenerRespuestaActualizarClave(respuesta);
         return resultado;
+    }
+    
+    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") String datosUsuario)  /*throws EmptyEntityException  */{
+
+        Entidad usuarioi = null;
+                 
+            /*try{       
+                
+                boolean validador  = validadorString(datosPagos);
+                if( validador ){
+         */
+                    String decodifico;
+        try {
+            decodifico = URLDecoder.decode(datosUsuario,"UTF-8");
+            JsonReader reader = Json.createReader(new StringReader(decodifico));
+                    JsonObject usuarioJSON = reader.readObject();           
+                    reader.close();
+                    usuarioi = FabricaEntidad.obtenerUsuario(0,
+                    null,null,null,usuarioJSON.getString("u_usuario"),
+                    usuarioJSON.getString("u_password"),null,null,null,null);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                    
+                    /*
+                }else {
+
+                    throw new EmptyEntityException();   
+                }
+            
+            }catch(EmptyEntityException e){
+                System.out.println(e.EmptyEntity());
+            } catch (UnsupportedEncodingException ex1) {
+                
+            }*/
+        return usuarioi;
+    }
+    
+    private String obtenerRespuestaActualizarClave(Entidad enti){
+          String respuesta;
+        //if(validadorEntidad(enti)) 
+        if(((SimpleResponse) enti).getStatus() == 5){
+            respuesta = "5";
+        }else{
+            respuesta = "6";
+        }
+        return respuesta;
+        //else {
+        //    return "Error Entidad nula o Vacia";
+        //}
     }
 
     /**
