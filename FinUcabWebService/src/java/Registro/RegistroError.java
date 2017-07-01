@@ -23,7 +23,8 @@ public class RegistroError {
     private static final String error_numero_vacia = "Se ha proporcionado un numero nulo";
     private static final String error_entidad_nula = "La Entidad proporcionada es nula";
     private static final String error_string_nula = "La cadena de caracteres proporcionda es nula";
-     
+    private static final String error_actualizar_clave = "Ha ocurrido un error actualizando la clave";
+    
     public static final HashMap<Integer,String> errores;
     static{
         HashMap<Integer,String> errorsLocal = new HashMap<>();
@@ -33,7 +34,7 @@ public class RegistroError {
         errorsLocal.put(4, error_string_nula);
         errorsLocal.put(5, error_entidad_nula);
         errorsLocal.put(6, error_numero_vacia);
-        
+        errorsLocal.put(201, error_actualizar_clave);
         errores = (HashMap<Integer, String>) Collections.unmodifiableMap(errorsLocal);
         
     }

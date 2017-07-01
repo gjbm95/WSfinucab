@@ -125,8 +125,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{ 
                    st.close();
                    respuesta =  6; //No se modifica la clave
-                   throw FabricaExcepcion.
-                           instanciarActualizarClaveException(201);
+                  // throw FabricaExcepcion.
+                          // instanciarActualizarClaveException(201);
                 }
             }
          
@@ -298,7 +298,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
-                throw FabricaExcepcion.instanciarRecuperarClaveException(203);
+                //throw FabricaExcepcion.instanciarRecuperarClaveException(203);
                 
             }
             
