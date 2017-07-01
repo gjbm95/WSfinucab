@@ -17,4 +17,7 @@ public class ActualizarClaveException extends FinUCABException{
         super(code, message,ActualizarClaveException.class);
     }
     
+    public ActualizarClaveException(int code){
+        super(code,ActualizarClaveException.class);
+    }
 }

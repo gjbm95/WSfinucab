@@ -6,6 +6,7 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
+import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
 import Logica.Modulo1.ActualizarClaveException;
 import Logica.Modulo1.IniciarSesionException;
@@ -79,12 +80,12 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             } else {
                 st.close();
                 respuesta = 0;//No se agrega el usuario
-                throw new RegistrarIncorrectoException(100,RegistroError.error_parametros);
+                throw FabricaExcepcion.instanciarRegistrarIncorrectoException(200);
             }
 
         } catch (SQLException ex) {
             respuesta = 0;
-            throw new RegistrarIncorrectoException(ex.getErrorCode(),ex.getMessage());                
+            throw FabricaExcepcion.instanciarRegistrarIncorrectoException(ex.getErrorCode(),ex.getMessage());                
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
@@ -118,14 +119,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{ 
                    st.close();
                    respuesta =  6; //No se modifica la clave
+                   throw FabricaExcepcion.instanciarActualizarClaveException(201);
                 }
             }
          
-        } catch (Exception e) {
-            respuesta = 2;
-            throw new ActualizarClaveException(100,RegistroError.error_parametros);
-      
+        } catch (SQLException ex) {
+            respuesta = 0;
+            throw FabricaExcepcion.instanciarActualizarClaveException(ex.getErrorCode(),ex.getMessage());                
         }
+        
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
@@ -165,7 +167,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             }
         } catch (SQLException ex) {
              Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-             throw new VerificarUsuarioException(ex.getErrorCode(),ex.getMessage());  
+             throw  FabricaExcepcion.instanciarVerificarUsuarioException(ex.getErrorCode(),ex.getMessage());  
    
         } catch (Exception e) {
             respuesta =  2;//cambiar
@@ -219,15 +221,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera==0){
               st.close();
               respuesta= "7";
-              throw new IniciarSesionException(100,RegistroError.error_parametros);
+              throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
             
         } catch (SQLException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw new IniciarSesionException(ex.getErrorCode(),ex.getMessage());  
+            throw FabricaExcepcion.instanciarIniciarSesionException(ex.getErrorCode(),ex.getMessage());  
         } catch (Exception e) {
             respuesta= "ERROR";
-            throw new IniciarSesionException(100,RegistroError.error_parametros);
+            throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
         
     return FabricaEntidad.obtenerSimpleResponse(respuesta);
@@ -275,14 +277,14 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
-                throw new RecuperarClaveException(100,RegistroError.error_parametros);
+                throw FabricaExcepcion.instanciarRecuperarClaveException(203);
                 
             }
             
         } catch (SQLException ex) {
             respuesta = "ERROR";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RecuperarClaveException(ex.getErrorCode(),ex.getMessage());  
+            throw FabricaExcepcion.instanciarRecuperarClaveException(ex.getErrorCode(),ex.getMessage());  
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
@@ -302,9 +304,10 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             cstmt.setString(6, obj.getPregunta());
             cstmt.setString(7, obj.getRespuesta());
             cstmt.setString(8, obj.getContrasena());
-            cstmt.execute();
-            System.out.printf("ENTREEEEEEEEEEE");
-        } catch (SQLException ex) {
+            cstmt.execute();   
+        }catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;

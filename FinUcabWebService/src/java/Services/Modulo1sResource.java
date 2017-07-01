@@ -6,6 +6,8 @@ import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.SimpleResponse;
+import Exceptions.DataReaderException;
+import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
@@ -19,7 +21,6 @@ import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
 import Logica.Modulo1.RegistrarIncorrectoException;
 import Logica.Modulo1.VerificarUsuarioException;
-import Logica.Modulo5.EmptyEntityException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -131,11 +132,11 @@ public class Modulo1sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor) throws EmptyEntityException, NullPointerException{
+    private boolean validadorString(String valor) throws DataReaderException {
         if (valor == null) {
-            throw new NullPointerException();
+            throw FabricaExcepcion.instanciarDataReaderException(1);
         }else if(valor.equals("")) {
-            throw new EmptyEntityException();
+            throw FabricaExcepcion.instanciarDataReaderException(1);
         }else{
             return true;
         }
@@ -175,10 +176,7 @@ public class Modulo1sResource {
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaRegistrarUsuario(respuesta);
             
-        } catch (EmptyEntityException ex) {
-            resultado = "0";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NullPointerException ex) {
+        } catch (DataReaderException ex) {
             resultado = "0";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RegistrarIncorrectoException ex) {
@@ -187,8 +185,7 @@ public class Modulo1sResource {
         } catch (Exception ex) {
             resultado = "0";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+        }
         return resultado;
     }
     
@@ -199,7 +196,7 @@ public class Modulo1sResource {
      * u_password
      * @return Entidad con los datos del usuario
      */
-    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") String datosCuenta) throws EmptyEntityException, NullPointerException  /*throws EmptyEntityException  */{
+    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") String datosCuenta) throws DataReaderException, NullPointerException  /*throws EmptyEntityException  */{
 
         Entidad usuario = null;
         try {
@@ -218,10 +215,8 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_password"),
                 usuarioJSON.getString("u_pregunta"),
                 usuarioJSON.getString("u_respuesta"),null,null);
-            }else {
-                throw new EmptyEntityException();   
             }
-        } catch (EmptyEntityException ex) {
+        } catch (DataReaderException ex) {
                 Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -322,10 +317,7 @@ public class Modulo1sResource {
             cru.ejecutar();
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaIniciarsesion(respuesta);
-        } catch (EmptyEntityException ex) {
-            resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (NullPointerException ex) {
+        } catch (DataReaderException ex) {
             resultado = "7";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -347,7 +339,7 @@ public class Modulo1sResource {
      * @param usuario JSON.toString() con los "atributos" u_usuario y u_password
      * @return Entidad con los datos del usuario
      */
-    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") String usuario)  throws EmptyEntityException {
+    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") String usuario)  throws DataReaderException {
         Entidad usuarioi = null;
         String decodifico;
         try {
@@ -361,11 +353,7 @@ public class Modulo1sResource {
                 null,null,null,
                 usuarioJSON.getString("u_usuario"),
                 usuarioJSON.getString("u_password"),null,null,null,null);
-            }else {
-                throw new EmptyEntityException();
             }
-        } catch(EmptyEntityException e){
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, e);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -402,13 +390,15 @@ public class Modulo1sResource {
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
         String resultado = "";
-        
         try {
             Comando crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
             crc.ejecutar();
             Entidad respuesta = crc.getResponse();
             resultado = obtenerRespuestaRecuperarClave(respuesta);
-        }  catch (RecuperarClaveException ex) {
+        }  catch (DataReaderException ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (RecuperarClaveException ex) {
             resultado = "ERROR";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -462,13 +452,10 @@ public class Modulo1sResource {
             cis.ejecutar();
             Entidad respuesta = cis.getResponse();
             resultado = obtenerRespuestaActualizarClave(respuesta);
-        } catch (EmptyEntityException ex) {
+        } catch (DataReaderException ex) {
             resultado = "6";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NullPointerException ex) {
-            resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ActualizarClaveException ex) {
+        }catch (ActualizarClaveException ex) {
             resultado = "6";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -485,12 +472,9 @@ public class Modulo1sResource {
      * @return Entidad con los datos del usuario
      */
     
-    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") String datosUsuario)  throws EmptyEntityException  {
+    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") String datosUsuario)  throws DataReaderException  {
 
-        Entidad usuarioi = null;
-                 
-        
-                    
+        Entidad usuarioi = null; 
         try {
             boolean validador  = validadorString(datosUsuario);
             if( validador ){
@@ -502,11 +486,7 @@ public class Modulo1sResource {
                 usuarioi = FabricaEntidad.obtenerUsuario(0,
                 null,null,null,usuarioJSON.getString("u_usuario"),
                 usuarioJSON.getString("u_password"),null,null,null,null);
-            }else {
-                throw new EmptyEntityException();   
             }
-        } catch (EmptyEntityException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -529,7 +509,7 @@ public class Modulo1sResource {
                 respuesta = "6"; //Incorrecto
             }
         }else {
-            respuesta = "Error Entidad nula o Vacia";
+            respuesta = "error";
         }
         return respuesta;
         

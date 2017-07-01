@@ -17,5 +17,8 @@ public class UsuarioIncorrectoException extends FinUCABException{
         super(code, message, UsuarioIncorrectoException.class);
     }
     
+    public UsuarioIncorrectoException(int code){
+        super(code,UsuarioIncorrectoException.class);
+    }
     
 }

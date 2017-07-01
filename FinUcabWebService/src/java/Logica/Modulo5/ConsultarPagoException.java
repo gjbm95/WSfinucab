@@ -13,6 +13,10 @@ import Exceptions.FinUCABException;
  */
 public class ConsultarPagoException extends FinUCABException {
     
+    public ConsultarPagoException(int code){
+        super(code,ConsultarPagoException.class);
+    }
+    
     public ConsultarPagoException(int code, String message){
         super(code, message,ConsultarPagoException.class);
     }

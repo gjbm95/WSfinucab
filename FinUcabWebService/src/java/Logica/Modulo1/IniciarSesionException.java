@@ -17,4 +17,7 @@ public class IniciarSesionException extends FinUCABException{
         super(code, message, IniciarSesionException.class);
     }
     
+    public IniciarSesionException(int code) {
+        super(code, IniciarSesionException.class);
+    }
 }

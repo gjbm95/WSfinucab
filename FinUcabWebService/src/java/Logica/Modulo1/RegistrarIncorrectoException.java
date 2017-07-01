@@ -17,4 +17,8 @@ public class RegistrarIncorrectoException extends FinUCABException{
         super(code, message,  RegistrarIncorrectoException.class);
     }
     
+     public RegistrarIncorrectoException(int code){
+        super(code,RegistrarIncorrectoException.class);
+    }
+    
 }

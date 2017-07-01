@@ -24,7 +24,7 @@ public class ComandoActualizarClave extends Comando{
      * para actualizar la clave del usuario
      */
     @Override
-    public void ejecutar(){
+    public void ejecutar() throws ActualizarClaveException{
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.ActualizarClave(usuario);
     }

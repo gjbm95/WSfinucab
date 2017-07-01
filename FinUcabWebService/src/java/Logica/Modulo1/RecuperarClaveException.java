@@ -17,4 +17,7 @@ public class RecuperarClaveException extends FinUCABException {
         super(code, message, RecuperarClaveException.class);
     }
     
+    public RecuperarClaveException(int code){
+        super(code,RecuperarClaveException.class);
+    }
 }

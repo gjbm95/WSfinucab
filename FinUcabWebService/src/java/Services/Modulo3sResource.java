@@ -215,7 +215,6 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
-
         String respuesta = "0";
         try {
             Entidad e = creaPresupuesto(datosPresupuesto);
@@ -227,7 +226,6 @@ public class Modulo3sResource {
         } catch (FinUCABException ex) {
             Logger.getLogger(Modulo3sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return respuesta;
     }
 

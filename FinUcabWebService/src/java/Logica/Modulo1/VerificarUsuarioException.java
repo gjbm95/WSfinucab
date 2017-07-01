@@ -17,4 +17,8 @@ public class VerificarUsuarioException extends FinUCABException{
         super(code, message, VerificarUsuarioException.class);
     }
     
+    public VerificarUsuarioException(int code){
+        super(code,VerificarUsuarioException.class);
+    }
+    
 }
