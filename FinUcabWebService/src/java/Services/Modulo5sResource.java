@@ -142,9 +142,9 @@ public class Modulo5sResource {
     private boolean validadorString(String valor) throws DataReaderException{
         
         if (valor == null) {
-            throw FabricaExcepcion.instanciarDataReaderException(1);
+            throw FabricaExcepcion.instanciarDataReaderException(3);
         }else if(valor.equals("")) {
-            throw FabricaExcepcion.instanciarDataReaderException(1);
+            throw FabricaExcepcion.instanciarDataReaderException(4);
         }else{
             return true;
         }
@@ -161,7 +161,7 @@ public class Modulo5sResource {
     private boolean validadorInteger(int valor) throws DataReaderException{
         
         if (valor == 0) {
-            throw FabricaExcepcion.instanciarDataReaderException(3);
+            throw FabricaExcepcion.instanciarDataReaderException(6);
         }
         return true;
     }
@@ -176,7 +176,7 @@ public class Modulo5sResource {
     private boolean validadorEntidad(Entidad valor) throws DataReaderException{
         
         if (valor == null)
-            throw FabricaExcepcion.instanciarDataReaderException(1);
+            throw FabricaExcepcion.instanciarDataReaderException(5);
      
         return true;
     }
