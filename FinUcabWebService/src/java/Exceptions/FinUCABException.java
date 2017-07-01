@@ -15,13 +15,22 @@ public abstract class FinUCABException extends Exception{
     private String _message;
     private Class _className;
     
+    public FinUCABException(int code, Class className){
+        super();        
+        this._code = code;
+        this._message = RegistroError.erros.get(code);
+        this._className = className;
+        
+        System.out.println("Error ("+_className+") : "+_code+" - "+ _message);
+    }
+    
     public FinUCABException(int code, String message, Class className){
         super();        
         this._code = code;
         this._message = message;
         this._className = className;
         
-        System.out.println("Error ("+className+") : "+code+" - "+ message);
+        System.out.println("Error ("+_className+") : "+_code+" - "+ _message);
     }
     
     
