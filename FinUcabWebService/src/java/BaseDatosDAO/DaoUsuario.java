@@ -66,7 +66,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement a = conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+            CallableStatement a = 
+                    conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
             a.setString(1, usuario.getUsuario());
             a.setString(2, usuario.getNombre());
             a.setString(3, usuario.getApellido());
@@ -80,12 +81,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             } else {
                 st.close();
                 respuesta = 0;//No se agrega el usuario
-                throw FabricaExcepcion.instanciarRegistrarIncorrectoException(200);
+                throw FabricaExcepcion.
+                        instanciarRegistrarIncorrectoException(200);
             }
 
         } catch (SQLException ex) {
             respuesta = 0;
-            throw FabricaExcepcion.instanciarRegistrarIncorrectoException(ex.getErrorCode(),ex.getMessage());                
+            throw FabricaExcepcion.
+                    instanciarRegistrarIncorrectoException(ex.getErrorCode(),
+                            ex.getMessage());                
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
@@ -100,13 +104,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * modificar la clave del usuario.
      */
     @Override
-    public Entidad ActualizarClave(Entidad entidad) throws ActualizarClaveException{
+    public Entidad ActualizarClave(Entidad entidad) 
+            throws ActualizarClaveException{
     Usuario usuario = (Usuario) entidad;
     int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement a = conn.prepareCall("{ call ActualizarClave(?,?) }");
+            CallableStatement a =
+                    conn.prepareCall("{ call ActualizarClave(?,?) }");
             a.setString(1,usuario.getUsuario());
             a.setString(2,usuario.getContrasena());
             a.execute();
@@ -119,13 +125,16 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{ 
                    st.close();
                    respuesta =  6; //No se modifica la clave
-                   throw FabricaExcepcion.instanciarActualizarClaveException(201);
+                   throw FabricaExcepcion.
+                           instanciarActualizarClaveException(201);
                 }
             }
          
         } catch (SQLException ex) {
             respuesta = 0;
-            throw FabricaExcepcion.instanciarActualizarClaveException(ex.getErrorCode(),ex.getMessage());                
+            throw FabricaExcepcion.
+                    instanciarActualizarClaveException(ex.getErrorCode(),
+                            ex.getMessage());                
         }
         
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
@@ -143,12 +152,14 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * @throws Logica.Modulo1.VerificarUsuarioException
      */
     @Override
-    public Entidad verificarUsuario(String usuario) throws VerificarUsuarioException{
+    public Entidad verificarUsuario(String usuario) 
+            throws VerificarUsuarioException{
         int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-            CallableStatement a = conn.prepareCall("{ call verificarUsuario(?) }");
+            CallableStatement a =
+                    conn.prepareCall("{ call verificarUsuario(?) }");
             
             a.setString(1, usuario);
             a.execute();
@@ -166,8 +177,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }
             }
         } catch (SQLException ex) {
-             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-             throw  FabricaExcepcion.instanciarVerificarUsuarioException(ex.getErrorCode(),ex.getMessage());  
+             Logger.getLogger(Modulo1sResource.class.getName()).
+                     log(Level.SEVERE, null, ex);
+             throw  FabricaExcepcion.
+                     instanciarVerificarUsuarioException(ex.getErrorCode(),
+                             ex.getMessage());  
    
         } catch (Exception e) {
             respuesta =  2;//cambiar
@@ -190,7 +204,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * 
      */
     @Override
-    public Entidad obtenerInicioSesion(Entidad usuario) throws IniciarSesionException{
+    public Entidad obtenerInicioSesion(Entidad usuario) 
+            throws IniciarSesionException{
         Usuario objeto = (Usuario) usuario;
         String respuesta="";
         int bandera=0;
@@ -198,7 +213,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             
-            CallableStatement a = conn.prepareCall("{ call iniciarSesion(?,?) }");
+            CallableStatement a = 
+                    conn.prepareCall("{ call iniciarSesion(?,?) }");
             a.setString(1,  objeto.getUsuario());
             a.setString(2,  objeto.getContrasena());
             a.execute();
@@ -225,8 +241,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         }
             
         } catch (SQLException ex) {
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw FabricaExcepcion.instanciarIniciarSesionException(ex.getErrorCode(),ex.getMessage());  
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.
+                    instanciarIniciarSesionException(ex.getErrorCode(),
+                            ex.getMessage());  
         } catch (Exception e) {
             respuesta= "ERROR";
             throw FabricaExcepcion.instanciarIniciarSesionException(202);
@@ -249,13 +268,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      */
     
     @Override
-    public Entidad obtenerXRecuperarClave(String usuario) throws RecuperarClaveException{
+    public Entidad obtenerXRecuperarClave(String usuario) 
+            throws RecuperarClaveException{
         String respuesta="";
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             //String query = "SELECT * from recuperarclave('" + usuario+"');";
-            CallableStatement a = conn.prepareCall("{ call recuperarclave(?) }");
+            CallableStatement a = 
+                    conn.prepareCall("{ call recuperarclave(?) }");
             a.setString(1, usuario);
             a.execute(); 
             ResultSet rs = a.getResultSet();
@@ -283,8 +304,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             
         } catch (SQLException ex) {
             respuesta = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-            throw FabricaExcepcion.instanciarRecuperarClaveException(ex.getErrorCode(),ex.getMessage());  
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.
+                    instanciarRecuperarClaveException(ex.getErrorCode(),
+                            ex.getMessage());  
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
@@ -306,9 +330,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             cstmt.setString(8, obj.getContrasena());
             cstmt.execute();   
         }catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoUsuario.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoUsuario.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return obj;
     }

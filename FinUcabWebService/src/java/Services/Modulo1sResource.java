@@ -166,37 +166,44 @@ public class Modulo1sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarUsuario")
-    public String registrarUsuario(@QueryParam("datosUsuario") String datosCuenta) {
+    public String registrarUsuario(@QueryParam("datosUsuario") 
+            String datosCuenta) {
         String resultado = "";
         try {
             Entidad usuario;
             usuario = entidadAgregarUsuario(datosCuenta);
-            Comando cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
+            Comando cru = FabricaComando.
+                    instanciarComandoRegistrarUsuario(usuario);
             cru.ejecutar();
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaRegistrarUsuario(respuesta);
             
         } catch (DataReaderException ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
         } catch (RegistrarIncorrectoException ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
     }
     
     /**
      * Metodo encargado de la construccion de los JSON para agregar un usuario
-     * @param datosUsuario JSON.toString() con los atributos: u_usuario, u_nombre
+     * @param datosUsuario JSON.toString() con los atributos: u_usuario,u_nombre
      * , u_apellido , u_correo , u_pregunta , u_respuesta , u_pregunta ,
      * u_password
      * @return Entidad con los datos del usuario
      */
-    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") String datosCuenta) throws DataReaderException, NullPointerException  /*throws EmptyEntityException  */{
+    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") 
+            String datosCuenta) throws DataReaderException, 
+            NullPointerException  {
 
         Entidad usuario = null;
         try {
@@ -217,9 +224,11 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_respuesta"),null,null);
             }
         } catch (DataReaderException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
         }
           
         return usuario;
@@ -264,11 +273,13 @@ public class Modulo1sResource {
             resultado = obtenerRespuestaVerificarUsuario(respuesta); 
         } catch (VerificarUsuarioException ex) {
             resultado = "3";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
             resultado = "3";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
                
         return resultado;
@@ -313,21 +324,25 @@ public class Modulo1sResource {
          String resultado = "";
         try {
             usuarioi = entidadiniciarSesion(usuario);
-            Comando cru = FabricaComando.instanciarComandoIniciarSesion(usuarioi);
+            Comando cru = FabricaComando.
+                    instanciarComandoIniciarSesion(usuarioi);
             cru.ejecutar();
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaIniciarsesion(respuesta);
         } catch (DataReaderException ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         catch (IniciarSesionException ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return resultado;
         
@@ -339,14 +354,16 @@ public class Modulo1sResource {
      * @param usuario JSON.toString() con los "atributos" u_usuario y u_password
      * @return Entidad con los datos del usuario
      */
-    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") String usuario)  throws DataReaderException {
+    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") 
+            String usuario)  throws DataReaderException {
         Entidad usuarioi = null;
         String decodifico;
         try {
             boolean validador  = validadorString(usuario);
             if( validador ){
                 decodifico = URLDecoder.decode(usuario,"UTF-8");
-                JsonReader reader = Json.createReader(new StringReader(decodifico));
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
                 JsonObject usuarioJSON = reader.readObject();           
                 reader.close();
                 usuarioi = FabricaEntidad.obtenerUsuario(0,
@@ -355,7 +372,8 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_password"),null,null,null,null);
             }
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return usuarioi;
     }
@@ -391,20 +409,24 @@ public class Modulo1sResource {
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
         String resultado = "";
         try {
-            Comando crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
+            Comando crc = FabricaComando.
+                    instanciarComandoRecuperarClave(usuario);
             crc.ejecutar();
             Entidad respuesta = crc.getResponse();
             resultado = obtenerRespuestaRecuperarClave(respuesta);
         }  catch (DataReaderException ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }catch (RecuperarClaveException ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         
         
@@ -443,25 +465,30 @@ public class Modulo1sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarClave")
-    public String actualizarClave(@QueryParam("datosUsuario") String datosUsuario) {
+    public String actualizarClave(@QueryParam("datosUsuario") 
+            String datosUsuario) {
         Entidad usuario;
         String resultado = "";
         try {
             usuario = entidadActualizarClave(datosUsuario);
-            Comando cis = FabricaComando.instanciarComandoActualizarClave(usuario);
+            Comando cis = FabricaComando.
+                    instanciarComandoActualizarClave(usuario);
             cis.ejecutar();
             Entidad respuesta = cis.getResponse();
             resultado = obtenerRespuestaActualizarClave(respuesta);
         } catch (DataReaderException ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }catch (ActualizarClaveException ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return resultado;
     }
@@ -472,7 +499,8 @@ public class Modulo1sResource {
      * @return Entidad con los datos del usuario
      */
     
-    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") String datosUsuario)  throws DataReaderException  {
+    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") 
+            String datosUsuario)  throws DataReaderException  {
 
         Entidad usuarioi = null; 
         try {
@@ -480,7 +508,8 @@ public class Modulo1sResource {
             if( validador ){
                 String decodifico;
                 decodifico = URLDecoder.decode(datosUsuario,"UTF-8");
-                JsonReader reader = Json.createReader(new StringReader(decodifico));
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
                 JsonObject usuarioJSON = reader.readObject();           
                 reader.close();
                 usuarioi = FabricaEntidad.obtenerUsuario(0,
@@ -488,7 +517,8 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_password"),null,null,null,null);
             }
         } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
         }
         return usuarioi;
     }

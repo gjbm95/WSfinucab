@@ -12,7 +12,7 @@ import javax.json.JsonObject;
  *
  **/
 public class Usuario extends Entidad{
-    //Estas variables almacenan los datos personasles de los usuarios en memoria.
+   //Estas variables almacenan los datos personasles de los usuarios en memoria.
     private String nombre;
     private String apellido;
     private String correo;
@@ -20,15 +20,19 @@ public class Usuario extends Entidad{
     private String contrasena;
     private String pregunta;
     private String respuesta;
-    private ArrayList<Cuenta_Bancaria> cuentas = new ArrayList<Cuenta_Bancaria>();
-    private ArrayList<Planificacion> planes = new ArrayList<Planificacion>();
-    private ArrayList<Presupuesto> presupuestos = new ArrayList<Presupuesto>();
+    private ArrayList<Cuenta_Bancaria> cuentas = 
+            new ArrayList<Cuenta_Bancaria>();
+    private ArrayList<Planificacion> planes = 
+            new ArrayList<Planificacion>();
+    private ArrayList<Presupuesto> presupuestos = 
+            new ArrayList<Presupuesto>();
 
     
     //Contructor
     public Usuario(int idusuario, String nombre, String apellido, String correo, 
-            String usuario, String contrasena, String pregunta, String respuesta, 
-            ArrayList<Cuenta_Bancaria> cuentas, ArrayList<Planificacion> planes) {
+            String usuario, String contrasena, String pregunta, 
+            String respuesta,ArrayList<Cuenta_Bancaria> cuentas, 
+            ArrayList<Planificacion> planes) {
         super(idusuario);
         this.nombre = nombre;
         this.apellido = apellido;
