@@ -53,7 +53,7 @@ import javax.ws.rs.core.Response;
 *Desarrolladores:
 *Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
 *Descripción de la clase:
-*Metodos del servicio web destinados para las funcionalidades de iniciar session,
+*Metodos del servicio web destinados para las funcionalidades de iniciar sesion,
 * registro de usuario y recuperacion de cuenta.
 *@Params
 *
@@ -134,9 +134,9 @@ public class Modulo1sResource {
      */
     private boolean validadorString(String valor) throws DataReaderException {
         if (valor == null) {
-            throw FabricaExcepcion.instanciarDataReaderException(1);
+            throw FabricaExcepcion.instanciarDataReaderException(3);
         }else if(valor.equals("")) {
-            throw FabricaExcepcion.instanciarDataReaderException(1);
+            throw FabricaExcepcion.instanciarDataReaderException(4);
         }else{
             return true;
         }
@@ -148,8 +148,11 @@ public class Modulo1sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorEntidad(Entidad valor){
-        return (valor!= null) && (!valor.equals(""));
+    private boolean validadorEntidad(Entidad valor) throws DataReaderException{
+        if (valor == null)
+            throw FabricaExcepcion.instanciarDataReaderException(5);
+     
+        return true;
     }
 
     /**
@@ -211,7 +214,8 @@ public class Modulo1sResource {
             if( validador ){
                 String decodifico;
                 decodifico = URLDecoder.decode(datosCuenta,"UTF-8");
-                JsonReader reader = Json.createReader(new StringReader(decodifico));
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
                 JsonObject usuarioJSON = reader.readObject();           
                 reader.close();
                 usuario = FabricaEntidad.obtenerUsuario(0,
@@ -240,7 +244,8 @@ public class Modulo1sResource {
      * @return Si se inserta el usuario devuelve un String con el mensaje
      * "1", De lo contrario devuelve el mensaje "0"
     */
-    private String obtenerRespuestaRegistrarUsuario(Entidad enti){
+    private String obtenerRespuestaRegistrarUsuario(Entidad enti) 
+            throws DataReaderException{
           String respuesta;
         if(validadorEntidad(enti)) {
             if(((SimpleResponse) enti).getStatus() == 1){
@@ -264,10 +269,11 @@ public class Modulo1sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
-    public String verificarUsuario(@QueryParam("nombreUsuario") String usuario) {
+    public String verificarUsuario(@QueryParam("nombreUsuario") String usuario){
         String resultado = "";
         try { 
-            Comando cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
+            Comando cvu = FabricaComando.
+                    instanciarComandoVerificarUsuario(usuario);
             cvu.ejecutar();
             Entidad respuesta = cvu.getResponse();
             resultado = obtenerRespuestaVerificarUsuario(respuesta); 
@@ -292,7 +298,8 @@ public class Modulo1sResource {
      * @return Si el nombre ya existe devuelve "4", Si no existe
      * devuelve "3"
      */
-    private String obtenerRespuestaVerificarUsuario(Entidad enti){
+    private String obtenerRespuestaVerificarUsuario(Entidad enti) 
+            throws DataReaderException{
           String respuesta = "";
         if(validadorEntidad(enti)) {
             if(((SimpleResponse) enti).getStatus() == 4){
@@ -385,7 +392,8 @@ public class Modulo1sResource {
      * String con todos los datos del usuario. De lo contrario retorna el String
      * "7"
      */
-     private String obtenerRespuestaIniciarsesion(Entidad enti){
+     private String obtenerRespuestaIniciarsesion(Entidad enti) 
+             throws DataReaderException{
           String respuesta;
         if(validadorEntidad(enti)) {
             respuesta = ((SimpleResponse) enti).getDescripcion();
@@ -442,7 +450,8 @@ public class Modulo1sResource {
      * String con todos los datos del usuario. De lo contrario retorna el String
      * "ERROR"
      */
-    private String obtenerRespuestaRecuperarClave(Entidad enti){
+    private String obtenerRespuestaRecuperarClave(Entidad enti) 
+            throws DataReaderException{
         String respuesta = "";
         if(validadorEntidad(enti)) {
             respuesta = ((SimpleResponse) enti).getDescripcion();
@@ -530,7 +539,8 @@ public class Modulo1sResource {
      * @return Si se actualiza correctamente retorna un String con "5" de no 
      * actualiza correctamente retorna "6"
      */
-    private String obtenerRespuestaActualizarClave(Entidad enti){
+    private String obtenerRespuestaActualizarClave(Entidad enti) 
+            throws DataReaderException{
           String respuesta;
         if(validadorEntidad(enti)) {
             if(((SimpleResponse) enti).getStatus() == 5){

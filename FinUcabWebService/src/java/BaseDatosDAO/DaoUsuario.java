@@ -237,17 +237,17 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera==0){
               st.close();
               respuesta= "7";
-              throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
             
         } catch (SQLException ex) {
+            respuesta= "7";
             Logger.getLogger(Modulo1sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             throw FabricaExcepcion.
                     instanciarIniciarSesionException(ex.getErrorCode(),
                             ex.getMessage());  
         } catch (Exception e) {
-            respuesta= "ERROR";
+            respuesta= "7";
             throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
         
