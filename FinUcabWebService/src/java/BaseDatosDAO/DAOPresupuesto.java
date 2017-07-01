@@ -154,13 +154,47 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
     }
 
     @Override
-    public int verificarNombre(String nombre) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public Entidad verificarNombre(String nombre) {
+        int respuesta = 0;
+        
+        try{
+            Connection conn = Conectar();
+            PreparedStatement ps = conn.prepareStatement(RegistroBaseDatos.VERIFICAR_NOMBRE);
+            ps.setString(1, nombre);
+            ps.executeQuery();
+            ResultSet rs = ps.getResultSet();
+            rs.next();
+            respuesta = rs.getInt("verificarnombre");
+            ps.close();
+            Desconectar(conn);
+        } catch (Exception e){
+            e.printStackTrace();
+            respuesta = 2;
+        }
+        return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     @Override
-    public int eliminarPresupuesto(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public Entidad eliminarPresupuesto(int id) {
+        
+        int respuesta = 0;
+        
+        try {
+            Connection conn = Conectar();
+            PreparedStatement ps = conn.prepareStatement(RegistroBaseDatos.ELIMINAR_PRESUPUESTO);
+            ps.setInt(1, id);
+            ps.executeQuery();
+            ResultSet rs = ps.getResultSet(); 
+            rs.next();
+            respuesta = rs.getInt("eliminarpresupuesto");
+            ps.close();
+            Desconectar(conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            respuesta = 2;
+        }
+       
+        return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     public JsonArray getUltimosPresupuestos(int id) {
