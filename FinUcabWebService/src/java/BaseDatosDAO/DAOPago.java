@@ -20,6 +20,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  *
@@ -34,7 +39,9 @@ public class DAOPago extends DAO implements IDAOPago{
             CallableStatement pag;
             
         int idPago = 0;
-        try {
+        try {                
+            
+            Connection conn = Conexion.conectarADb();
             pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
@@ -44,13 +51,13 @@ public class DAOPago extends DAO implements IDAOPago{
             ResultSet rs = pag.getResultSet();
             rs.next();            
             idPago = rs.getInt(1);
-            
+           
             pago.setId(idPago);
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
                         
             } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                System.out.println("ERROR");
+            }
         
         return FabricaEntidad.obtenerSimpleResponse(idPago);
 
@@ -65,6 +72,9 @@ public class DAOPago extends DAO implements IDAOPago{
         CallableStatement cstmt;
         
         try {
+            
+            Connection conn = Conexion.conectarADb();
+            
             cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
@@ -86,8 +96,8 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public Entidad consultar(int idPago ) {
 
-        Entidad pago = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
         
+        Entidad pago = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
         if (pago == null ){
                 
             try {
@@ -103,7 +113,8 @@ public class DAOPago extends DAO implements IDAOPago{
                 while (rs.next()){
                     pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
                 }
-
+                
+                SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,7 +132,7 @@ public class DAOPago extends DAO implements IDAOPago{
         
         ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
         
-        if (listaEntidad == null ){
+        if (listaEntidad.getLista().isEmpty()){
             try {
                 
                 ArrayList<Entidad> listaPagos = new ArrayList<>();
@@ -142,6 +153,8 @@ public class DAOPago extends DAO implements IDAOPago{
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPagos);
                 
+                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -151,6 +164,67 @@ public class DAOPago extends DAO implements IDAOPago{
         
     }
 
-   
-    
+
+    public JsonArray getUltimosPagosXUsuario(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        JsonArray array = null;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call obtenerUltimosPagos(?)}");
+            cstm.setInt(1, id);
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            int n = 0;
+            while (rs.next()) {
+                n++;
+                cuentaBuilder.add("est_id", "3." + Integer.toString(n));
+                cuentaBuilder.add("est_fecha", rs.getString("pg_fecha"));
+                cuentaBuilder.add("est_transaccion", rs.getString("pg_descripcion"));
+                JsonObject cuentaJsonObject = cuentaBuilder.build();
+                arrayBuilder.add(cuentaJsonObject);
+            }
+            array = arrayBuilder.build();
+            cstm.close();
+            st.close();
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return array;
+    }
+
+    public JsonObject getBalance(int id) {
+        CallableStatement cstm;
+        String respuesta;
+        JsonObject cuentaJsonObject = null;
+        try {
+            Statement st = conn.createStatement();
+            cstm = conn.prepareCall("{ call obtenerBalance(?)}");
+            cstm.setInt(1, id);
+            ResultSet rs = cstm.executeQuery();
+            JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
+            int n = 0;
+            if (rs.next()) {
+                float ingresos = rs.getFloat("ingreso");
+                float egresos = rs.getFloat("egreso");
+                float total = ingresos + egresos;
+                ingresos = ingresos * 100 / total;
+                egresos = egresos * 100 / total;
+                cuentaBuilder.add("est_id", "2");
+                cuentaBuilder.add("est_ingreso", Float.toString(ingresos));
+                cuentaBuilder.add("est_egreso", Float.toString(egresos));
+                cuentaJsonObject = cuentaBuilder.build();
+            }
+            cstm.close();
+            st.close();
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        return cuentaJsonObject;
+    }
 }

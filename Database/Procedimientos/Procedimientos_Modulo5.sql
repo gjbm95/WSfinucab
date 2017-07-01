@@ -1,13 +1,13 @@
 DROP FUNCTION ConsultarPago(integer);
 DROP FUNCTION ListaPagos(integer);
-DROP FUNCTION AgregarPago(integer, real, character varying, character varying, integer );
-DROP FUNCTION ModificarPago(real, character varying, character varying, integer);
+DROP FUNCTION AgregarPago(integer, float, character varying, character varying, integer );
+DROP FUNCTION ModificarPago(float, character varying, character varying, integer);
 
 
 
 
 CREATE OR REPLACE FUNCTION AgregarPago(
-	monto real,
+	monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -33,7 +33,7 @@ END;
 $function$;
 
 
-CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto real,
+CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -92,7 +92,7 @@ CREATE OR REPLACE FUNCTION ListaPagos(
     
 AS $function$
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c , Usuario u
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c
 where (p.categoriaca_id = c.ca_id and c.usuariou_id =idusuario )
 
 $function$;

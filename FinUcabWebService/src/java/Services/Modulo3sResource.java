@@ -35,6 +35,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Modulo 3 - Modulo de Presupuestos Desarrolladores:*Mariángel Pérez / Oswaldo
@@ -44,6 +47,8 @@ import javax.ws.rs.core.Response;
  */
 @Path("/Modulo3")
 public class Modulo3sResource {
+    
+    final static Logger log = LogManager.getLogger();
 
     @Context
     private UriInfo context;
@@ -52,6 +57,22 @@ public class Modulo3sResource {
      * Creates a new instance of Modulo3sResource
      */
     public Modulo3sResource() {
+    }
+    
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/prueba")
+    public String getPruebaJson() {
+        //TODO return proper representation object
+        JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
+        usuarioBuilder.add("Nombre", "Jose");
+        usuarioBuilder.add("Apellido", "Rodriguez");
+        usuarioBuilder.add("Usuario", "jose123");
+        JsonObject usuarioJsonObject = usuarioBuilder.build();
+        log.debug("Devolviendo objeto:"+usuarioJsonObject.toString());
+        log.info("INFO");
+        log.error("ESTO ES UN ERROR");
+        return usuarioJsonObject.toString();
     }
 
     /**
@@ -134,7 +155,7 @@ public class Modulo3sResource {
 
         String respuesta = "0";
         try {
-
+            System.out.println(idUsuario);
             Comando comando = FabricaComando.instanciarComandoListarPresupuestos(idUsuario);
             comando.ejecutar();
             Entidad objectResponse = comando.getResponse();
