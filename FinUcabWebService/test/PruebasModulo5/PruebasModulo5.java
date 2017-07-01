@@ -80,9 +80,7 @@ public class PruebasModulo5 {
     public void testConsultar() {
         try {
             //System.out.println("consultar");
-            int idPago = 1;
-            
-            
+            int idPago = 1;                 
             DAOPago instance = new DAOPago();
             Entidad expResult = null;
             Entidad result = instance.consultar(1);

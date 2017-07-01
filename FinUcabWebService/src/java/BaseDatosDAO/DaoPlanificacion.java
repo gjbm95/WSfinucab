@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BaseDatosDAO;
 
 import Dominio.Entidad;
@@ -20,11 +15,15 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-
 /**
- *
- * @author Alejandro Negrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class DaoPlanificacion extends DAO {
 
     private Connection conn = Conexion.conectarADb();
@@ -52,30 +51,33 @@ public class DaoPlanificacion extends DAO {
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Lista de proximos pagos obtenidos con exito");
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
-
+            Logger.getLogger(DaoPlanificacion.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
+            Logger.getLogger(DaoPlanificacion.class.getName()).log(Level.SEVERE, null, ex);
         }
         return array;
     }
 
     @Override
     public Entidad agregar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public Entidad consultar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public ListaEntidad consultarTodos(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 }
