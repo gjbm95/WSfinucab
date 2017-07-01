@@ -426,15 +426,13 @@ public class Modulo5sResource {
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
         
         String respuesta ="";
-            
+         System.out.println("AQUIIII");
         try{
             if( validadorInteger(idPago) ){
-                        Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
-                        c.ejecutar();
-                        Entidad objectResponse = c.getResponse();
-                        respuesta =obtenerRespuestaLista(objectResponse);
-            }else {
-                        System.out.println("Parametro de entrada nulo o vacio");  
+                Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
+                c.ejecutar();
+                Entidad objectResponse = c.getResponse();
+                respuesta =obtenerRespuestaLista(objectResponse);
             }
         }
         catch (ListarPagosException e) {
