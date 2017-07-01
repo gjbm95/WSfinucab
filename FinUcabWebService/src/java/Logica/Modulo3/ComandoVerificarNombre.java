@@ -23,7 +23,7 @@ public class ComandoVerificarNombre extends Comando {
         
     @Override
     public void ejecutar() {
-        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
         this.response = dao.verificarNombre(nombrePresupuesto);
     }
     

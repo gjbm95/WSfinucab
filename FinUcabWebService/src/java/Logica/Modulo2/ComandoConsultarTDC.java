@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo2;
 
 import BaseDatosDAO.DaoTarjeta_Credito;
@@ -17,11 +12,15 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.JsonObject;
-
 /**
- *
- * @author AlejandroNegrin
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class ComandoConsultarTDC extends Comando {
 
     private int user ;
@@ -33,7 +32,9 @@ public class ComandoConsultarTDC extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de consulta de tarjetas de credito
+     */
     @Override
     public void ejecutar() {
 

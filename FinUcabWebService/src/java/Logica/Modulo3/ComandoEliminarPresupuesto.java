@@ -24,7 +24,7 @@ public class ComandoEliminarPresupuesto extends Comando {
     
     @Override
     public void ejecutar() {
-        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
         this.response = dao.eliminarPresupuesto(idPresupuesto);
     }
     

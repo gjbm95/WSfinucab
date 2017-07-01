@@ -6,6 +6,7 @@
 package Logica;
 
 import Dominio.Entidad;
+import Exceptions.FinUCABException;
 
 /**
  *
@@ -15,7 +16,7 @@ public abstract class Comando {
     
     protected Entidad response;
     
-    public abstract void ejecutar();   
+    public abstract void ejecutar() throws FinUCABException;   
     
     public Entidad getResponse(){
         return response;

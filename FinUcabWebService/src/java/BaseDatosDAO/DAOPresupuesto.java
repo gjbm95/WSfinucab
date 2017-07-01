@@ -10,6 +10,13 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
+import Exceptions.FabricaExcepcion;
+import Exceptions.Presupuesto.AgregarPresupuestoException;
+import Exceptions.Presupuesto.ConsultarPresupuestoException;
+import Exceptions.Presupuesto.EliminarPresupuestoExeption;
+import Exceptions.Presupuesto.ListarPresupuestoException;
+import Exceptions.Presupuesto.ModificarPresupuestoException;
+import Exceptions.Presupuesto.VerificarNombreException;
 import IndentityMap.SingletonIdentityMap;
 import Registro.RegistroBaseDatos;
 import Registro.RegistroIdentityMap;
@@ -38,7 +45,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
     final static org.apache.logging.log4j.Logger log = LogManager.getLogger();
     
     @Override
-    public Entidad agregar(Entidad e) {
+    public Entidad agregar(Entidad e) throws AgregarPresupuestoException {
 
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta = 0;
@@ -58,18 +65,18 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("agregarpresupuesto");
             pag.close();
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             log.error("Error agregando presupuesto: "+ex.getMessage());
-            ex.printStackTrace();
             respuesta = 2;
-
+            throw FabricaExcepcion.instanciarAgregarPresupuestoException(ex.getErrorCode(),ex.getMessage());
+            
         }
 
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     @Override
-    public Entidad modificar(Entidad e) {
+    public Entidad modificar(Entidad e) throws ModificarPresupuestoException {
 
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta = 0;
@@ -92,16 +99,16 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.close();
             Desconectar(conn);
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             log.error("Error modificando presupuesto: "+ex.getMessage());
-            ex.printStackTrace();
             respuesta = 2;
+            throw FabricaExcepcion.instanciarModificarPresupuestoException(ex.getErrorCode(), ex.getMessage());
         }
         return presupuesto;
     }
 
     @Override
-    public Entidad consultar(int id) {
+    public Entidad consultar(int id) throws ConsultarPresupuestoException {
         Entidad presupuesto = null;
 
         if (presupuesto == null) {
@@ -120,14 +127,14 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                        
             } catch (SQLException e){
                 log.error("Error consultando presupuesto: "+e.getMessage());
-                e.printStackTrace();
+                throw FabricaExcepcion.instanciarConsultarPresupuestoException(e.getErrorCode(), e.getMessage());
             }
         }
         return presupuesto;
     }
 
     @Override
-    public ListaEntidad consultarTodos(int idUsuario) {
+    public ListaEntidad consultarTodos(int idUsuario) throws ListarPresupuestoException {
 
         ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO);
 
@@ -154,14 +161,14 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
-                e.printStackTrace();
+                throw FabricaExcepcion.instanciarListarPresupuestoException(e.getErrorCode(), e.getMessage());
             }
         }
         return listaEntidad;
     }
 
     @Override
-    public Entidad verificarNombre(String nombre) {
+    public Entidad verificarNombre(String nombre) throws VerificarNombreException{
         int respuesta = 0;
         
         try{
@@ -174,16 +181,16 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("verificarnombre");
             ps.close();
             Desconectar(conn);
-        } catch (Exception e){
+        } catch (SQLException e){
             log.error("Error verificando nombre: "+e.getMessage());
-            e.printStackTrace();
             respuesta = 2;
+            throw FabricaExcepcion.instanciarVerificarNombreException(e.getErrorCode(), e.getMessage());
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     @Override
-    public Entidad eliminarPresupuesto(int id) {
+    public Entidad eliminarPresupuesto(int id) throws EliminarPresupuestoExeption {
         
         int respuesta = 0;
         
@@ -199,8 +206,8 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             Desconectar(conn);
         } catch (SQLException e) {
             log.error("Error eliminando presupuestos: "+e.getMessage());
-            e.printStackTrace();
             respuesta = 2;
+            throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(e.getErrorCode(), e.getMessage());
         }
        
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
@@ -210,8 +217,8 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         CallableStatement cstm;
         JsonArray array = null;
         try {
-            Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerUltimosPresupuestos(?)}");
+            Statement st = Conexion.conectarADb().createStatement();
+            cstm =Conexion.conectarADb().prepareCall("{ call obtenerUltimosPresupuestos(?)}");
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

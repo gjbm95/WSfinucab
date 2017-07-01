@@ -1,40 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo1;
 
-import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
-import Dominio.Usuario;
+import Exceptions.FinUCABException;
 import Logica.Comando;
-import Services.Modulo1sResource;
 
 /**
- *
- * @author Oswaldo
+ * Modulo 1 - Modulo de Inicio de Sesion 
+ * Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido 
+ * Descripción de la clase: Clase encargada de realizar la llamada al DAOUsuario
+ * para registrar el usuario
  */
 public class ComandoRegistrarUsuario extends Comando{
+    Entidad usuario;
     
-    Usuario usuario;
-
-    public ComandoRegistrarUsuario(Usuario usuario) {
+    //Constructor
+    public ComandoRegistrarUsuario(Entidad usuario) {
         this.usuario = usuario;
     }
     
-    
-    public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-        Entidad respuesta = dao.agregar((Entidad)usuario);
-        
-        /*if(respuesta == 1){
-            Modulo1sResource.resultado = "1";
-        }else {
-            Modulo1sResource.resultado = "0";
-        }
-*/
-        //return null;
+    /**
+     * Procedimiento que se encarga de realizar la llamada al DAOUsuario
+     * para registrar el usuario
+     * @throws Exceptions.FinUCABException
+     */
+    @Override
+    public void ejecutar() throws FinUCABException{
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.agregar(usuario);
     }
 }

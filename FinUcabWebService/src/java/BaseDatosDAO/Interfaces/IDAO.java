@@ -7,8 +7,7 @@ package BaseDatosDAO.Interfaces;
 
 import Dominio.Entidad;
 import Dominio.ListaEntidad;
-import java.util.ArrayList;
-import java.util.Dictionary;
+import Exceptions.FinUCABException;
 
 /**
  *
@@ -16,11 +15,11 @@ import java.util.Dictionary;
  */
 public interface IDAO {
     
-    Entidad agregar(Entidad e);
+    Entidad agregar(Entidad e) throws FinUCABException;
     
-    Entidad modificar(Entidad e);
+    Entidad modificar(Entidad e)throws FinUCABException;
     
-    Entidad consultar(int id);
+    Entidad consultar(int id) throws FinUCABException;
     
-    ListaEntidad consultarTodos(int idUsuario);
+    ListaEntidad consultarTodos(int idUsuario) throws FinUCABException;
 }

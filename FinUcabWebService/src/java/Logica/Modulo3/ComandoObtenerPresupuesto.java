@@ -7,6 +7,7 @@ package Logica.Modulo3;
 
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -22,8 +23,8 @@ public class ComandoObtenerPresupuesto extends Comando {
     }
         
     @Override
-    public void ejecutar() {
-        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+    public void ejecutar() throws FinUCABException{
+        IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
         this.response = dao.consultar(idPresupuesto);
     }
     
