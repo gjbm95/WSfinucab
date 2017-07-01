@@ -6,9 +6,12 @@
 package PruebasModulo2;
 
 import Dominio.Usuario;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -20,9 +23,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author Junior
- */
+*Modulo 2 - Modulo de Home
+*Desarrolladores:
+*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+*Descripción de la clase:
+*Metodos del servicio web destinados para las funcionalidades de Home y 
+* Tarjetas de Credito y Cuentas Bancarias. 
+*
+**/
 public class PruebasModulo2 {
 
     public PruebasModulo2() {
@@ -67,9 +75,7 @@ public class PruebasModulo2 {
         
         Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
         command.ejecutar();
-
     }
-
     /**
      * Funcion que convierte un string con estructura JSON en JsonObject
      *

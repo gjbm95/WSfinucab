@@ -6,6 +6,7 @@ import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Usuario;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Services.Modulo1sResource;
 import Services.Modulo2sResource;
@@ -34,7 +35,7 @@ public class ComandoActualizarCuenta extends Comando {
      * Metodo encargado de la ejecucion de la moficiacion de cuenta de  bancaria.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws FinUCABException {
 
         IDAOCuentaBancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         daoCuenta.modificar(cuenta);

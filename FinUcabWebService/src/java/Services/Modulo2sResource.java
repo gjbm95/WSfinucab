@@ -2,6 +2,7 @@ package Services;
 
 import BaseDatosDAO.Conexion;
 import Dominio.*;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo2.Excepciones.ConversionFallidaException;
@@ -414,6 +415,9 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (FinUCABException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
