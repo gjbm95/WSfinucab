@@ -5,6 +5,8 @@
  */
 package BaseDatosDAO.Interfaces;
 
+import Exceptions.FinUCABException;
+
 /**
 *Modulo 2 - Modulo de Home
 *Desarrolladores:
@@ -17,5 +19,5 @@ package BaseDatosDAO.Interfaces;
 public interface IDAOTarjetaCredito extends IDAO {
     String getSaldoTotal(int id);
     String getTarjetasXUsuario(int id);
-    int eliminar(int id);
+    int eliminar(int id)throws FinUCABException;
 }

@@ -232,8 +232,12 @@ public class DAOPago extends DAO implements IDAOPago{
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Balance obtenido del usuario de id: "+id);
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Balance obtenido del usuario de id: "+id);
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
 
         }
         return cuentaJsonObject;

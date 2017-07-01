@@ -33,7 +33,7 @@ public class ComandoAgregarTDC extends Comando {
      * Metodo encargado de la ejecucion de registro de tarjetas de credito.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws AgregarFallidoException {
 
         DaoTarjeta_Credito daoTDC = FabricaDAO.instanciasDaoTarjeta_Credito();
         super.response = daoTDC.agregar(tdc);

@@ -10,6 +10,11 @@ import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
 import Logica.Modulo1.RegistrarIncorrectoException;
 import Logica.Modulo1.VerificarUsuarioException;
+import Logica.Modulo2.AgregarFallidoException;
+import Logica.Modulo2.ConsultarFallidoException;
+import Logica.Modulo2.ConversionFallidaException;
+import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.ModificarFallidoException;
 import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
@@ -118,5 +123,29 @@ public class FabricaExcepcion {
     
     }   
         
+    public static AgregarFallidoException instanciarAgregarFallidoException
+        (int code, String message) {
+        return new AgregarFallidoException(code, message);
+    }
+    
+    public static ModificarFallidoException instanciarModificarFallidoException
+        (int code, String message) {
+        return new ModificarFallidoException(code, message);
+    }
+    
+    public static ConsultarFallidoException instanciarConsultarFallidoException
+        (int code, String message) {
+        return new ConsultarFallidoException(code, message);
+    }
+    
+    public static ConversionFallidaException instanciarConversionFallidaException
+        (int code, String message) {
+        return new ConversionFallidaException(code, message);
+    }
+    
+    public static EliminarFallidoException instanciarEliminarFallidoException
+        (int code, String message) {
+        return new EliminarFallidoException(code, message);
+    }
         
 }

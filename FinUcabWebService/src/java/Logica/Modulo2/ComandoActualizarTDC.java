@@ -33,7 +33,7 @@ public class ComandoActualizarTDC extends Comando {
      * Metodo encargado de la ejecucion de la moficiacion de tarjeta de credito.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws ModificarFallidoException {
 
         DaoTarjeta_Credito daoTarjeta_Credito = FabricaDAO.instanciasDaoTarjeta_Credito();
         daoTarjeta_Credito.modificar(tdc);

@@ -33,7 +33,7 @@ public class ComandoAgregarCuenta extends Comando {
      * Metodo encargado de la ejecucion de registro de cuentas bancarias.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws AgregarFallidoException {
         
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         cuenta = (Cuenta_Bancaria) daoCuenta.agregar(cuenta);

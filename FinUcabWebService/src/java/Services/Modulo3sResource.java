@@ -178,10 +178,10 @@ public class Modulo3sResource {
         
         String respuesta ="0";
         try {
-           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
-           command.ejecutar();
-           Entidad objectResponse = command.getResponse();
-           respuesta = String.valueOf(objectResponse.getId());
+//           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
+//           command.ejecutar();
+//           Entidad objectResponse = command.getResponse();
+//           respuesta = String.valueOf(objectResponse.getId());
         } catch (Exception e) {
             log.error("Error eliminando presupuesto con id: " + idPresupuesto);
             e.printStackTrace();
@@ -323,11 +323,11 @@ public class Modulo3sResource {
         log.debug("Verificando nombre "+nombrePresupuesto);
         String respuesta = "0";
         try {
-            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
-            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
-            command.ejecutar();
-            Entidad objectResponse = command.getResponse();
-            respuesta = String.valueOf(objectResponse.getId());
+//            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
+//            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
+//            command.ejecutar();
+//            Entidad objectResponse = command.getResponse();
+//            respuesta = String.valueOf(objectResponse.getId());
 
         } catch (Exception e) {
             log.error("Error verificando nombre presupuesto: " + nombrePresupuesto);
