@@ -5,13 +5,15 @@
  */
 package BaseDatosDAO.Interfaces;
 
+import Dominio.Entidad;
+
 /**
  *
  * @author William
  */
 public interface IDAOPresupuesto extends IDAO{
     
-    int verificarNombre(String nombre);
-    int eliminarPresupuesto(int id);
+    Entidad verificarNombre(String nombre);
+    Entidad eliminarPresupuesto(int idPresupuesto);
     
 }
