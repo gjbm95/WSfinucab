@@ -1,7 +1,7 @@
 DROP FUNCTION ConsultarPago(integer);
 DROP FUNCTION ListaPagos(integer);
-DROP FUNCTION AgregarPago(integer, float, character varying, character varying, integer );
-DROP FUNCTION ModificarPago(float, character varying, character varying, integer);
+DROP FUNCTION ModificarPago(integer, float, character varying, character varying, integer );
+DROP FUNCTION AgregarPago(float, character varying, character varying, integer);
 
 
 
@@ -20,8 +20,8 @@ DECLARE
  result integer;
 
 BEGIN
-  INSERT INTO Pago (pg_monto ,pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
-      (monto,descripcion,transaccion,categoria);
+  INSERT INTO Pago (pg_monto , pg_fecha , pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
+      (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria);
 
     if found then
   result := 1;
@@ -86,13 +86,14 @@ CREATE OR REPLACE FUNCTION ListaPagos(
 	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipotransaccion character varying,
-	OUT categoriaca_id integer)
+	OUT categoriaca_id integer,
+	OUT categoriaca_nombre character varying)
     RETURNS SETOF record 
     LANGUAGE 'sql'
     
 AS $function$
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p , Categoria c
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id, c.ca_nombre  from Pago p , Categoria c
 where (p.categoriaca_id = c.ca_id and c.usuariou_id =idusuario )
 
 $function$;
