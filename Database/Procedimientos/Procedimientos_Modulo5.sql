@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION ConsultarPago(
 	idpago integer,
     
 	OUT pg_id integer,
-	OUT pg_monto float,
+	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipoTransaccion character varying,
 	OUT categoriaca_id integer)
@@ -83,7 +83,7 @@ $function$;
 CREATE OR REPLACE FUNCTION ListaPagos(
 	idusuario integer,
 	OUT pg_id integer,
-	OUT pg_monto float,
+	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipotransaccion character varying,
 	OUT categoriaca_id integer)

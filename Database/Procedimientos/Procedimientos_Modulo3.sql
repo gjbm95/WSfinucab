@@ -23,8 +23,8 @@ DECLARE
  result integer;
 
 BEGIN
-  insert into presupuesto(pr_nombre, pr_monto, pr_clasificacion, pr_duracion, usuariou_id, categoriaca_id)
-    values (nombrePresupuesto, monto, clasificacion, duracion, usuario, categoria);
+  insert into presupuesto(pr_nombre, pr_monto, pr_fecha, pr_clasificacion, pr_duracion, usuariou_id, categoriaca_id)
+    values (nombrePresupuesto, monto, CURRENT_TIMESTAMP, clasificacion, duracion, usuario, categoria);
 
     if found then
   result := 1;
@@ -50,6 +50,7 @@ $function$
 
 CREATE OR REPLACE FUNCTION obtenerlistapresupuesto(
 	idusuario integer,
+	OUT pr_id integer,
 	OUT pr_nombre character varying,
 	OUT ca_nombre character varying,
 	OUT pr_monto real,
@@ -61,7 +62,7 @@ CREATE OR REPLACE FUNCTION obtenerlistapresupuesto(
     
 AS $function$
 
-SELECT p.pr_nombre,c.ca_nombre,p.pr_monto,p.pr_duracion,p.pr_clasificacion,c.ca_esIngreso
+SELECT p.pr_id, p.pr_nombre, c.ca_nombre,p.pr_monto,p.pr_duracion,p.pr_clasificacion,c.ca_esIngreso
 FROM Presupuesto p, Categoria c
 WHERE p.categoriaca_id = c.ca_id AND  p.usuariou_id = idUsuario
 
@@ -69,6 +70,7 @@ $function$;
 
 CREATE OR REPLACE FUNCTION obtenerlistapresupuestoasc(
 	idusuario integer,
+	OUT pr_id integer,
 	OUT pr_nombre character varying,
 	OUT ca_nombre character varying,
 	OUT pr_monto real,
@@ -80,7 +82,7 @@ CREATE OR REPLACE FUNCTION obtenerlistapresupuestoasc(
     
 AS $function$
 
-SELECT p.pr_nombre,c.ca_nombre,p.pr_monto,p.pr_duracion,p.pr_clasificacion,c.ca_esIngreso
+SELECT p.pr_id, p.pr_nombre,c.ca_nombre,p.pr_monto,p.pr_duracion,p.pr_clasificacion,c.ca_esIngreso
 FROM Presupuesto p, Categoria c
 WHERE p.categoriaca_id = c.ca_id AND  p.usuariou_id = idUsuario
 ORDER BY p.pr_clasificacion ASC
@@ -128,7 +130,8 @@ CREATE OR REPLACE FUNCTION modificarPresupuesto(nombrepresupuesto character vary
 	clasificacion character varying,
 	duracion integer,
 	usuario integer,
-	categoria integer)
+	categoria integer,
+	idPr integer)
     RETURNS integer LANGUAGE 'plpgsql'
     AS $$
 DECLARE
@@ -142,7 +145,7 @@ UPDATE presupuesto SET
                     pr_clasificacion = clasificacion,
                     pr_duracion = duracion,
                     categoriaca_id = categoria 
-                    WHERE usuariou_id= usuario and pr_nombre = nombrePresupuesto;
+                    WHERE usuariou_id= usuario and pr_id = idPr;
     if found then
 	result := 1;
 	else result := 0;
