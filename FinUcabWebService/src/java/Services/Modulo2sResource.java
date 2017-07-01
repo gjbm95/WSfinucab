@@ -4,6 +4,7 @@ import BaseDatosDAO.Conexion;
 import Dominio.*;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo2.Excepciones.ConversionFallidaException;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
@@ -76,6 +77,13 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ConversionFallidaException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -109,12 +117,18 @@ public class Modulo2sResource {
             command.ejecutar();
             cuenta = (Cuenta_Bancaria) command.getResponse();
             resultado = Integer.toString(cuenta.getId());
-        
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ConversionFallidaException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -152,6 +166,13 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ConversionFallidaException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -184,6 +205,10 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -208,12 +233,10 @@ public class Modulo2sResource {
         int resultado = 0;
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
-
             Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
-                    tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
-                    Float.parseFloat(tdcJSON.getString("tc_saldo")), 0,
-                    Integer.parseInt(tdcJSON.getString("usuariou_id")));
-
+            tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+            Float.parseFloat(tdcJSON.getString("tc_saldo")), 0,
+            Integer.parseInt(tdcJSON.getString("usuariou_id")));
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
             command.ejecutar();
             tdc = (Tarjeta_Credito) command.getResponse();
@@ -223,6 +246,13 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (ConversionFallidaException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -259,6 +289,9 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        } catch (ConversionFallidaException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -281,12 +314,15 @@ public class Modulo2sResource {
         String decodifico = idtdc;
         try {
             int id = Integer.parseInt(decodifico);
-
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
             command.ejecutar();
             resultado = command.getResponse().getId();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (NumberFormatException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
@@ -317,6 +353,10 @@ public class Modulo2sResource {
             resultado = simple.getDescripcion();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (NumberFormatException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -352,6 +392,10 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -383,6 +427,10 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
+        }catch (NumberFormatException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
         }catch (Exception ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -397,7 +445,12 @@ public class Modulo2sResource {
      * @param decodifico String con estructura json
      * @return JsonObject del string
      */
-    private JsonObject stringToJSON(String decodifico) {
+    private JsonObject stringToJSON(String decodifico) throws ConversionFallidaException{
+        if (decodifico.length()==0){
+           ConversionFallidaException ex = 
+                   new ConversionFallidaException("No hay datos entrantes");       
+                throw ex;
+        } 
         JsonReader reader = Json.createReader(new StringReader(decodifico));
         JsonObject jsonObj = reader.readObject();
         reader.close();

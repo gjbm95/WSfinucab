@@ -52,9 +52,9 @@ public class DaoPlanificacion extends DAO {
             st.close();
             rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPlanificacion.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoPlanificacion.class.getName()).log(Level.SEVERE, null, ex);
         }
         return array;
     }

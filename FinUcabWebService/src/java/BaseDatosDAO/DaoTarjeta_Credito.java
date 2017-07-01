@@ -1,5 +1,6 @@
 
 package BaseDatosDAO;
+import BaseDatosDAO.Interfaces.IDAOTarjetaCredito;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
@@ -14,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -33,10 +33,17 @@ import javax.json.JsonObjectBuilder;
 * Tarjetas de Credito y Cuentas Bancarias. 
 *
 **/
-public class DaoTarjeta_Credito extends DAO {
+public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
 
     private Connection conn = Conexion.conectarADb();
 
+    
+    /**
+     * Metodo encargado de registrar Tarjetas de Credito en la base de datos 
+     * 
+     * @param e Entidad Tarjeta_Credito a ser almacenada
+     * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
+     */
     @Override
     public Entidad agregar(Entidad e) {
         Tarjeta_Credito obj = (Tarjeta_Credito) e;
@@ -65,13 +72,20 @@ public class DaoTarjeta_Credito extends DAO {
             rs.close();
            
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;
     }
 
+    
+    /**
+     * Metodo encargado de modificar Tarjetas de Credito en la base de datos 
+     * 
+     * @param e Entidad Tarjeta_Credito a ser modificada
+     * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
+     */
     @Override
     public Entidad modificar(Entidad e) {
         Tarjeta_Credito obj = (Tarjeta_Credito) e;
@@ -93,9 +107,9 @@ public class DaoTarjeta_Credito extends DAO {
             cstmt.close();
            
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;
     }
@@ -108,6 +122,13 @@ public class DaoTarjeta_Credito extends DAO {
         return null;
     }
 
+    
+    /**
+     * Metodo encargado de eliminar Tarjetas de Credito en la base de datos 
+     * 
+     * @param e Id de las tarjetas de credito a ser almacenadas. 
+     * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
+     */
     public int eliminar(int id) {
         CallableStatement cstmt;
         int idtarjeta = 0;
@@ -122,13 +143,20 @@ public class DaoTarjeta_Credito extends DAO {
             cstmt.close();
             rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
-            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
         return idtarjeta;
     }
 
+    
+    /**
+     * Metodo encargado de mostrar Tarjetas de Credito de un usuario determinado
+     * 
+     * @param e Entidad Id del usuario titular de las tarjetas de credito. 
+     * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
+     */
     public String getTarjetasXUsuario(int id) {
         CallableStatement cstm;
         String respuesta ="";
@@ -165,6 +193,14 @@ public class DaoTarjeta_Credito extends DAO {
         return respuesta;
     }
 
+    
+    /**
+     * Metodo encargado de mostrar el saldo de las Tarjetas de Credito
+     *  registradas en la base de datos 
+     * 
+     * @param e Entidad Tarjeta_Credito a ser almacenada
+     * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
+     */
     public String getSaldoTotal(int id) {
         CallableStatement cstm;
         String respuesta;
