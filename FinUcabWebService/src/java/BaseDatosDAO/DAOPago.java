@@ -38,7 +38,7 @@ public class DAOPago extends DAO implements IDAOPago{
             Pago pago = (Pago) e;
             CallableStatement pag;
             
-        int idPago = 3 ;
+        int idPago = 0 ;
         try {                
             
             Connection conn = Conexion.conectarADb();
