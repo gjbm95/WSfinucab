@@ -6,6 +6,10 @@
 package BaseDatosDAO.Interfaces;
 
 import Dominio.Entidad;
+import Logica.Modulo1.ActualizarClaveException;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.VerificarUsuarioException;
 
 /**
  *
@@ -13,12 +17,12 @@ import Dominio.Entidad;
  */
 public interface IDAOUsuario extends IDAO {
     
-    public Entidad ActualizarClave(Entidad entidad);
+    public Entidad ActualizarClave(Entidad entidad) throws ActualizarClaveException;
     
-    public Entidad verificarUsuario(String usuario);
+    public Entidad verificarUsuario(String usuario)throws VerificarUsuarioException;
     
-    public Entidad obtenerInicioSesion(Entidad usuario);
+    public Entidad obtenerInicioSesion(Entidad usuario) throws IniciarSesionException;
     
-    public Entidad obtenerXRecuperarClave(String usuario);
+    public Entidad obtenerXRecuperarClave(String usuario) throws RecuperarClaveException;
  
 }

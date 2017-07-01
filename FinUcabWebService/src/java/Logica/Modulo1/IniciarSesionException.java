@@ -13,8 +13,8 @@ import Exceptions.FinUCABException;
  */
 public class IniciarSesionException extends FinUCABException{
     
-    public IniciarSesionException(int code, String message, Class className) {
-        super(code, message, className);
+    public IniciarSesionException(int code, String message) {
+        super(code, message, IniciarSesionException.class);
     }
     
 }

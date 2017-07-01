@@ -21,9 +21,10 @@ public class ComandoRecuperarClave extends Comando{
     /**
      * Procedimiento que se encarga de realizar la llamada al DAOUsuario
      * para obtener datos del usuario que desea recuperar su clave
+     * @throws Logica.Modulo1.RecuperarClaveException
      */
     @Override
-    public void ejecutar(){
+    public void ejecutar() throws RecuperarClaveException{
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.obtenerXRecuperarClave(usuario);
     }

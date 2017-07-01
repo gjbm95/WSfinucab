@@ -6,6 +6,13 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
+import Exceptions.FinUCABException;
+import Logica.Modulo1.ActualizarClaveException;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.RegistrarIncorrectoException;
+import Logica.Modulo1.VerificarUsuarioException;
+import Registro.RegistroError;
 import Services.Modulo1sResource;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
@@ -49,9 +56,10 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      *
      * @return 0 de retorna esto no se puedo agregar correctamente el usuario,
      * 1 en este caso el usuario es agregado correctamente.
+     * @throws Exceptions.FinUCABException
      */
     @Override
-    public Entidad agregar(Entidad e) {
+    public Entidad agregar(Entidad e) throws RegistrarIncorrectoException {
         Usuario usuario = (Usuario) e;
         int respuesta =0;
         try {
@@ -71,12 +79,12 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             } else {
                 st.close();
                 respuesta = 0;//No se agrega el usuario
+                throw new RegistrarIncorrectoException(100,RegistroError.error_parametros);
             }
 
-        } catch (Exception ex) {
-
-            respuesta = 2;
-
+        } catch (SQLException ex) {
+            respuesta = 0;
+            throw new RegistrarIncorrectoException(ex.getErrorCode(),ex.getMessage());                
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
@@ -91,7 +99,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * modificar la clave del usuario.
      */
     @Override
-    public Entidad ActualizarClave(Entidad entidad){
+    public Entidad ActualizarClave(Entidad entidad) throws ActualizarClaveException{
     Usuario usuario = (Usuario) entidad;
     int respuesta = 0;
         try {
@@ -114,9 +122,9 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             }
          
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             respuesta = 2;
-
+            throw new ActualizarClaveException(100,RegistroError.error_parametros);
+      
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
@@ -130,9 +138,10 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      *
      * @return 4 El usuario no se encuentra disponible, 5 el usuario se 
      * encuentra disponible.
+     * @throws Logica.Modulo1.VerificarUsuarioException
      */
     @Override
-    public Entidad verificarUsuario(String usuario){
+    public Entidad verificarUsuario(String usuario) throws VerificarUsuarioException{
         int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
@@ -150,11 +159,14 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{     
                    st.close();
                    respuesta =  3; //Usuario Disponible
+                   
+                
                 }
             }
         } catch (SQLException ex) {
              Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-             
+             throw new VerificarUsuarioException(ex.getErrorCode(),ex.getMessage());  
+   
         } catch (Exception e) {
             respuesta =  2;//cambiar
         }
@@ -172,10 +184,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * @return De validar correctamente el usuario y password retorna un JSON en
      * String con todos los datos del usuario,7 Se valido inicio de sesion del 
      * usuario correctamente,
+     * @throws Logica.Modulo1.IniciarSesionException
      * 
      */
     @Override
-    public Entidad obtenerInicioSesion(Entidad usuario){
+    public Entidad obtenerInicioSesion(Entidad usuario) throws IniciarSesionException{
         Usuario objeto = (Usuario) usuario;
         String respuesta="";
         int bandera=0;
@@ -206,12 +219,15 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera==0){
               st.close();
               respuesta= "7";
+              throw new IniciarSesionException(100,RegistroError.error_parametros);
         }
             
         } catch (SQLException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IniciarSesionException(ex.getErrorCode(),ex.getMessage());  
         } catch (Exception e) {
             respuesta= "ERROR";
+            throw new IniciarSesionException(100,RegistroError.error_parametros);
         }
         
     return FabricaEntidad.obtenerSimpleResponse(respuesta);
@@ -227,10 +243,11 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
      * @return De existir el usuario y la contraseña coincide retorna un JSON en
      * String con todos los datos del usuario. De lo contrario retorna el String
      * "ERROR"
+     * @throws Logica.Modulo1.RecuperarClaveException
      */
     
     @Override
-    public Entidad obtenerXRecuperarClave(String usuario){
+    public Entidad obtenerXRecuperarClave(String usuario) throws RecuperarClaveException{
         String respuesta="";
         try {
             Connection conn = Conexion.conectarADb();
@@ -258,10 +275,14 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
+                throw new RecuperarClaveException(100,RegistroError.error_parametros);
+                
             }
             
-        } catch (Exception e) {
-            respuesta = e.getMessage();
+        } catch (SQLException ex) {
+            respuesta = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RecuperarClaveException(ex.getErrorCode(),ex.getMessage());  
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }

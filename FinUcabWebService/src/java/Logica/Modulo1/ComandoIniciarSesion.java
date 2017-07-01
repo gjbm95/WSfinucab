@@ -23,9 +23,10 @@ public class ComandoIniciarSesion extends Comando{
     /**
      * Procedimiento que se encarga de realizar la llamada al DAOUsuario
      * para verificar los datos ingresados por el usuario.
+     * @throws Logica.Modulo1.IniciarSesionException
      */
     @Override
-    public void ejecutar(){
+    public void ejecutar() throws IniciarSesionException{
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.obtenerInicioSesion(usuario);
     }

@@ -13,8 +13,8 @@ import Exceptions.FinUCABException;
  */
 public class ActualizarClaveException extends FinUCABException{
     
-    public ActualizarClaveException(int code, String message, Class className) {
-        super(code, message, className);
+    public ActualizarClaveException(int code, String message) {
+        super(code, message,ActualizarClaveException.class);
     }
     
 }

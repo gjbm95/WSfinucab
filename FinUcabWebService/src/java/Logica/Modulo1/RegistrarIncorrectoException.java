@@ -13,8 +13,8 @@ import Exceptions.FinUCABException;
  */
 public class RegistrarIncorrectoException extends FinUCABException{
     
-    public RegistrarIncorrectoException(int code, String message, Class className) {
-        super(code, message, className);
+    public RegistrarIncorrectoException(int code, String message) {
+        super(code, message,  RegistrarIncorrectoException.class);
     }
     
 }

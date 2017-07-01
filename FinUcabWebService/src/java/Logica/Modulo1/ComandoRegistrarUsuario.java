@@ -3,6 +3,7 @@ package Logica.Modulo1;
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -22,8 +23,10 @@ public class ComandoRegistrarUsuario extends Comando{
     /**
      * Procedimiento que se encarga de realizar la llamada al DAOUsuario
      * para registrar el usuario
+     * @throws Exceptions.FinUCABException
      */
-    public void ejecutar(){
+    @Override
+    public void ejecutar() throws FinUCABException{
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.agregar(usuario);
     }

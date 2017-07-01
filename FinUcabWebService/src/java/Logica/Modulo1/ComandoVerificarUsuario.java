@@ -23,7 +23,7 @@ public class ComandoVerificarUsuario extends Comando{
      * existencia del usuario.
      */
     @Override
-    public void ejecutar(){
+    public void ejecutar() throws VerificarUsuarioException{
         IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
         this.response = dao.verificarUsuario(usuario);
     }

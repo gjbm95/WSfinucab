@@ -6,13 +6,19 @@ import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.SimpleResponse;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo1.ActualizarClaveException;
 import Logica.Modulo1.ComandoActualizarClave;
 import Logica.Modulo1.ComandoIniciarSesion;
 import Logica.Modulo1.ComandoRecuperarClave;
 import Logica.Modulo1.ComandoRegistrarUsuario;
 import Logica.Modulo1.ComandoVerificarUsuario;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.RegistrarIncorrectoException;
+import Logica.Modulo1.VerificarUsuarioException;
 import Logica.Modulo5.EmptyEntityException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -98,7 +104,6 @@ public class Modulo1sResource {
         //TODO return proper representation object 
         String respuesta = "";
         try {
-
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             //Se coloca el query
@@ -173,14 +178,16 @@ public class Modulo1sResource {
         } catch (EmptyEntityException ex) {
             resultado = "0";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-            
         } catch (NullPointerException ex) {
             resultado = "0";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (Exception ex) {
+        } catch (RegistrarIncorrectoException ex) {
             resultado = "0";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            resultado = "0";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         
         return resultado;
     }
@@ -195,7 +202,6 @@ public class Modulo1sResource {
     private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") String datosCuenta) throws EmptyEntityException, NullPointerException  /*throws EmptyEntityException  */{
 
         Entidad usuario = null;
-                
         try {
             boolean validador  = validadorString(datosCuenta);
             if( validador ){
@@ -255,10 +261,21 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
     public String verificarUsuario(@QueryParam("nombreUsuario") String usuario) {
-        Comando cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
-        cvu.ejecutar();
-        Entidad respuesta = cvu.getResponse();
-        String resultado = obtenerRespuestaVerificarUsuario(respuesta);        
+        String resultado = "";
+        try { 
+            Comando cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
+            cvu.ejecutar();
+            Entidad respuesta = cvu.getResponse();
+            resultado = obtenerRespuestaVerificarUsuario(respuesta); 
+        } catch (VerificarUsuarioException ex) {
+            resultado = "3";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "3";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+               
         return resultado;
     }
 
@@ -309,10 +326,15 @@ public class Modulo1sResource {
             resultado = "7";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }catch (NullPointerException ex) {
-            resultado = "0";
+            resultado = "7";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (Exception ex) {
-            resultado = "0";
+        }
+        catch (IniciarSesionException ex) {
+            resultado = "7";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "7";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
         return resultado;
@@ -380,10 +402,21 @@ public class Modulo1sResource {
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
         String resultado = "";
-        Comando crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
-        crc.ejecutar();
-        Entidad respuesta = crc.getResponse();
-        resultado = obtenerRespuestaRecuperarClave(respuesta);  
+        
+        try {
+            Comando crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
+            crc.ejecutar();
+            Entidad respuesta = crc.getResponse();
+            resultado = obtenerRespuestaRecuperarClave(respuesta);
+        }  catch (RecuperarClaveException ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         return resultado;
         
@@ -435,7 +468,11 @@ public class Modulo1sResource {
         } catch (NullPointerException ex) {
             resultado = "6";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }catch (Exception ex) {
+        } catch (ActualizarClaveException ex) {
+            resultado = "6";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
             resultado = "6";
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
         }

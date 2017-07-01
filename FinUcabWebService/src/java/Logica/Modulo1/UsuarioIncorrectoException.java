@@ -13,8 +13,8 @@ import Exceptions.FinUCABException;
  */
 public class UsuarioIncorrectoException extends FinUCABException{
     
-    public UsuarioIncorrectoException(int code, String message, Class className) {
-        super(code, message, className);
+    public UsuarioIncorrectoException(int code, String message) {
+        super(code, message, UsuarioIncorrectoException.class);
     }
     
     

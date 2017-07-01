@@ -13,8 +13,8 @@ import Exceptions.FinUCABException;
  */
 public class RecuperarClaveException extends FinUCABException {
     
-    public RecuperarClaveException(int code, String message, Class className) {
-        super(code, message, className);
+    public RecuperarClaveException(int code, String message) {
+        super(code, message, RecuperarClaveException.class);
     }
     
 }
