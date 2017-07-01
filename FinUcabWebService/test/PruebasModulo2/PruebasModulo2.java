@@ -6,9 +6,12 @@
 package PruebasModulo2;
 
 import Dominio.Usuario;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -53,20 +56,24 @@ public class PruebasModulo2 {
      @Test
      public void actualizarCuentaTest() {
          
-      String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
-              + " \"u_nombre\" : \"Alejandro\""
-      + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
-              + " \"aledavid21@hotmail.com\", "
-      + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
-              + " \"u_respuesta\" : \"/alejandra\", "
-               + "\"u_password\" : \"123456\" }";
-          JsonObject usuarioJSON = this.stringToJSON(decodifico);
-          Usuario usuario = new Usuario();
-          usuario.jsonToUsuario(usuarioJSON);
+        try {
+            String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
+                    + " \"u_nombre\" : \"Alejandro\""
+                    + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
+                    + " \"aledavid21@hotmail.com\", "
+                    + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
+                    + " \"u_respuesta\" : \"/alejandra\", "
+                    + "\"u_password\" : \"123456\" }";
+            JsonObject usuarioJSON = this.stringToJSON(decodifico);
+            Usuario usuario = new Usuario();
+            usuario.jsonToUsuario(usuarioJSON);
             
-          Comando command = FabricaComando.
-                  instanciarComandoActualizarDatosUsuario(usuario);
+            Comando command = FabricaComando.
+                    instanciarComandoActualizarDatosUsuario(usuario);
             command.ejecutar();
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
             
      

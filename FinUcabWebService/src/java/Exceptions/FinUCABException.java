@@ -21,6 +21,7 @@ public abstract class FinUCABException extends Exception{
         this._message = message;
         this._className = className;
         
+        System.out.println("Error ("+className+") : "+code+" - "+ message);
     }
     
     

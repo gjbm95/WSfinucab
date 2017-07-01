@@ -6,6 +6,7 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.SimpleResponse;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.EmptyEntityException;
@@ -152,11 +153,18 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarCategoria")
     public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
+        
         String respuesta="";
-        Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
-        c.ejecutar();
-        Entidad objectResponse = c.getResponse(); 
-        respuesta = obtenerRespuestaEliminar(objectResponse);
+        try {
+            Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            respuesta = obtenerRespuestaEliminar(objectResponse);
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return respuesta;
     }
     

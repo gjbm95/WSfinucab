@@ -10,10 +10,15 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Dominio.SimpleResponse;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo5.AgregarPagoException;
+import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.EmptyEntityException;
 import Logica.Modulo5.EmptyStringException;
+import Logica.Modulo5.ListarPagosException;
+import Logica.Modulo5.ModificarPagoException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -400,10 +405,10 @@ public class Modulo5sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
             respuesta = obtenerRespuestaAgregar(objectResponse);
-        } 
-       
-            catch (Exception ex) { 
+        }  catch (AgregarPagoException ex) {
             Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }  catch (Exception ex) {
+        
         }
         return respuesta;
     }
@@ -426,25 +431,24 @@ public class Modulo5sResource {
     public String consultarPago(@QueryParam("datosPago") int idPago) {
                         
         String respuesta ="";
-                try { 
+        try { 
                          
-                    if( validadorInteger(idPago)){
+            if( validadorInteger(idPago)){
                         
-                        Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
-                        c.ejecutar();
-                        Entidad objectResponse = c.getResponse();
-                        respuesta =obtenerRespuestaConsultar(objectResponse);
+                Comando c = FabricaComando.instanciarComandoConsultarPago(idPago);
+                c.ejecutar();
+                Entidad objectResponse = c.getResponse();
+                respuesta =obtenerRespuestaConsultar(objectResponse);
                         
-                    }
-                    else {
-                        System.out.println("Parametro de entrada nulo o vacio");  
-                    }
-                    }catch (EmptyEntityException e) {
-                        respuesta = "Error :"+e.EmptyEntity();
-                    }
-                    catch (Exception e) {
-                        respuesta = "Error :"+e.getMessage();
-                    }
+            }else {
+                System.out.println("Parametro de entrada nulo o vacio");  
+            }
+        }catch (ConsultarPagoException e) {
+            respuesta = "Error :"+e.getMessage();
+        }
+        catch (Exception e) {
+            respuesta = "Error :"+e.getMessage();
+        }
         
          return respuesta;
     }
@@ -467,20 +471,22 @@ public class Modulo5sResource {
         
         String respuesta ="";
             
-                try{
-                    if( validadorInteger(idPago) ){
+        try{
+            if( validadorInteger(idPago) ){
                         Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
                         c.ejecutar();
                         Entidad objectResponse = c.getResponse();
                         respuesta =obtenerRespuestaLista(objectResponse);
-                    }
-                    else {
+            }else {
                         System.out.println("Parametro de entrada nulo o vacio");  
-                    }
-                }
-                    catch(Exception e) {
-                    respuesta = "Error Objeto Vacio :"+e.getMessage();
-                    }    
+            }
+        }
+        catch (ListarPagosException e) {
+            respuesta = e.getMessage();
+        }
+        catch (Exception e) {
+            respuesta = e.getMessage();
+        }   
         
         return respuesta;
     }
@@ -503,19 +509,19 @@ public class Modulo5sResource {
         
         String respuesta = "";       
 
-            try {
+        try {
                 Entidad ex = entidadModificarPago(datosPagos);
                 Comando c = FabricaComando.instanciarComandoModificarPago(ex);
                 c.ejecutar();
                 Entidad objectResponse = c.getResponse();
                 respuesta = obtenerRespuestaModificar(objectResponse);
                 
-            } 
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-                respuesta = "0";
-            } 
-            
+        }catch (ModificarPagoException e) {
+            respuesta = e.getMessage();
+        }
+        catch (Exception e) {
+            respuesta = e.getMessage();
+        }
        return respuesta;
     }
     
