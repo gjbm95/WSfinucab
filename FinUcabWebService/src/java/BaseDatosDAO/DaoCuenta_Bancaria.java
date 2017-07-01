@@ -1,6 +1,7 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
+import BaseDatosDAO.Model.ExceptionDB;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
@@ -63,7 +64,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             rs.close();
             Logger.getLogger(getClass().getName()).log(
             Level.INFO, "Agregado Cuenta Bancaria con exito");
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
