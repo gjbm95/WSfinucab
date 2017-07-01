@@ -27,6 +27,7 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -34,6 +35,8 @@ import javax.json.JsonObjectBuilder;
  */
 public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
+    final static org.apache.logging.log4j.Logger log = LogManager.getLogger();
+    
     @Override
     public Entidad agregar(Entidad e) {
 
@@ -56,6 +59,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.close();
 
         } catch (Exception ex) {
+            log.error("Error agregando presupuesto: "+ex.getMessage());
             ex.printStackTrace();
             respuesta = 2;
 
@@ -89,6 +93,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             Desconectar(conn);
 
         } catch (Exception ex) {
+            log.error("Error modificando presupuesto: "+ex.getMessage());
             ex.printStackTrace();
             respuesta = 2;
         }
@@ -114,6 +119,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                         String.valueOf(rs.getBoolean(7)));
                        
             } catch (SQLException e){
+                log.error("Error consultando presupuesto: "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -147,6 +153,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
             } catch (SQLException e) {
+                log.error("Error listando presupuestos: "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -168,6 +175,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             ps.close();
             Desconectar(conn);
         } catch (Exception e){
+            log.error("Error verificando nombre: "+e.getMessage());
             e.printStackTrace();
             respuesta = 2;
         }
@@ -190,6 +198,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             ps.close();
             Desconectar(conn);
         } catch (SQLException e) {
+            log.error("Error eliminando presupuestos: "+e.getMessage());
             e.printStackTrace();
             respuesta = 2;
         }
@@ -219,6 +228,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             array = arrayBuilder.build();
 
         } catch (SQLException ex) {
+            log.error("Error listando ultimos presupuestos presupuestos: "+ex.getMessage());
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
 
         }

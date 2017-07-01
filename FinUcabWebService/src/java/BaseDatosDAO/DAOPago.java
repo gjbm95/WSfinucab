@@ -40,9 +40,11 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public Entidad agregar(Entidad e) throws AgregarPagoException {
 
+
         Pago pago = (Pago) e;
         CallableStatement pag;
         int idPago = 0;
+
 
         try {                
             
@@ -61,14 +63,17 @@ public class DAOPago extends DAO implements IDAOPago{
             }
            
             pago.setId(idPago);
+            
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
                         
+
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarAgregarPagoException(ex.getErrorCode(),ex.getMessage());                
         }
         
-        return FabricaEntidad.obtenerSimpleResponse(idPago);
 
+        return FabricaEntidad.obtenerSimpleResponse(idPago);
+            
     }
     
     

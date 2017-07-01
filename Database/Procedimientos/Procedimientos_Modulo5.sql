@@ -4,8 +4,6 @@ DROP FUNCTION ModificarPago(integer, float, character varying, character varying
 DROP FUNCTION AgregarPago(float, character varying, character varying, integer);
 
 
-
-
 CREATE OR REPLACE FUNCTION AgregarPago(
 	monto float,
 	descripcion character varying,
@@ -24,7 +22,7 @@ BEGIN
       (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria);
 
     if found then
-  result := 1;
+  result :=(Select pg_id from Pago where pg_descripcion = descripcion and pg_monto = monto and categoriaca_id = categoria  );
   else result := 0;
   end if;
   RETURN result;
