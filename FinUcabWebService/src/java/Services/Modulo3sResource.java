@@ -86,7 +86,10 @@ public class Modulo3sResource {
     @Path("/ObtenerPresupuesto")
     public String getObtenerPresupuesto(@QueryParam("idPresupuesto") int idPresupuesto) {
 
+        log.debug("Obteniendo presupuesto con id: "+idPresupuesto);
+        
         String respuesta = "";
+        
         try {
             Comando comando = FabricaComando.instanciarComandoObtenerPresupuesto(idPresupuesto);
             comando.ejecutar();
@@ -94,8 +97,10 @@ public class Modulo3sResource {
             respuesta = creaPresupuestoJson(objectResponse);
 
         } catch (Exception e) {
+            log.error("rror obteniendo presupuesto"+e.getMessage());
             e.printStackTrace();
         }
+        log.info("Retornando presupuesto con id: " +idPresupuesto);
         return respuesta;
     }
 
@@ -152,6 +157,8 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/ListaPresupuesto")
     public String getListaPresupuesto(@QueryParam("idUsuario") int idUsuario) {
+        
+        log.debug("Listando presupuestos de usuario con id:_"+ idUsuario);
 
         String respuesta = "0";
         try {
@@ -162,8 +169,10 @@ public class Modulo3sResource {
             respuesta = creaListaPresupuestos(objectResponse);
 
         } catch (Exception e) {
+            log.error("Error obteniendo presupuestos del usuario con id: "+idUsuario);
             e.printStackTrace();
         }
+        log.info("Retornando presupuestos de usuario: "+idUsuario);
         return respuesta;
     }
 
@@ -233,6 +242,8 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
+        
+        log.debug("Registrando presupuesto ");
 
         String respuesta = "0";
         Entidad e = creaPresupuesto(datosPresupuesto);
@@ -240,7 +251,8 @@ public class Modulo3sResource {
         command.ejecutar();
         Entidad objectResponse = command.getResponse();
         respuesta = String.valueOf(objectResponse.getId());
-        System.out.println(respuesta + " respuesta");
+        
+        log.info("Presupuesto registrado con id: "+respuesta);
         return respuesta;
 
     }
@@ -258,6 +270,8 @@ public class Modulo3sResource {
     @Path("/ModificarPresupuesto")
     public String modificarPresupuesto(@QueryParam("nombrePresupuesto") String nombrePresupuesto, @QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
 
+        log.debug("Modificando presupuesto");
+        
         String respuesta = "0";
         Entidad e = modificaPresupuesto(datosPresupuesto);
         Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
@@ -267,6 +281,8 @@ public class Modulo3sResource {
         if (resultado != null) {
             respuesta = "1";
         }
+        
+        log.info("Respuesta: "+respuesta);
         return respuesta;
     }
 
