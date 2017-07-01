@@ -5,6 +5,12 @@
  */
 package Exceptions;
 
+import Exceptions.Presupuesto.AgregarPresupuestoException;
+import Exceptions.Presupuesto.ConsultarPresupuestoException;
+import Exceptions.Presupuesto.EliminarPresupuestoExeption;
+import Exceptions.Presupuesto.ListarPresupuestoException;
+import Exceptions.Presupuesto.ModificarPresupuestoException;
+import Exceptions.Presupuesto.VerificarNombreException;
 import Logica.Modulo1.ActualizarClaveException;
 import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
@@ -61,7 +67,53 @@ public class FabricaExcepcion {
         return new ListarPagosException(code, message);
     }
     
- 
+    public static AgregarPresupuestoException instanciarAgregarPresupuestoException (int code){
+        return new AgregarPresupuestoException(code);
+    }
+    
+    public static AgregarPresupuestoException instanciarAgregarPresupuestoException (int code, String message){
+        return new AgregarPresupuestoException(code, message);
+    }
+    
+    public static ConsultarPresupuestoException instanciarConsultarPresupuestoException (int code){
+        return new ConsultarPresupuestoException(code);
+    }
+    
+    public static ConsultarPresupuestoException instanciarConsultarPresupuestoException (int code, String message){
+        return new ConsultarPresupuestoException(code, message);
+    }
+    
+    public static ListarPresupuestoException instanciarListarPresupuestoException (int code){
+        return new ListarPresupuestoException(code);
+    }
+    
+    public static ListarPresupuestoException instanciarListarPresupuestoException (int code, String message){
+        return new ListarPresupuestoException(code, message);
+    }
+    
+    public static ModificarPresupuestoException instanciarModificarPresupuestoException (int code){
+        return new ModificarPresupuestoException(code);
+    }
+    
+    public static ModificarPresupuestoException instanciarModificarPresupuestoException (int code, String message){
+        return new ModificarPresupuestoException(code, message);
+    }
+    
+    public static VerificarNombreException instanciarVerificarNombreException (int code){
+        return new VerificarNombreException(code);
+    }
+    
+    public static VerificarNombreException instanciarVerificarNombreException(int code, String message){
+        return new VerificarNombreException(code, message);
+    }
+    
+    public static EliminarPresupuestoExeption instanciarEliminarPresupuestoExeption (int code){
+        return new EliminarPresupuestoExeption(code);
+    }
+    
+    public static EliminarPresupuestoExeption instanciarEliminarPresupuestoExeption(int code, String message){
+        return new EliminarPresupuestoExeption(code, message);
+    }
     
     public static ActualizarClaveException instanciarActualizarClaveException
     (int code, String message){
