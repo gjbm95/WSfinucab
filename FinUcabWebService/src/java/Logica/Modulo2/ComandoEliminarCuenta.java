@@ -29,7 +29,7 @@ public class ComandoEliminarCuenta extends Comando {
      * Metodo encargado de la ejecucion de eliminar cuentas bancarias.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws EliminarFallidoException {
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         
         super.response = FabricaEntidad.obtenerSimpleResponse(daoCuenta.eliminar(id));
