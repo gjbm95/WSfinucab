@@ -155,12 +155,12 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
     public int verificarNombre(String nombre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public int eliminarPresupuesto(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     public JsonArray getUltimosPresupuestos(int id) {
