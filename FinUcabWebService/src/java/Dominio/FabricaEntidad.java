@@ -98,7 +98,14 @@ public class FabricaEntidad {
        return new SimpleResponse(id,status, descripcion);
     } 
     
+
+    public static SimpleResponse obtenerSimpleResponse(String descripcion){
+       return new SimpleResponse(descripcion);
+    } 
+    
+    
     public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria) {
+
         return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
     

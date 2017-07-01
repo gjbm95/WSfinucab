@@ -1,35 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo1;
 
-import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Logica.Comando;
-import Services.Modulo1sResource;
 
 /**
- *
- * @author Oswaldo
+ * Modulo 1 - Modulo de Inicio de Sesion 
+ * Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido 
+ * Descripción de la clase: Clase encargada de realizar la llamada al DAOUsuario
+ * para verificar la existencia del usuario.
  */
 public class ComandoVerificarUsuario extends Comando{
     String usuario;
-
+    
+    //Constructor
     public ComandoVerificarUsuario(String usuario) {
         this.usuario = usuario;
     }
     
+    /**
+     * Metodo encargado de realizar la llamada al DAOUsuario para verificar la 
+     * existencia del usuario.
+     */
     @Override
-    public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-        int respuesta = dao.verificarUsuario(usuario);
-        if(respuesta == 4){
-            Modulo1sResource.resultado = "4";//EN USO
-        }else if(respuesta == 3){
-            Modulo1sResource.resultado = "3";//DISPONIBLE
-        }
-        //return null;
+    public void ejecutar() throws VerificarUsuarioException{
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.verificarUsuario(usuario);
     }
 }

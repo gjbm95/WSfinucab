@@ -5,6 +5,11 @@
  */
 package Exceptions;
 
+import Logica.Modulo1.ActualizarClaveException;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.RegistrarIncorrectoException;
+import Logica.Modulo1.VerificarUsuarioException;
 import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
@@ -55,4 +60,63 @@ public class FabricaExcepcion {
     public static ListarPagosException instanciarListarPagosException(int code, String message) {
         return new ListarPagosException(code, message);
     }
+    
+ 
+    
+    public static ActualizarClaveException instanciarActualizarClaveException
+    (int code, String message){
+        return new ActualizarClaveException(code,message);
+    
+    }
+    
+    public static IniciarSesionException instanciarIniciarSesionException
+    (int code, String message){
+        return new IniciarSesionException(code,message);
+    
+    }
+    
+    public static RecuperarClaveException instanciarRecuperarClaveException
+    (int code, String message){
+        return new RecuperarClaveException(code,message);
+    
+    }
+    
+     
+    public static RegistrarIncorrectoException 
+    instanciarRegistrarIncorrectoException(int code, String message){
+        return new RegistrarIncorrectoException(code,message);
+    
+    }
+    
+    public static VerificarUsuarioException instanciarVerificarUsuarioException
+    (int code, String message){
+        return new VerificarUsuarioException(code,message);
+    
+    }
+     
+   
+    public static RegistrarIncorrectoException 
+    instanciarRegistrarIncorrectoException(int code){
+        return new RegistrarIncorrectoException(code);
+    
+    }  
+     
+     public static ActualizarClaveException instanciarActualizarClaveException
+    (int code){
+        return new ActualizarClaveException(code);
+    
+    }
+     public static IniciarSesionException instanciarIniciarSesionException
+     (int code){
+      return new IniciarSesionException(code);
+    
+    }    
+        
+     public static RecuperarClaveException instanciarRecuperarClaveException
+    (int code){
+        return new RecuperarClaveException(code);
+    
+    }   
+        
+        
 }

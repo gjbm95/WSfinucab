@@ -27,7 +27,6 @@ public class ComandoAgregarPago extends Comando {
     public void ejecutar() throws FinUCABException {
         IDAOPago dao = SingletonDAOPago.getInstance();
         this.response = dao.agregar(pago);
-        
     }
     
 }

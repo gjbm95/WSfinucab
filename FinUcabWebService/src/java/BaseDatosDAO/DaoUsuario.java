@@ -1,14 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package BaseDatosDAO;
 
+import BaseDatosDAO.Interfaces.IDAOUsuario;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
+import Exceptions.FabricaExcepcion;
+import Exceptions.FinUCABException;
+import Logica.Modulo1.ActualizarClaveException;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.RegistrarIncorrectoException;
+import Logica.Modulo1.VerificarUsuarioException;
+import Registro.RegistroError;
 import Services.Modulo1sResource;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
@@ -25,18 +30,37 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
 /**
- *
- * @author AlejandroNegrin
- */
-public class DaoUsuario extends DAO {
+*Modulo 1 - Modulo de DaoUsuario.
+*Desarrolladores:
+*Mariangel Perez / Oswaldo Lopez / Aquiles Pulido
+*Descripción de la clase:
+*Clase encargada de contener todos los metodos que manejan la informacion del
+*usuario.
+*@Params
+*
+**/
+
+public class DaoUsuario extends DAO implements IDAOUsuario{
 
     private Connection conn = Conexion.conectarADb();
 
     DaoUsuario() {
     }
 
+    
+    
+    
+     /**
+     * Funcion encargada de agregar el usuario en la BD.
+     *
+     * @param e entidad que posee los datos a agregar en la BD.
+     *
+     * @return 0 de retorna esto no se puedo agregar correctamente el usuario,
+     * 1 en este caso el usuario es agregado correctamente.
+     * @throws Exceptions.FinUCABException
+     */
     @Override
-    public Entidad agregar(Entidad e) {
+    public Entidad agregar(Entidad e) throws RegistrarIncorrectoException {
         Usuario usuario = (Usuario) e;
         int respuesta =0;
         try {
@@ -52,52 +76,74 @@ public class DaoUsuario extends DAO {
             a.setString(7, usuario.getContrasena());
             if (a.execute()) {
                 st.close();
-                respuesta = 1;
+                respuesta = 1;//Se agrego correctamente el usuario
             } else {
                 st.close();
-                respuesta = 0;
+                respuesta = 0;//No se agrega el usuario
+                throw FabricaExcepcion.instanciarRegistrarIncorrectoException(200);
             }
 
-        } catch (Exception ex) {
-
-            respuesta = 2;
-
+        } catch (SQLException ex) {
+            respuesta = 0;
+            throw FabricaExcepcion.instanciarRegistrarIncorrectoException(ex.getErrorCode(),ex.getMessage());                
         }
         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
-    
-    public int ActualizarClave(String usuario, String clave){
-    String decodifico = URLDecoder.decode(usuario);
+     /**
+     * Funcion encargada de actualizar la clave del usuario en la BD por medio 
+     * de la opcion olvido su contraseña.
+     *
+     * @param entidad entidad que posee los datos para modificar la clave del
+     * usuario.
+     *
+     * @return 5 la clave de usuario se modifico correctamente, 6 no se logro
+     * modificar la clave del usuario.
+     */
+    @Override
+    public Entidad ActualizarClave(Entidad entidad) throws ActualizarClaveException{
+    Usuario usuario = (Usuario) entidad;
     int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
-           
             CallableStatement a = conn.prepareCall("{ call ActualizarClave(?,?) }");
-            a.setString(1,usuario);
-            a.setString(2,clave);
+            a.setString(1,usuario.getUsuario());
+            a.setString(2,usuario.getContrasena());
             a.execute();
             ResultSet rs = a.getResultSet();
            
             while(rs.next()){
                 if (rs.getString(1).equals("1")){
                     st.close();
-                    respuesta =  5; 
+                    respuesta =  5; //Se modifica correctamente la clave
                 }else{ 
                    st.close();
-                   respuesta =  6; 
+                   respuesta =  6; //No se modifica la clave
+                   throw FabricaExcepcion.instanciarActualizarClaveException(201);
                 }
             }
          
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            respuesta = 2;
-
+        } catch (SQLException ex) {
+            respuesta = 0;
+            throw FabricaExcepcion.instanciarActualizarClaveException(ex.getErrorCode(),ex.getMessage());                
         }
-        return respuesta;
+        
+        return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
-    public int verificarUsuario(String usuario){
+    
+     /**
+     * Funcion encargada de verificar si el usuario existe en la BD.
+     *
+     * @param usuario string que posee los datos para verificar la clave del
+     * usuario.
+     *
+     * @return 4 El usuario no se encuentra disponible, 5 el usuario se 
+     * encuentra disponible.
+     * @throws Logica.Modulo1.VerificarUsuarioException
+     */
+    @Override
+    public Entidad verificarUsuario(String usuario) throws VerificarUsuarioException{
         int respuesta = 0;
         try {
             Connection conn = Conexion.conectarADb();
@@ -115,19 +161,37 @@ public class DaoUsuario extends DAO {
                 }else{     
                    st.close();
                    respuesta =  3; //Usuario Disponible
+                   
+                
                 }
             }
         } catch (SQLException ex) {
              Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
-             
+             throw  FabricaExcepcion.instanciarVerificarUsuarioException(ex.getErrorCode(),ex.getMessage());  
+   
         } catch (Exception e) {
             respuesta =  2;//cambiar
         }
-        return respuesta;
+         return FabricaEntidad.obtenerSimpleResponseStatus(respuesta);
     }
     
-    public String obtenerInicioSesion(String usuario, String clave){
-        String decodifico = URLDecoder.decode(usuario);
+    /**
+     * Funcion encargada de verificar existencia de un usuario en el sistema 
+     * y de existir verifica si el password recibido es igual al que está 
+     * almacenado en la BD
+     *
+     * @param usuario entidad que posee los datos para verificar el inicio 
+     * sesion del usuario.
+     *
+     * @return De validar correctamente el usuario y password retorna un JSON en
+     * String con todos los datos del usuario,7 Se valido inicio de sesion del 
+     * usuario correctamente,
+     * @throws Logica.Modulo1.IniciarSesionException
+     * 
+     */
+    @Override
+    public Entidad obtenerInicioSesion(Entidad usuario) throws IniciarSesionException{
+        Usuario objeto = (Usuario) usuario;
         String respuesta="";
         int bandera=0;
         try {
@@ -135,8 +199,8 @@ public class DaoUsuario extends DAO {
             Statement st = conn.createStatement();
             
             CallableStatement a = conn.prepareCall("{ call iniciarSesion(?,?) }");
-            a.setString(1,  usuario);
-            a.setString(2,  clave);
+            a.setString(1,  objeto.getUsuario());
+            a.setString(2,  objeto.getContrasena());
             a.execute();
   
            ResultSet rs = a.getResultSet();
@@ -157,18 +221,35 @@ public class DaoUsuario extends DAO {
             if(bandera==0){
               st.close();
               respuesta= "7";
+              throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
             
         } catch (SQLException ex) {
             Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarIniciarSesionException(ex.getErrorCode(),ex.getMessage());  
         } catch (Exception e) {
             respuesta= "ERROR";
+            throw FabricaExcepcion.instanciarIniciarSesionException(202);
         }
         
-    return respuesta;
+    return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
     
-    public String obtenerXRecuperarClave(String usuario){
+      /**
+     * Función que verifica existencia de un usuario en el sistema y de existir
+     * verifica si el password recibido es igual al que está almacenado en la BD
+     *
+     * @param usuario string que posee los datos para verificar la clave del
+     * usuario.
+     *
+     * @return De existir el usuario y la contraseña coincide retorna un JSON en
+     * String con todos los datos del usuario. De lo contrario retorna el String
+     * "ERROR"
+     * @throws Logica.Modulo1.RecuperarClaveException
+     */
+    
+    @Override
+    public Entidad obtenerXRecuperarClave(String usuario) throws RecuperarClaveException{
         String respuesta="";
         try {
             Connection conn = Conexion.conectarADb();
@@ -196,12 +277,16 @@ public class DaoUsuario extends DAO {
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
+                throw FabricaExcepcion.instanciarRecuperarClaveException(203);
+                
             }
             
-        } catch (Exception e) {
-            respuesta = e.getMessage();
+        } catch (SQLException ex) {
+            respuesta = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarRecuperarClaveException(ex.getErrorCode(),ex.getMessage());  
         }
-        return respuesta;
+        return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
     
 
