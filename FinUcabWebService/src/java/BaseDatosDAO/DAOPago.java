@@ -181,8 +181,8 @@ public class DAOPago extends DAO implements IDAOPago{
         String respuesta;
         JsonArray array = null;
         try {
-            Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerUltimosPagos(?)}");
+            Statement st = Conexion.conectarADb().createStatement();
+            cstm = Conexion.conectarADb().prepareCall("{ call obtenerUltimosPagos(?)}");
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
@@ -212,8 +212,8 @@ public class DAOPago extends DAO implements IDAOPago{
         String respuesta;
         JsonObject cuentaJsonObject = null;
         try {
-            Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerBalance(?)}");
+            Statement st = Conexion.conectarADb().createStatement();
+            cstm = Conexion.conectarADb().prepareCall("{ call obtenerBalance(?)}");
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

@@ -62,19 +62,23 @@ public class PruebasModulo2 {
     @Test
     public void actualizarCuentaTest() {
 
-        String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
-                + " \"u_nombre\" : \"Alejandro\""
-                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
-                + " \"aledavid21@hotmail.com\", "
-                + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
-                + " \"u_respuesta\" : \"/alejandra\", "
-                + "\"u_password\" : \"123456\" }";
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        Usuario usuario = new Usuario();
-        usuario.jsonToUsuario(usuarioJSON);
-        
-        Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
-        command.ejecutar();
+        try {
+            String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
+                    + " \"u_nombre\" : \"Alejandro\""
+                    + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
+                    + " \"aledavid21@hotmail.com\", "
+                    + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
+                    + " \"u_respuesta\" : \"/alejandra\", "
+                    + "\"u_password\" : \"123456\" }";
+            JsonObject usuarioJSON = this.stringToJSON(decodifico);
+            Usuario usuario = new Usuario();
+            usuario.jsonToUsuario(usuarioJSON);
+            
+            Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
+            command.ejecutar();
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     /**
      * Funcion que convierte un string con estructura JSON en JsonObject
