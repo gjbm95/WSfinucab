@@ -53,7 +53,7 @@ public class ComandoConsultarEstadisticasHome extends Comando {
 
         DaoCuenta_Bancaria daoCueta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         DaoTarjeta_Credito daotcd = FabricaDAO.instanciasDaoTarjeta_Credito();
-        DAOPresupuesto daopre = FabricaDAO.instanciarDAOPresupuesto();
+        DAOPresupuesto daopre = FabricaDAO.instanciasDAOPresupuesto();
         DaoPlanificacion daopla = FabricaDAO.instanciasDAOPlanificacion();
         DAOPago daoPago = FabricaDAO.instanciasDAOPago();
         JsonObjectBuilder saldoBuilder = Json.createObjectBuilder();
