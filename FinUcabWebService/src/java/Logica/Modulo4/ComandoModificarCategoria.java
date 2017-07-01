@@ -7,6 +7,7 @@ package Logica.Modulo4;
 
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -23,7 +24,7 @@ public class ComandoModificarCategoria extends Comando{
 
     @Override
     public void ejecutar() {
-        DAO dao = FabricaDAO.instanciasDaoCategoria();
+        IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
         Entidad respuesta = dao.modificar(categoria);
         /*if (respuesta != null){
             return respuesta;

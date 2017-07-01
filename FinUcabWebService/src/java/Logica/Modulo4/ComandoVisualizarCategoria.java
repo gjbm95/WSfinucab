@@ -8,6 +8,7 @@ package Logica.Modulo4;
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.DAOCategoria;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Entidad;
 import Logica.Comando;
 
@@ -25,7 +26,7 @@ public class ComandoVisualizarCategoria extends Comando {
     @Override
     public void ejecutar() {
         
-        DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
         this.response = dao.consultarTodos(usuario);
         
 
