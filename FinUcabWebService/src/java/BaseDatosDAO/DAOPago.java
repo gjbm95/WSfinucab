@@ -40,9 +40,11 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public Entidad agregar(Entidad e) throws AgregarPagoException {
 
+
         Pago pago = (Pago) e;
         CallableStatement pag;
         int idPago = 0;
+
 
         try {                
             
@@ -61,14 +63,17 @@ public class DAOPago extends DAO implements IDAOPago{
             }
            
             pago.setId(idPago);
+            
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
                         
+
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarAgregarPagoException(ex.getErrorCode(),ex.getMessage());                
         }
         
-        return FabricaEntidad.obtenerSimpleResponse(idPago);
 
+        return FabricaEntidad.obtenerSimpleResponse(idPago);
+            
     }
     
     
@@ -232,8 +237,12 @@ public class DAOPago extends DAO implements IDAOPago{
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Balance obtenido del usuario de id: "+id);
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Balance obtenido del usuario de id: "+id);
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
 
         }
         return cuentaJsonObject;

@@ -79,6 +79,7 @@ public class PruebasModulo2 {
         } catch (FinUCABException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
     /**
      * Funcion que convierte un string con estructura JSON en JsonObject
