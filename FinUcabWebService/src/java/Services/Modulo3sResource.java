@@ -39,8 +39,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Modulo 3 - Modulo de Presupuestos Desarrolladores:*Mariángel Pérez / Oswaldo
- * López / Aquiles Pulido Descripción de la clase: Clase encargada de Agregar,
+ * Modulo 3 - Modulo de Presupuestos Desarrolladores:*William Lopez
+ * / Christian Leon / Eduardo Lorenzo 
+ * Descripción de la clase: Clase encargada de Agregar,
  * modificar, eliminar y visualizar los presupuestos ademas de obtener la lista
  * de categorias
  */
