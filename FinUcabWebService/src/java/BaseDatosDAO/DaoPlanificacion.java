@@ -51,6 +51,8 @@ public class DaoPlanificacion extends DAO {
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Lista de proximos pagos obtenidos con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoPlanificacion.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -61,21 +63,21 @@ public class DaoPlanificacion extends DAO {
 
     @Override
     public Entidad agregar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public Entidad modificar(Entidad e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public Entidad consultar(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 
     @Override
     public ListaEntidad consultarTodos(int idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
 }

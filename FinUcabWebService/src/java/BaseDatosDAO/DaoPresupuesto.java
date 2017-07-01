@@ -156,6 +156,13 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
         throw new UnsupportedOperationException("Not supported yet."); 
     }
 
+   
+    /**
+     * Metodo que se encarga de Obtener los presupuestos realizados por el 
+     * usuario. 
+     * @param id Id del usuario que realizo los presupuestos
+     * @return Un arreglo de Json con los dados de los ultimos presupuestos realizados 
+     */
     public JsonArray getUltimosPresupuestos(int id) {
         CallableStatement cstm;
         JsonArray array = null;
@@ -176,10 +183,14 @@ public class DaoPresupuesto extends DAO implements IDAOPresupuesto {
                 arrayBuilder.add(cuentaJsonObject);
             }
             array = arrayBuilder.build();
-
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Presupuestos obtenidos con exito");
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Presupuestos obtenidos con exito");
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
-
+            Logger.getLogger(DaoPresupuesto.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(DaoPresupuesto.class.getName()).log(Level.SEVERE, null, ex);
         }
         return array;
     }

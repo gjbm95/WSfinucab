@@ -57,9 +57,12 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             rs.next();
             idCuenta = rs.getInt(1);
             obj.setId(idCuenta);
-            System.out.printf("id de: " + rs.getString(1));
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Agregado Cuenta Bancaria con exito");
             cstmt.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Agregado Cuenta Bancaria con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -79,16 +82,18 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
         CallableStatement cstmt;
         try {
-            System.out.println("Paso por aqui");
             cstmt = conn.prepareCall("{ call modificarCuentaBancaria(?,?,?,?,?)}");
             cstmt.setString(3, obj.getTipoCuenta());
             cstmt.setString(2, obj.getNumcuenta());
             cstmt.setString(1, obj.getNombreBanco());
             cstmt.setFloat(4, obj.getSaldoActual());
             cstmt.setInt(5, obj.getId());
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Modificado Cuenta Bancaria con exito");
             cstmt.execute();
             cstmt.close();
-
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Modificado Cuenta Bancaria con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -117,9 +122,11 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             ResultSet rs = cstmt.getResultSet();
             rs.next();
             idCuenta = rs.getInt(1);
-            System.out.printf("id de: " + rs.getString(1));
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Eliminado Cuenta Bancaria con exito");
             cstmt.close();
-          
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Eliminado Cuenta Bancaria con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -146,8 +153,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rs.next()) {
-                System.out.println("Entre2");
+            while (rs.next()) {   
                 cuentaBuilder.add("ct_id", rs.getString("ct_id"));
                 cuentaBuilder.add("ct_tipo", rs.getString("ct_tipocuenta"));
                 cuentaBuilder.add("ct_numerocuenta", rs.getString("ct_numcuenta"));
@@ -158,9 +164,13 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             }
             JsonArray array = arrayBuilder.build();
             respuesta = array.toString();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Lista de Cuentas Bancarias obtenidas con exito");
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Lista de Cuentas Bancarias obtenidas con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -194,9 +204,13 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             else {
                 respuesta = "";
             }
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Saldo obtenido con exito");
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Saldo obtenido con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";

@@ -30,7 +30,9 @@ public class ComandoConsultarCuentas extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de consulta de cuentas bancarias
+     */
     @Override
     public void ejecutar() {
 

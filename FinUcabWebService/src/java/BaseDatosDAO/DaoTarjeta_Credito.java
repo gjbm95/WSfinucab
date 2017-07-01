@@ -67,10 +67,12 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             rs.next();
             idtarjeta = rs.getInt(1);
             obj.setId(idtarjeta);
-            System.out.printf("id de: " + rs.getString(1));
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Agregado Tarjeta de credito con exito");
             cstmt.close();
             rs.close();
-           
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Agregado Tarjeta de credito con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -104,8 +106,11 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             cstmt.setFloat(4, obj.getSaldo());
             cstmt.setInt(5, obj.getId());
             cstmt.execute();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER,"Modificado Tarjeta de credito con exito");
             cstmt.close();
-           
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Modificado Tarjeta de credito con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -139,9 +144,12 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             ResultSet rs = cstmt.getResultSet();
             rs.next();
             idtarjeta = rs.getInt(1);
-            System.out.printf("id de: " + rs.getString(1));
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Eliminado Tarjeta de credito con exito");
             cstmt.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Eliminado Tarjeta de credito con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -169,7 +177,6 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             JsonObjectBuilder tdcBuilder = Json.createObjectBuilder();
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             while (rs.next()) {
-
                 tdcBuilder.add("tc_id", Integer.toString(rs.getInt("tc_id")));
                 tdcBuilder.add("tc_tipo", rs.getString("tc_tipotarjeta"));
                 tdcBuilder.add("tc_fechavencimiento", rs.getString("tc_fechavencimiento"));
@@ -180,9 +187,13 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             }
             JsonArray array = arrayBuilder.build();
             respuesta = array.toString();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Obtenido lista de Tarjetas de credito con exito");
             cstm.close();   
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Obtenido lista de Tarjetas de credito con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -214,9 +225,13 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             } else {
                 respuesta = "";
             }
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Obtenido saldo de deuda de Tarjeta de credito con exito");
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Obtenido saldo de deuda de Tarjeta de credito con exito");
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";
