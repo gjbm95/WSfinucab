@@ -14,5 +14,6 @@ public class RegistroIdentityMap {
     
     public static final String pago_listado = "pago_listado";
     public static final String categoria_listado = "categoria_listado";
-    
+    public static final String LISTA_PRESUPUESTO = "lista_presupuesto";
+
 }

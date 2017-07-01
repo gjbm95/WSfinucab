@@ -48,7 +48,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             idCategoria = rs.getInt(1);
             
             categoria.setId(idCategoria);
-            //SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,7 +57,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
 
             return FabricaEntidad.obtenerSimpleResponseStatus(2);
        }
-        return FabricaEntidad.obtenerSimpleResponse(1);
+        return FabricaEntidad.obtenerSimpleResponse(idCategoria);
     }
                            
     @Override
@@ -72,8 +72,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getIdcategoria());
             cstmt.execute();
-            
-            //SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -84,8 +83,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     @Override
     public Entidad consultar(int idcategoria) {
         
-         Entidad categoria = null;
-         //SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.categoria_listado, idcategoria);          
+         Entidad categoria = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.categoria_listado, idcategoria);          
 
          if (categoria == null){
                             
@@ -115,12 +113,11 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     
     @Override
     public ListaEntidad consultarTodos(int idUsuario) {
-        System.out.println("consultandotodos");
-        ListaEntidad listaEntidad = null; 
-        //SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.categoria_listado);
         
-        if (listaEntidad == null ){
-            System.out.println("notengolista");
+        ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.categoria_listado);
+        
+        if (listaEntidad.getLista().isEmpty() ){
+            
             try {
                 ArrayList<Entidad> listaCategorias = new ArrayList<>();
                 Statement st = conn.createStatement();
@@ -136,7 +133,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                 }            
                 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategorias);
-                //SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.categoria_listado, listaEntidad);
+                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.categoria_listado, listaEntidad);
                 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,7 +158,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             ResultSet rs = cat.getResultSet();
             rs.next();
             
-            //SingletonIdentityMap.getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
+            SingletonIdentityMap.getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
             
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
