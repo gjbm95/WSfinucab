@@ -38,7 +38,7 @@ public class DAOPago extends DAO implements IDAOPago{
             Pago pago = (Pago) e;
             CallableStatement pag;
             
-        int idPago = 0;
+        int idPago = 3 ;
         try {                
             
             Connection conn = Conexion.conectarADb();
@@ -53,14 +53,15 @@ public class DAOPago extends DAO implements IDAOPago{
             idPago = rs.getInt(1);
            
             pago.setId(idPago);
+            
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
                         
             } catch (SQLException ex) {
-                System.out.println("ERROR");
+                Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+        System.out.println(idPago);
         return FabricaEntidad.obtenerSimpleResponse(idPago);
-
+            
     }
     
     

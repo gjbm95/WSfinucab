@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Junior
+ * @author Juan
  */
 public class PruebasModulo5 {
     
@@ -51,14 +51,9 @@ public class PruebasModulo5 {
      */
     @Test
     public void testAgregar() {
-        System.out.println("agregar");
+        System.out.println("Prueba agregar");
         Entidad e = null;
-        
-       e=  FabricaEntidad.obtenerPago( 1, "prueba", 200, "ingreso");
-        
-        System.out.println("ando aca");
-            
-              
+        e=  FabricaEntidad.obtenerPago( 1, "prueba", 200, "ingreso");
         IDAOPago dao = SingletonDAOPago.getInstance();
         System.out.println(e+"holaaa");
         dao.agregar(e);
@@ -71,15 +66,13 @@ public class PruebasModulo5 {
     @Test
     public void testConsultar() {
         //System.out.println("consultar");
-        int idPago = 1;
-        
-        
-        DAOPago instance = new DAOPago();
-        Entidad expResult = null;
-        Entidad result = instance.consultar(1);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Entidad e = null;
+        e=  FabricaEntidad.obtenerPago( 1, "prueba", 200, "ingreso");
+        IDAOPago dao = SingletonDAOPago.getInstance();
+        System.out.println(e+"holaaa");
+        dao.agregar(e);
+        Entidad resultado = dao.consultar(10);
+        assertEquals(e, resultado);
     }
     
     /*

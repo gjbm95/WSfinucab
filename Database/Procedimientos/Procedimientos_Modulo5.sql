@@ -1,6 +1,6 @@
 DROP FUNCTION ConsultarPago(integer);
 DROP FUNCTION ListaPagos(integer);
-DROP FUNCTION AgregarPago(integer, float, character varying, character varying, integer );
+DROP FUNCTION AgregarPago(float, character varying, character varying, integer );
 DROP FUNCTION ModificarPago(float, character varying, character varying, integer);
 
 
@@ -24,7 +24,7 @@ BEGIN
       (monto,descripcion,transaccion,categoria);
 
     if found then
-  result := 1;
+  result :=(Select pg_id from Pago where pg_descripcion = descripcion and pg_monto = monto and categoriaca_id = categoria  );
   else result := 0;
   end if;
   RETURN result;
