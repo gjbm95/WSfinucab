@@ -12,6 +12,10 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
+import Exceptions.FinUCABException;
+import Logica.Modulo5.ConsultarPagoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import org.junit.After;
@@ -51,35 +55,43 @@ public class PruebasModulo5 {
      */
     @Test
     public void testAgregar() {
-        System.out.println("agregar");
-        Entidad e = null;
-        
-       e=  FabricaEntidad.obtenerPago( 1, "prueba", 200, "ingreso");
-        
-        System.out.println("ando aca");
+        try {
+            System.out.println("agregar");
+            Entidad e = null;
             
-              
-        IDAOPago dao = SingletonDAOPago.getInstance();
-        System.out.println(e+"holaaa");
-        dao.agregar(e);
-        System.out.println("entre2");
-        Entidad resultado = dao.consultar(10);
-        assertEquals(e, resultado);
+            e=  FabricaEntidad.obtenerPago( 1, "prueba", 200, "ingreso");
+            
+            System.out.println("ando aca");
+            
+            
+            IDAOPago dao = SingletonDAOPago.getInstance();
+            System.out.println(e+"holaaa");
+            dao.agregar(e);
+            System.out.println("entre2");
+            Entidad resultado = dao.consultar(10);
+            assertEquals(e, resultado);
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo5.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
  
     @Test
     public void testConsultar() {
-        //System.out.println("consultar");
-        int idPago = 1;
-        
-        
-        DAOPago instance = new DAOPago();
-        Entidad expResult = null;
-        Entidad result = instance.consultar(1);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        try {
+            //System.out.println("consultar");
+            int idPago = 1;
+            
+            
+            DAOPago instance = new DAOPago();
+            Entidad expResult = null;
+            Entidad result = instance.consultar(1);
+            assertEquals(expResult, result);
+            // TODO review the generated test code and remove the default call to fail.
+            fail("The test case is a prototype.");
+        } catch (ConsultarPagoException ex) {
+            Logger.getLogger(PruebasModulo5.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /*

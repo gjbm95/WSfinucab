@@ -7,6 +7,7 @@ package Logica.Modulo5;
 
 import BaseDatosDAO.Interfaces.IDAOPago;
 import BaseDatosDAO.Singleton.SingletonDAOPago;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -22,7 +23,7 @@ public class ComandoListarPagos extends Comando{
     }
     
     @Override
-    public void ejecutar() {        
+    public void ejecutar() throws FinUCABException{        
         IDAOPago dao = SingletonDAOPago.getInstance();
         this.response = dao.consultarTodos(idUSuario);                
        
