@@ -46,7 +46,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
-            pag.setInt(4, 1);
+            pag.setInt(4, pago.getCategoria());
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             rs.next();            

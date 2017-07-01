@@ -8,6 +8,8 @@ import Dominio.ListaEntidad;
 import Dominio.SimpleResponse;
 import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo5.EmptyEntityException;
+import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -125,20 +127,11 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            if (objectResponse != null ){
-                
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                
-            }else{
-                respuesta = "Error";
-            }
-            return objectResponse.toString();
+            respuesta = obtenerRespuestaAgregar(objectResponse);
             
-        } catch (Exception e) {
-
-            System.out.println(e.getMessage());
-            respuesta = "0";
-
+        } catch (Exception ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
          return respuesta;
     }
@@ -163,13 +156,7 @@ public class Modulo4sResource {
         Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
         c.ejecutar();
         Entidad objectResponse = c.getResponse(); 
-        if (objectResponse != null ){
-                
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                
-            }else{
-                respuesta = "Error";
-            }
+        respuesta = obtenerRespuestaEliminar(objectResponse);
         return respuesta;
     }
     
@@ -194,14 +181,21 @@ public class Modulo4sResource {
             String respuesta ="";
             
         try{
-
+            if( validadorInteger(usuario) ){
             Comando c = FabricaComando.instanciarComandoVisualizarCategoria(usuario);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            respuesta = listaCategoria(objectResponse);
+            respuesta = obtenerRespuestaLista(objectResponse);
+            }
+            else{
+                
+            System.out.println("Parametro de entrada nulo o vacio");  
+            
+            }
+            
            }
         catch(Exception e) {
-            respuesta = "Error :"+e.getMessage();
+            respuesta = "Error Vacio :"+e.getMessage();
         }
         return respuesta;
     }
@@ -230,14 +224,8 @@ public class Modulo4sResource {
             Entidad e = modCategoria(datosCategoria);
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
             c.ejecutar();
-            Object objectResponse = c.getResponse();
-           if (objectResponse != null ){
-                
-                respuesta = String.valueOf(((SimpleResponse) objectResponse).getStatus());
-                
-            }else{
-                respuesta = "Error";
-            }
+            Entidad objectResponse = c.getResponse();
+            respuesta = obtenerRespuestaModificar(objectResponse);
            } catch (Exception e) {
 
             System.out.println(e.getMessage());
@@ -265,12 +253,19 @@ public class Modulo4sResource {
     public String buscarCategoria(@QueryParam("datosCategoria") int datosCategoria){
         String respuesta ="";
         try{
-            
+            if( validadorInteger(datosCategoria)){
 
             Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
             c.ejecutar();
             Entidad objectResponse = c.getResponse(); 
-            respuesta = verCategoria(objectResponse);
+            respuesta =obtenerRespuestaConsultar(objectResponse);
+            }
+            else{
+            
+            }
+        }
+        catch(EmptyEntityException e){
+            respuesta = "Error :"+e.EmptyEntity();
         }
         catch(Exception e) {
             respuesta = "Error :"+e.getMessage();
@@ -283,7 +278,10 @@ public class Modulo4sResource {
         
     String respuesta = "";
         
-        if (objeto != null ){
+        boolean validador  =validadorEntidad(objeto);
+                
+        if( validador ){
+            try{
                 ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
                 JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
@@ -303,8 +301,12 @@ public class Modulo4sResource {
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-        
-    }
+            }
+            catch(Exception e){
+                System.out.println(e);
+
+            }
+        }
         
         else {
             System.out.println("Error");   
@@ -313,41 +315,78 @@ public class Modulo4sResource {
         return respuesta;
     }
     
-    private Entidad registroCategoria (@QueryParam("datosCategoria") String datosCategorias){
+    private Entidad registroCategoria (@QueryParam("datosCategoria") String datosCategorias) {
+        
+        Entidad ex = null;
         try {
-            String decodifico = URLDecoder.decode(datosCategorias,"UTF-8");
-            JsonReader reader = Json.createReader(new StringReader(decodifico));
-            JsonObject categoriaJSON = reader.readObject();           
-            reader.close();
-            Entidad ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
-            return ex;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            boolean validador  = validadorString(datosCategorias);
+            if( validador ){
+                String decodifico = URLDecoder.decode(datosCategorias,"UTF-8");
+                JsonReader reader = Json.createReader(new StringReader(decodifico));
+                JsonObject categoriaJSON = reader.readObject();           
+                reader.close();
+                ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+                }
+                
+        } catch (EmptyStringException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+        catch (NullPointerException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+         catch (UnsupportedEncodingException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+        catch (Exception e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
         }
         
-        return null;
+        return ex;
     }
     
     private Entidad modCategoria (@QueryParam("datosCategoria") String datosCategorias){
+        
+        Entidad ex = null;
         try {
+        boolean validador  = validadorString(datosCategorias);
+                
+        if( validador ){
+        
+        
             String decodifico = URLDecoder.decode(datosCategorias,"UTF-8");
             JsonReader reader = Json.createReader(new StringReader(decodifico));
             JsonObject categoriaJSON = reader.readObject();           
             reader.close();
-            Entidad ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
-            return ex;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_id"),categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
+            
         }
+        else {
+            
+           System.out.println("Parametro de entrada nulo o vacio");
+           
+            }
+        } catch (EmptyStringException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+        catch (NullPointerException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+         catch (UnsupportedEncodingException e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+        catch (Exception e) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ex;
         
-        return null;
     }
     
-    private String verCategoria(Entidad Objeto){
+    private String verCategoria(Entidad Objeto)throws EmptyEntityException{
         
          String respuesta ="";
-          if (Objeto != null ){
-                
+         boolean validador  =validadorEntidad(Objeto);
+          try{
+                if( validador ){
                 JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
                 
                  Categoria categoria = (Categoria) Objeto;                  
@@ -359,9 +398,139 @@ public class Modulo4sResource {
                 categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
                  JsonObject categoriaJsonObject = categoriaBuilder.build(); 
                 respuesta = categoriaJsonObject.toString();
-                       
-    }
+                }else{
+                    
+                    throw new EmptyEntityException();  
+                }
+           } catch (Exception ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
             return respuesta;
+    } 
+    
+    
+        /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaAgregar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+            /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaEliminar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaConsultar(Entidad enti) throws EmptyEntityException{
+         
+        if(validadorEntidad(enti)) 
+        
+        return verCategoria(enti);
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+     
+     
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
+         
+        if(validadorEntidad(enti)){ 
+        
+        return listaCategoria(enti);
+        }
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti
+     * @return 
+     */
+    private String obtenerRespuestaModificar(Entidad enti){
+          
+        if(validadorEntidad(enti)) 
+        
+        return String.valueOf(((SimpleResponse) enti).getId());
+        else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
+    
+    
+    /**
+     * Metodo para validar un string
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorString(String valor) throws EmptyStringException, NullPointerException{
+        
+        if (valor == null) {
+            throw new NullPointerException();
+        }else if(valor.equals("")) {
+            throw new EmptyStringException();
+        }else{
+            return true;
+        }
+
+    }
+    
+    
+    
+    /**
+     * Metodo para validar que un integer no sea cero , ni nulo
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorInteger(int valor){
+        
+        return (valor!=0);
+    }
+    
+   
+    
+    /**
+     * Metodo para validar que una entidad no sea nula ni vacia
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorEntidad(Entidad valor){
+        
+        return (valor!= null) && (!valor.equals(""));
     }
     
 

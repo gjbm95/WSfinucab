@@ -72,7 +72,6 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getIdcategoria());
             cstmt.execute();
-            
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
            } catch (SQLException ex) {
