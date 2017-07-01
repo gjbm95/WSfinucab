@@ -29,7 +29,9 @@ public class ComandoAgregarCuenta extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de registro de cuentas bancarias.
+     */
     @Override
     public void ejecutar() {
         

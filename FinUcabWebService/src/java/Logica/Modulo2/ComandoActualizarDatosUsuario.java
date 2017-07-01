@@ -29,7 +29,9 @@ public class ComandoActualizarDatosUsuario extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de la moficiacion de cuenta de usuario.
+     */
     @Override
     public void ejecutar() {
 

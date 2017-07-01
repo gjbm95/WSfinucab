@@ -101,16 +101,13 @@ public class DAOPago extends DAO implements IDAOPago {
 
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
-
                 CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
                 a.setInt(1, idPago);
                 a.executeQuery();
-
                 ResultSet rs = a.getResultSet();
                 while (rs.next()){
                     pago = new Pago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
                 }
-
 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -158,6 +155,12 @@ public class DAOPago extends DAO implements IDAOPago {
         
     }
 
+    /**
+     * Metodo que se encarga de Obtener los ultimos pagos realizados por el 
+     * usuario. 
+     * @param id Id del usuario que realizo los pagos
+     * @return Un arreglo de json con los datos de los ultimos pagos realizados.
+     */
     public JsonArray getUltimosPagosXUsuario(int id) {
         CallableStatement cstm;
         String respuesta;
@@ -183,15 +186,22 @@ public class DAOPago extends DAO implements IDAOPago {
             st.close();
             rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).
+            Logger.getLogger(DAOPago.class.getName()).
                     log(Level.SEVERE, null, ex);
         } catch (Exception ex){
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).
+            Logger.getLogger(DAOPago.class.getName()).
                     log(Level.SEVERE, null, ex);
         }
         return array;
     }
 
+    
+    /**
+     * Metodo que se encarga de Obtener los ingregos y egresos realizados por el 
+     * usuario. 
+     * @param id Id del usuario que realizo los pagos
+     * @return Un json con los datos de la suma total de ingresos y egresos. 
+     */
     public JsonObject getBalance(int id) {
         CallableStatement cstm;
         String respuesta;
@@ -218,10 +228,10 @@ public class DAOPago extends DAO implements IDAOPago {
             st.close();
             rs.close();
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).
+            Logger.getLogger(DAOPago.class.getName()).
                     log(Level.SEVERE, null, ex);
         } catch (Exception ex){
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).
+            Logger.getLogger(DAOPago.class.getName()).
                     log(Level.SEVERE, null, ex);
         }
         return cuentaJsonObject;

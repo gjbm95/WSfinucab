@@ -45,6 +45,9 @@ public class ComandoConsultarEstadisticasHome extends Comando {
         this.idusuario = idusuario;
     }
 
+    /**
+     * Metodo encargado de la ejecucion de consulta de estadisticas de home 
+     */
     @Override
     public void ejecutar() {
 

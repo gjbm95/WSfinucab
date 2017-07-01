@@ -28,7 +28,9 @@ public class ComandoEliminarTDC extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de eliminar tarjetas de credito.
+     */
     @Override
     public void ejecutar() {
 

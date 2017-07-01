@@ -219,9 +219,10 @@ public class DaoUsuario extends DAO {
             cstmt.setString(6, obj.getPregunta());
             cstmt.setString(7, obj.getRespuesta());
             cstmt.setString(8, obj.getContrasena());
-            cstmt.execute();
-            System.out.printf("ENTREEEEEEEEEEE");
-        } catch (SQLException ex) {
+            cstmt.execute();   
+        }catch (SQLException ex) {
+            Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }catch (Exception ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         return obj;

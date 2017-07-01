@@ -25,6 +25,9 @@ public class ComandoEliminarCuenta extends Comando {
         this.id = id;
     }
 
+    /**
+     * Metodo encargado de la ejecucion de eliminar cuentas bancarias.
+     */
     @Override
     public void ejecutar() {
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();

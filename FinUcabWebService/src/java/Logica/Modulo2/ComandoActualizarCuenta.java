@@ -30,7 +30,9 @@ public class ComandoActualizarCuenta extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de la moficiacion de cuenta de  bancaria.
+     */
     @Override
     public void ejecutar() {
 

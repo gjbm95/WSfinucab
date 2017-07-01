@@ -65,6 +65,8 @@ public class Modulo2sResource {
     public String actualizarDatosUsuario(@QueryParam("datosUsuario") String datosCuenta) {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de Actualizar datos de usuario recibida");
         try {
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
             Usuario usuario = FabricaEntidad.obtenerUsuario();
@@ -106,19 +108,21 @@ public class Modulo2sResource {
     public String agregarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = null;
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de agregar cuenta bancaria recibida");
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
-            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
-            (cuentaJSON.getString("ct_tipocuenta"),
-            cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
-            Float.parseFloat(cuentaJSON.getString("ct_saldoactual")), 0,
-            Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+            Cuenta_Bancaria cuenta = jsonToCuenta (cuentaJSON);
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
             command.ejecutar();
             cuenta = (Cuenta_Bancaria) command.getResponse();
             resultado = Integer.toString(cuenta.getId());
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (NullPointerException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -151,18 +155,19 @@ public class Modulo2sResource {
     public String actualizarCuentaBancaria(@QueryParam("datosCuenta") String datosCuenta) {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de Actualizar datos de Cuenta Bancaria recibida");
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
-            Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
-            (cuentaJSON.getString("ct_tipocuenta"),
-            cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
-            Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
-            Integer.parseInt(cuentaJSON.getString("ct_id")),
-            Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+            Cuenta_Bancaria cuenta = jsonToCuentaM (cuentaJSON);
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (NullPointerException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -195,6 +200,8 @@ public class Modulo2sResource {
     public String eliminarCuentaBancaria(@QueryParam("idCuenta") String idCuenta) {
         String decodifico = URLDecoder.decode(idCuenta);
         int resultado = 1;
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de eliminar cuenta bancaria recibida");
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
@@ -231,18 +238,21 @@ public class Modulo2sResource {
     public String agregarTDC(@QueryParam("datosTDC") String datosTDC) {
         String decodifico = URLDecoder.decode(datosTDC);
         int resultado = 0;
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de agregar tarjeta de credito recibida");
         try {
-            JsonObject tdcJSON = this.stringToJSON(decodifico);
-            Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
-            tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
-            Float.parseFloat(tdcJSON.getString("tc_saldo")), 0,
-            Integer.parseInt(tdcJSON.getString("usuariou_id")));
+            JsonObject tdcJSON = this.stringToJSON(decodifico);   
+            Tarjeta_Credito tdc = jsonToTarjeta (tdcJSON);
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
             command.ejecutar();
             tdc = (Tarjeta_Credito) command.getResponse();
             resultado = tdc.getId();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (NullPointerException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
@@ -275,13 +285,11 @@ public class Modulo2sResource {
     public String actualizarTDC(@QueryParam("datosTDC") String datosTDC) {
         String decodifico = datosTDC;
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de Actualizar datos de tarjeta de credito recibida");
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
-            Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
-            tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
-            Float.parseFloat(tdcJSON.getString("tc_saldo")),
-            Integer.parseInt(tdcJSON.getString("tc_id")),
-            Integer.parseInt(tdcJSON.getString("usuariou_id")));
+            Tarjeta_Credito tdc = jsonToTarjetaM (tdcJSON);
             Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
             command.ejecutar();
             Conexion.conectarADb().close();
@@ -289,7 +297,11 @@ public class Modulo2sResource {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
-        } catch (ConversionFallidaException ex) {
+        }catch (NullPointerException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ConversionFallidaException ex) {
             Logger.getLogger(Modulo2sResource.class.getName())
                     .log(Level.SEVERE, null, ex);
         }catch (Exception ex) {
@@ -312,6 +324,8 @@ public class Modulo2sResource {
     public String eliminarTDC(@QueryParam("idtdc") String idtdc) {
         int resultado = 0;
         String decodifico = idtdc;
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de eliminar datos de tarjeta de credito recibida");
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
@@ -345,6 +359,8 @@ public class Modulo2sResource {
     public String consultarTDC(@QueryParam("idUsuario") String idUsuario) {
         String decodifico = idUsuario;
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de consultar tarjetas de credito recibida");
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
@@ -381,6 +397,8 @@ public class Modulo2sResource {
     public String consultarCuentas(@QueryParam("idUsuario") String idUsuario) {
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de consultar cuentas bancarias recibida");
         try{
         int id = Integer.parseInt(decodifico);
         Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
@@ -416,6 +434,8 @@ public class Modulo2sResource {
     public String consultarEstadisticas(@QueryParam("idUsuario") String idUsuario) {
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
+        Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Solicitud de consultar estadisticas recibida");
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoConsultarEstadisticas(id);
@@ -455,6 +475,65 @@ public class Modulo2sResource {
         JsonObject jsonObj = reader.readObject();
         reader.close();
         return jsonObj;
+    }
+    
+    
+    /**
+     * Metodo encargado de convertir un Json en una entidad tarjeta de Credito.
+     *  @param tdcJSON Objeto Json con los datos de la tarjeta 
+     *  @return tdc Objeto de tipo Tarjeta_Credito
+     */
+    private Tarjeta_Credito jsonToTarjetaM (JsonObject tdcJSON)throws NullPointerException{
+        Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
+        tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+        Float.parseFloat(tdcJSON.getString("tc_saldo")),
+        Integer.parseInt(tdcJSON.getString("tc_id")),
+        Integer.parseInt(tdcJSON.getString("usuariou_id")));
+     return tdc;
+    }
+    
+    
+     /**
+     * Metodo encargado de convertir un Json en una entidad Cuenta_Bancaria.
+     *  @param cuentaJSON Objeto Json con los datos de la Cuenta Bancaria 
+     *  @return cuenta Objeto de tipo Cuenta_Bancaria
+     * */
+    private Cuenta_Bancaria jsonToCuentaM (JsonObject cuentaJSON)throws NullPointerException{
+        Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
+        (cuentaJSON.getString("ct_tipocuenta"),
+        cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+        Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
+        Integer.parseInt(cuentaJSON.getString("ct_id")),
+        Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+     return cuenta;
+    }
+    
+    /**
+     * Metodo encargado de convertir un Json en una entidad tarjeta de Credito.
+     *  @param tdcJSON Objeto Json con los datos de la tarjeta 
+     *  @return tdc Objeto de tipo Tarjeta_Credito
+     */
+    private Tarjeta_Credito jsonToTarjeta (JsonObject tdcJSON)throws NullPointerException{
+        Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
+        tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
+        Float.parseFloat(tdcJSON.getString("tc_saldo")),
+        0,Integer.parseInt(tdcJSON.getString("usuariou_id")));
+     return tdc;
+    }
+    
+    
+     /**
+     * Metodo encargado de convertir un Json en una entidad Cuenta_Bancaria.
+     *  @param cuentaJSON Objeto Json con los datos de la Cuenta Bancaria 
+     *  @return cuenta Objeto de tipo Cuenta_Bancaria
+     * */
+    private Cuenta_Bancaria jsonToCuenta (JsonObject cuentaJSON) throws NullPointerException{
+        Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
+        (cuentaJSON.getString("ct_tipocuenta"),
+        cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
+        Float.parseFloat(cuentaJSON.getString("ct_saldoactual")),
+        0,Integer.parseInt(cuentaJSON.getString("usuariou_id")));
+     return cuenta;
     }
 
 }

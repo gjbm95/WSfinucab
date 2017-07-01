@@ -29,7 +29,9 @@ public class ComandoAgregarTDC extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de registro de tarjetas de credito.
+     */
     @Override
     public void ejecutar() {
 

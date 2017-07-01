@@ -32,7 +32,9 @@ public class ComandoConsultarTDC extends Comando {
     }
 
     
-    
+    /**
+     * Metodo encargado de la ejecucion de consulta de tarjetas de credito
+     */
     @Override
     public void ejecutar() {
 
