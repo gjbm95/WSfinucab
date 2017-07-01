@@ -71,7 +71,7 @@ public class PruebasModulo2 {
             Comando command = FabricaComando.
                     instanciarComandoActualizarDatosUsuario(usuario);
             command.ejecutar();
-        } catch (FinUCABException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
             
