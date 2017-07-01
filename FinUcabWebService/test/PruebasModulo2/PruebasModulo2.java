@@ -24,57 +24,52 @@ import static org.junit.Assert.*;
  * @author Junior
  */
 public class PruebasModulo2 {
-    
+
     public PruebasModulo2() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
-   
-     /** Prueba encargada de verificar el funcionamiento de actualizar
-     *   datos de cuentas de usuario. 
+    /**
+     * Prueba encargada de verificar el funcionamiento de actualizar datos de
+     * cuentas de usuario.
+     *
      * @param decodifico String con estructura json
      * @return JsonObject del string
      */
-     @Test
-     public void actualizarCuentaTest() {
-         
-      String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
-              + " \"u_nombre\" : \"Alejandro\""
-      + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
-              + " \"aledavid21@hotmail.com\", "
-      + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
-              + " \"u_respuesta\" : \"/alejandra\", "
-               + "\"u_password\" : \"123456\" }";
-          JsonObject usuarioJSON = this.stringToJSON(decodifico);
-          Usuario usuario = new Usuario();
-          usuario.jsonToUsuario(usuarioJSON);
-            
-          Comando command = FabricaComando.
-                  instanciarComandoActualizarDatosUsuario(usuario);
-            command.ejecutar();
-            
-            
-     
-     
-     }
-     
-     
-     
+    @Test
+    public void actualizarCuentaTest() {
+
+        String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
+                + " \"u_nombre\" : \"Alejandro\""
+                + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
+                + " \"aledavid21@hotmail.com\", "
+                + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
+                + " \"u_respuesta\" : \"/alejandra\", "
+                + "\"u_password\" : \"123456\" }";
+        JsonObject usuarioJSON = this.stringToJSON(decodifico);
+        Usuario usuario = new Usuario();
+        usuario.jsonToUsuario(usuarioJSON);
+        
+        Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
+        command.ejecutar();
+
+    }
+
     /**
      * Funcion que convierte un string con estructura JSON en JsonObject
      *
