@@ -70,7 +70,7 @@ public class PruebasModulo5 {
             System.out.println("entre2");
             Entidad resultado = dao.consultar(10);
             assertEquals(e, resultado);
-        } catch (FinUCABException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PruebasModulo5.class.getName()).log(Level.SEVERE, null, ex);
         }
         
