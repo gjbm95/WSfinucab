@@ -5,6 +5,7 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
@@ -17,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -212,16 +215,18 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
     public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
-
         String respuesta = "0";
-        Entidad e = creaPresupuesto(datosPresupuesto);
-        Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
-        command.ejecutar();
-        Entidad objectResponse = command.getResponse();
-        respuesta = String.valueOf(objectResponse.getId());
-        System.out.println(respuesta + " respuesta");
+        try {
+            Entidad e = creaPresupuesto(datosPresupuesto);
+            Comando command = FabricaComando.instanciarComandoAgregarPresupuesto(e);
+            command.ejecutar();
+            Entidad objectResponse = command.getResponse();
+            respuesta = String.valueOf(objectResponse.getId());
+            System.out.println(respuesta + " respuesta");
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo3sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return respuesta;
-
     }
 
     /**
@@ -238,14 +243,19 @@ public class Modulo3sResource {
     public String modificarPresupuesto(@QueryParam("nombrePresupuesto") String nombrePresupuesto, @QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
 
         String respuesta = "0";
-        Entidad e = modificaPresupuesto(datosPresupuesto);
-        Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
-        command.ejecutar();
-        Entidad resultado = command.getResponse();
-
-        if (resultado != null) {
-            respuesta = "1";
+        try {
+            Entidad e = modificaPresupuesto(datosPresupuesto);
+            Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
+            command.ejecutar();
+            Entidad resultado = command.getResponse();
+            
+            if (resultado != null) {
+                respuesta = "1";
+            }
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo3sResource.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return respuesta;
     }
 
@@ -294,10 +304,12 @@ public class Modulo3sResource {
             rs.close();
             st.close();
 
-            return respuesta;
         } catch (Exception e) {
-            return e.getMessage();
+            respuesta = e.getMessage();
         }
+        
+        
+        return respuesta;
     }
 
     /**

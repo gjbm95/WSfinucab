@@ -6,16 +6,16 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.SimpleResponse;
+import Exceptions.DataReaderException;
+import Exceptions.FabricaExcepcion;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
-import Logica.Modulo5.EmptyEntityException;
-import Logica.Modulo5.EmptyStringException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -152,11 +152,18 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/eliminarCategoria")
     public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
+        
         String respuesta="";
-        Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
-        c.ejecutar();
-        Entidad objectResponse = c.getResponse(); 
-        respuesta = obtenerRespuestaEliminar(objectResponse);
+        try {
+            Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
+            c.ejecutar();
+            Entidad objectResponse = c.getResponse();
+            respuesta = obtenerRespuestaEliminar(objectResponse);
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return respuesta;
     }
     
@@ -264,8 +271,8 @@ public class Modulo4sResource {
             
             }
         }
-        catch(EmptyEntityException e){
-            respuesta = "Error :"+e.EmptyEntity();
+        catch(DataReaderException e){
+            respuesta = "Error :"+e.getMessage();
         }
         catch(Exception e) {
             respuesta = "Error :"+e.getMessage();
@@ -328,13 +335,11 @@ public class Modulo4sResource {
                 ex = FabricaEntidad.obtenerCategoria(categoriaJSON.getInt("c_usuario"), categoriaJSON.getString("c_nombre"), categoriaJSON.getString("c_descripcion"), categoriaJSON.getBoolean("c_ingreso"), categoriaJSON.getBoolean("c_estado")) ;
                 }
                 
-        } catch (EmptyStringException e) {
+     
+        }catch (DataReaderException e) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
         }
-        catch (NullPointerException e) {
-            Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
-        }
-         catch (UnsupportedEncodingException e) {
+         catch (FinUCABException e) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
         }
         catch (Exception e) {
@@ -365,10 +370,10 @@ public class Modulo4sResource {
            System.out.println("Parametro de entrada nulo o vacio");
            
             }
-        } catch (EmptyStringException e) {
+        } catch (DataReaderException e) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
         }
-        catch (NullPointerException e) {
+        catch (FinUCABException e) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, e);
         }
          catch (UnsupportedEncodingException e) {
@@ -381,7 +386,7 @@ public class Modulo4sResource {
         
     }
     
-    private String verCategoria(Entidad Objeto)throws EmptyEntityException{
+    private String verCategoria(Entidad Objeto)throws DataReaderException{
         
          String respuesta ="";
          boolean validador  =validadorEntidad(Objeto);
@@ -398,9 +403,6 @@ public class Modulo4sResource {
                 categoriaBuilder.add("usuariou_id",categoria.getIdUsario());
                  JsonObject categoriaJsonObject = categoriaBuilder.build(); 
                 respuesta = categoriaJsonObject.toString();
-                }else{
-                    
-                    throw new EmptyEntityException();  
                 }
            } catch (Exception ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
@@ -445,7 +447,7 @@ public class Modulo4sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaConsultar(Entidad enti) throws EmptyEntityException{
+    private String obtenerRespuestaConsultar(Entidad enti) throws DataReaderException{
          
         if(validadorEntidad(enti)) 
         
@@ -462,7 +464,7 @@ public class Modulo4sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
+    private String obtenerRespuestaLista(Entidad enti) throws DataReaderException{
          
         if(validadorEntidad(enti)){ 
         
@@ -497,12 +499,12 @@ public class Modulo4sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor) throws EmptyStringException, NullPointerException{
+    private boolean validadorString(String valor) throws DataReaderException{
         
         if (valor == null) {
-            throw new NullPointerException();
+            throw FabricaExcepcion.instanciarDataReaderException(1);
         }else if(valor.equals("")) {
-            throw new EmptyStringException();
+            throw FabricaExcepcion.instanciarDataReaderException(1);
         }else{
             return true;
         }
@@ -516,9 +518,12 @@ public class Modulo4sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorInteger(int valor){
+    private boolean validadorInteger(int valor) throws DataReaderException{
         
-        return (valor!=0);
+        if (valor == 0) {
+            throw FabricaExcepcion.instanciarDataReaderException(3);
+        }
+        return true;
     }
     
    
