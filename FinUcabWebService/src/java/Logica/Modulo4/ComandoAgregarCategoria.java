@@ -10,6 +10,7 @@ import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Categoria;
 import Dominio.Entidad;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -24,16 +25,9 @@ public class ComandoAgregarCategoria extends Comando {
      }
 
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws FinUCABException {
         IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        Entidad respuesta = dao.agregar(categoria);
-        
-        /*if(respuesta==1){
-            System.out.println("Registro Exitoso");
-                }
-        else{System.out.println("Fallido");}
-        */
-        //return respuesta;
+        this.response = dao.agregar(categoria);
         
     }
     

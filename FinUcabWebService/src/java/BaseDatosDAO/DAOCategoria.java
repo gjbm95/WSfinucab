@@ -42,14 +42,16 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cat.setString(3, categoria.getDescripcion());
             cat.setBoolean(4, categoria.isIngreso());
             cat.setBoolean(5, categoria.isEstaHabilitado());
-             cat.executeQuery();
+            cat.executeQuery();
             ResultSet rs = cat.getResultSet();
             rs.next();
+            
             idCategoria = rs.getInt(1);
             
             categoria.setId(idCategoria);
+            System.out.println(idCategoria+"id super");
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
-            
+            System.out.println(categoria.getId()+"id normal");
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -70,7 +72,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setString(2,categoria.getDescripcion());
             cstmt.setBoolean(3,categoria.isIngreso());
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
-            cstmt.setInt(5, categoria.getIdcategoria());
+            cstmt.setInt(5, categoria.getId());
             cstmt.execute();
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
@@ -99,7 +101,8 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                    while (rs.next()){
                        
                        categoria = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
-                       System.out.println(rs.getString(2));
+                       System.out.println("estoyaqui");
+                       System.out.println(rs.getInt(1));
                    }
 
                } catch (SQLException ex) {
