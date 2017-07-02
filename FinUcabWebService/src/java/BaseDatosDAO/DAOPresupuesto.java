@@ -42,6 +42,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta = 0;
+        int idPresupuesto =0;
         try {
 
             Connection conn = Conexion.conectarADb();
@@ -55,8 +56,11 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             rs.next();
-            respuesta = rs.getInt("agregarpresupuesto");
+            idPresupuesto = rs.getInt("agregarpresupuesto");
             pag.close();
+            respuesta = 1;
+            presupuesto.setId(idPresupuesto);
+            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (Exception ex) {
             log.error("Error agregando presupuesto: "+ex.getMessage());
@@ -91,18 +95,19 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("modificarpresupuesto");
             pag.close();
             Desconectar(conn);
+            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (Exception ex) {
             log.error("Error modificando presupuesto: "+ex.getMessage());
             ex.printStackTrace();
             respuesta = 2;
         }
-        return presupuesto;
+        return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     @Override
     public Entidad consultar(int id) {
-        Entidad presupuesto = null;
+        Entidad presupuesto = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
 
         if (presupuesto == null) {
             try {
@@ -118,6 +123,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                         rs.getString(6), rs.getInt(5), String.valueOf(rs.getInt(3)), 
                         String.valueOf(rs.getBoolean(7)));
                        
+                SingletonIdentityMap.getInstance().setEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
             } catch (SQLException e){
                 log.error("Error consultando presupuesto: "+e.getMessage());
                 e.printStackTrace();
@@ -152,6 +158,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 }
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
+                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
                 e.printStackTrace();
@@ -197,6 +204,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("eliminarpresupuesto");
             ps.close();
             Desconectar(conn);
+            SingletonIdentityMap.getInstance().rmEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
         } catch (SQLException e) {
             log.error("Error eliminando presupuestos: "+e.getMessage());
             e.printStackTrace();
