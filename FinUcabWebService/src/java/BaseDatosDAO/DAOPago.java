@@ -56,7 +56,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             
-            if (rs.next()){
+            if (rs.next() || rs.getInt(1) == 0){
                 idPago = rs.getInt(1); 
             }else{
                 throw FabricaExcepcion.instanciarAgregarPagoException(100);
@@ -113,18 +113,13 @@ public class DAOPago extends DAO implements IDAOPago{
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
-            System.out.println("DAO");
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
-            System.out.println("DAO");
         } catch (SQLException ex) {
-            System.out.println(ex.getSQLState());
-            System.out.println(ex.getMessage());
             throw FabricaExcepcion.instanciarModificarPagoException(998);
             
         }
         
-            System.out.println("DAO");
         return pago;
     }
          
