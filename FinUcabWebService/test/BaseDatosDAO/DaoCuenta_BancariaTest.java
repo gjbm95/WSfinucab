@@ -7,6 +7,9 @@ package BaseDatosDAO;
 
 import Dominio.Entidad;
 import Dominio.ListaEntidad;
+import Logica.Modulo2.AgregarFallidoException;
+import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.ModificarFallidoException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,7 +46,7 @@ public class DaoCuenta_BancariaTest {
      * Test of agregar method, of class DaoCuenta_Bancaria.
      */
     @Test
-    public void testAgregar() {
+    public void testAgregar() throws AgregarFallidoException {
         System.out.println("agregar");
         Entidad e = null;
         DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
@@ -58,7 +61,7 @@ public class DaoCuenta_BancariaTest {
      * Test of modificar method, of class DaoCuenta_Bancaria.
      */
     @Test
-    public void testModificar() {
+    public void testModificar() throws ModificarFallidoException {
         System.out.println("modificar");
         Entidad e = null;
         DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
@@ -88,7 +91,7 @@ public class DaoCuenta_BancariaTest {
      * Test of eliminar method, of class DaoCuenta_Bancaria.
      */
     @Test
-    public void testEliminar() {
+    public void testEliminar() throws EliminarFallidoException {
         System.out.println("eliminar");
         int id = 0;
         DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
