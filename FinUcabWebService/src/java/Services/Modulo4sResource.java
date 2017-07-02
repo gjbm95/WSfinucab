@@ -273,7 +273,7 @@ public class Modulo4sResource {
             }
         }
         catch(DataReaderException e){
-            respuesta = "Error :"+e.getMessage();
+            respuesta = "Error :"+e.getOwnMessage();
         }
         catch(Exception e) {
             respuesta = "Error :"+e.getMessage();

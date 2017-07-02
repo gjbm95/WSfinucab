@@ -355,7 +355,7 @@ public class Modulo5sResource {
             respuesta = obtenerRespuestaAgregar(objectResponse);
             
         }  catch (AgregarPagoException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         
@@ -396,7 +396,7 @@ public class Modulo5sResource {
                         
             }
         }catch (ConsultarPagoException e) {
-            respuesta = e.getMessage();
+            respuesta = e.getOwnMessage();
         }  catch (DataReaderException ex) {
             
         }  catch (FinUCABException ex) {
@@ -435,7 +435,7 @@ public class Modulo5sResource {
             }
         }
         catch (ListarPagosException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         
@@ -470,14 +470,12 @@ public class Modulo5sResource {
                 Entidad ex = entidadModificarPago(datosPagos);
                 Comando c = FabricaComando.instanciarComandoModificarPago(ex);
                 c.ejecutar();
-                System.out.println("METODO WEB");
                 Entidad objectResponse = c.getResponse();
-                System.out.println("METODO WEB");
                 respuesta = obtenerRespuestaModificar(objectResponse);
-                System.out.println("METODO WEB");
                 
         }catch (ModificarPagoException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            System.out.println("EXCEPTION: "+ ex.getOwnMessage());
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         

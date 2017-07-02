@@ -42,5 +42,9 @@ public abstract class FinUCABException extends Exception{
         System.out.println("Error ("+_className+") : "+_code+" - "+ _message);
     }
     
+    public String getOwnMessage(){
+        return _message;
+    }
+    
     
 }

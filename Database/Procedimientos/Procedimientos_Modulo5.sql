@@ -31,7 +31,7 @@ END;
 $function$;
 
 
-CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto float,
+CREATE OR REPLACE FUNCTION ModificarPago(idpago integer, monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -42,12 +42,12 @@ result integer;
     
 BEGIN 
 
-UPDATE pago SET 
+UPDATE PAGO SET 
 					pg_monto=monto , 
 					pg_descripcion=descripcion , 
 					pg_tipotransaccion=transaccion , 
 					categoriaca_id= categoria
-				    where pg_id = pago;
+				    where pg_id = idpago;
     if found then
 	result := 1;
 	else result := 0;
@@ -57,7 +57,7 @@ END;
 $$ 
 
 
-CREATE OR REPLACE FUNCTION ConsultarPago(
+CREATE OR REPLACE FUNCTION ConsultarPago(x
 	idpago integer,
     
 	OUT pg_id integer,

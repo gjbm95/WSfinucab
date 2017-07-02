@@ -55,7 +55,6 @@ public class IdentityMap {
             
             ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(new ArrayList<Entidad>());
             
-            System.out.println(listaEntidad.getLista().toArray());
             setEntidad(id, listaEntidad);
             
             return listaEntidad;
