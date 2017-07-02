@@ -67,7 +67,7 @@ public class DAOPago extends DAO implements IDAOPago{
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
         } catch (SQLException ex) {
-            throw FabricaExcepcion.instanciarAgregarPagoException(ex.getErrorCode(),ex.getMessage());                
+            throw FabricaExcepcion.instanciarAgregarPagoException(998);                
         }
         
 
@@ -98,7 +98,7 @@ public class DAOPago extends DAO implements IDAOPago{
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
         } catch (SQLException ex) {
-            throw FabricaExcepcion.instanciarModificarPagoException(ex.getErrorCode(),ex.getMessage());
+            throw FabricaExcepcion.instanciarModificarPagoException(998);
         }
         return pago;
     }
@@ -132,7 +132,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
-                throw FabricaExcepcion.instanciarConsultarPagoException(ex.getErrorCode(),ex.getMessage());
+                throw FabricaExcepcion.instanciarConsultarPagoException(998);
             }
         }
         
@@ -170,7 +170,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
                 
             } catch (SQLException ex) {
-                throw FabricaExcepcion.instanciarListarPagosException(ex.getErrorCode(),ex.getMessage());
+                throw FabricaExcepcion.instanciarListarPagosException(998);
             }
         }
         
