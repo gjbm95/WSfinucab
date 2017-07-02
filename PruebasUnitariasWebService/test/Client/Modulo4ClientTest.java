@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Client;
 
 import java.net.URLEncoder;
@@ -71,10 +67,8 @@ public class Modulo4ClientTest {
 
             Modulo4Client instance = new Modulo4Client();
             String result = instance.registrarCategoria(datosCategoria);
-            System.out.println(result);
             String eliminar = instance.eliminarCategoria(result);
             String resulta = instance.buscarCategoria(result);
-            System.out.println(resulta);
             assertEquals("", resulta);
     
     
@@ -133,7 +127,6 @@ public class Modulo4ClientTest {
         String datosCategoria1 = "{ \"c_usuario\" : 1, \"c_nombre\" : \"Prueba5\",\"c_descripcion\" : \"UCAB\",\"c_ingreso\" : true,\"c_estado\" : true }";
         datosCategoria1 = URLEncoder.encode(datosCategoria1);
         String result2 = instance.registrarCategoria(datosCategoria1);
-
         String resultVisualizar = instance.VisualizarCategoria("1");
         String ArrayCategoria[] = resultVisualizar.split(",");
         String ArrayCategoriaAux1[] = ArrayCategoria[18].split(":");
