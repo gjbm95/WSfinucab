@@ -21,13 +21,14 @@ AS $function$
 
 DECLARE
  result integer;
+ foo integer;
 
 BEGIN
   insert into presupuesto(pr_nombre, pr_monto, pr_fecha, pr_clasificacion, pr_duracion, usuariou_id, categoriaca_id)
-    values (nombrePresupuesto, monto, CURRENT_TIMESTAMP, clasificacion, duracion, usuario, categoria);
+    values (nombrePresupuesto, monto, CURRENT_TIMESTAMP, clasificacion, duracion, usuario, categoria) returning pr_id into result;
 
     if found then
-  result := 1;
+  foo := 1;
   else result := 0;
   end if;
   RETURN result;

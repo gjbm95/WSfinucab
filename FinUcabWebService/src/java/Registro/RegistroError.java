@@ -26,10 +26,14 @@ public class RegistroError {
     
     private static final String error_consulta_vacia = "La consulta realizada no trajo ningun resultado";
     private static final String error_agregar_pago = "Ocurrio un error al agregar su nuevo pago";
+
+        private static final String error_actualizar_clave = "Ha ocurrido un error actualizando la clave";
+
     
     private static final String error_base_datos = "Ocurrio un error interno en la base de datos";
     private static final String error_decode = "Ocurrio un error al descodificar las datos proporcionados";
      
+    
     public static final HashMap<Integer,String> errores;
     static{
         HashMap<Integer,String> errorsLocal = new HashMap<>();
@@ -46,6 +50,7 @@ public class RegistroError {
         errorsLocal.put(998, error_base_datos);        
         errorsLocal.put(999, error_decode);
         
+        errorsLocal.put(201, error_actualizar_clave);
         errores = (HashMap<Integer, String>) Collections.unmodifiableMap(errorsLocal);
         
     }
