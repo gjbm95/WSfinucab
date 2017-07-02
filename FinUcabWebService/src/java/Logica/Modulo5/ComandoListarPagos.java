@@ -25,7 +25,7 @@ public class ComandoListarPagos extends Comando{
     @Override
     public void ejecutar() throws FinUCABException{        
         IDAOPago dao = SingletonDAOPago.getInstance();
-        this.response = dao.consultarTodos(idUSuario);                
+        this.response = dao.consultarTodos(idUSuario);
        
     }
     

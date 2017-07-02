@@ -7,6 +7,7 @@ package Logica.Modulo3;
 
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOPresupuesto;
+import Exceptions.FinUCABException;
 import Logica.Comando;
 
 /**
@@ -23,7 +24,7 @@ public class ComandoEliminarPresupuesto extends Comando {
     
     
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws FinUCABException {
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
         this.response = dao.eliminarPresupuesto(idPresupuesto);
     }

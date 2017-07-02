@@ -71,8 +71,8 @@ CREATE OR REPLACE FUNCTION ConsultarPago(
 AS $function$
 
 
-select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id  from Pago p
-where ( p.pg_id = idpago)
+select p.pg_id, p.pg_monto, p.pg_descripcion, p.pg_tipotransaccion , p.categoriaca_id , c.ca_nombre   from Pago p , Categoria c
+where ( p.pg_id = idpago and p.categoriaca_id = c.ca_id )
 $function$;
 
 
