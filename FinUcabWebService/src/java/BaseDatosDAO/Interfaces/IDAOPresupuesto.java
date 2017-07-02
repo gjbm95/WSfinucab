@@ -5,13 +5,16 @@
  */
 package BaseDatosDAO.Interfaces;
 
+import Dominio.Entidad;
+import Exceptions.FinUCABException;
+
 /**
  *
  * @author William
  */
 public interface IDAOPresupuesto extends IDAO{
     
-    int verificarNombre(String nombre);
-    int eliminarPresupuesto(int id);
+    Entidad verificarNombre(String nombre) throws FinUCABException;
+    Entidad eliminarPresupuesto(int idPresupuesto) throws FinUCABException;
     
 }

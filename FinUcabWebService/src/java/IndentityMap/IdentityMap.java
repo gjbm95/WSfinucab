@@ -40,11 +40,17 @@ public class IdentityMap {
      public ListaEntidad getListaEntidad(String id){
         
         Entidad salida  = this._cache.get(id);
-        
+         //System.out.println("IM");
         if (salida != null ){
+            //System.out.println("IM1");
+            //System.out.println(((ListaEntidad) salida).getLista().toArray().toString());
             return (ListaEntidad) salida;
         }else{
+            
+         //System.out.println("IM2");
             ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(new ArrayList<Entidad>());
+            
+            System.out.println(listaEntidad.getLista().toArray());
             setEntidad(id, listaEntidad);
             
             return listaEntidad;
@@ -87,7 +93,7 @@ public class IdentityMap {
      
     }
     
-     public Entidad getEntidadEnLista(String id, int idEntidad){
+    public Entidad getEntidadEnLista(String id, int idEntidad){
          
         ListaEntidad listaEntidad  = getListaEntidad(id);       
         ArrayList<Entidad> lista = listaEntidad.getLista();
@@ -100,4 +106,8 @@ public class IdentityMap {
         
         return null;
     }
+    
+    
+    
+    
 }

@@ -3,13 +3,26 @@ package Services;
 
 import Dominio.Usuario;
 import BaseDatosDAO.Conexion;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.SimpleResponse;
+import Exceptions.DataReaderException;
+import Exceptions.FabricaExcepcion;
+import Exceptions.FinUCABException;
+import Logica.Comando;
 import Logica.FabricaComando;
+import Logica.Modulo1.ActualizarClaveException;
 import Logica.Modulo1.ComandoActualizarClave;
 import Logica.Modulo1.ComandoIniciarSesion;
 import Logica.Modulo1.ComandoRecuperarClave;
 import Logica.Modulo1.ComandoRegistrarUsuario;
 import Logica.Modulo1.ComandoVerificarUsuario;
+import Logica.Modulo1.IniciarSesionException;
+import Logica.Modulo1.RecuperarClaveException;
+import Logica.Modulo1.RegistrarIncorrectoException;
+import Logica.Modulo1.VerificarUsuarioException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -40,7 +53,7 @@ import javax.ws.rs.core.Response;
 *Desarrolladores:
 *Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
 *Descripción de la clase:
-*Metodos del servicio web destinados para las funcionalidades de iniciar session,
+*Metodos del servicio web destinados para las funcionalidades de iniciar sesion,
 * registro de usuario y recuperacion de cuenta.
 *@Params
 *
@@ -92,7 +105,6 @@ public class Modulo1sResource {
         //TODO return proper representation object 
         String respuesta = "";
         try {
-
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             //Se coloca el query
@@ -116,49 +128,192 @@ public class Modulo1sResource {
     }
 
     /**
-     * Función que registra un usuario en la base de datos si esta disponible su
-     * nombre de usuario.
-     *
-     * @param datosCuenta JSON.toString() con los atributos: u_usuario, u_nombre
-     * , u_apellido , u_correo , u_pregunta , u_respuesta , u_pregunta ,
-     * u_password
-     *
-     * @return Si se inserta el usuario devuelve un String con el mensaje
-     * "Registro Exitoso", De lo contrario devuelve el mensaje "No se pudo
-     * registrar"
+     * Metodo para validar un string
+     * @param valor
+     * @return boolean
      */
+    private boolean validadorString(String valor) throws DataReaderException {
+        if (valor == null) {
+            throw FabricaExcepcion.instanciarDataReaderException(3);
+        }else if(valor.equals("")) {
+            throw FabricaExcepcion.instanciarDataReaderException(4);
+        }else{
+            return true;
+        }
+    }
+    
+    
+    /**
+     * Metodo para validar que una entidad no sea nula ni vacia
+     * @param valor
+     * @return boolean
+     */
+    private boolean validadorEntidad(Entidad valor) throws DataReaderException{
+        if (valor == null)
+            throw FabricaExcepcion.instanciarDataReaderException(5);
+     
+        return true;
+    }
+
+    /**
+    * Función que registra un usuario en la base de datos si esta disponible su
+    * nombre de usuario.
+    *
+    * @param datosCuenta JSON.toString() con los atributos: u_usuario, u_nombre
+    * , u_apellido , u_correo , u_pregunta , u_respuesta , u_pregunta ,
+    * u_password
+    *
+    * @return Si se inserta el usuario devuelve un String con el mensaje
+    * "1", De lo contrario devuelve el mensaje "0"
+    */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarUsuario")
-    public String registrarUsuario(@QueryParam("datosUsuario") String datosCuenta) {
-
-        String decodifico = URLDecoder.decode(datosCuenta);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        Usuario usuario = new Usuario(0,usuarioJSON.getString("u_nombre"),usuarioJSON.getString("u_apellido"),
-        usuarioJSON.getString("u_correo"),usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"),
-        usuarioJSON.getString("u_pregunta"),usuarioJSON.getString("u_respuesta"),null,null);
-        
-        ComandoRegistrarUsuario cru = FabricaComando.instanciarComandoRegistrarUsuario(usuario);
-        cru.ejecutar();
+    public String registrarUsuario(@QueryParam("datosUsuario") 
+            String datosCuenta) {
+        String resultado = "";
+        try {
+            Entidad usuario;
+            usuario = entidadAgregarUsuario(datosCuenta);
+            Comando cru = FabricaComando.
+                    instanciarComandoRegistrarUsuario(usuario);
+            cru.ejecutar();
+            Entidad respuesta = cru.getResponse();
+            resultado = obtenerRespuestaRegistrarUsuario(respuesta);
+            
+        } catch (DataReaderException ex) {
+            resultado = "0";
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RegistrarIncorrectoException ex) {
+            resultado = "0";
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            resultado = "0";
+            Logger.getLogger(Modulo1sResource.
+                    class.getName()).log(Level.SEVERE, null, ex);
+        }
         return resultado;
+    }
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para agregar un usuario
+     * @param datosUsuario JSON.toString() con los atributos: u_usuario,u_nombre
+     * , u_apellido , u_correo , u_pregunta , u_respuesta , u_pregunta ,
+     * u_password
+     * @return Entidad con los datos del usuario
+     */
+    private Entidad entidadAgregarUsuario (@QueryParam("datosUsuario") 
+            String datosCuenta) throws DataReaderException, 
+            NullPointerException  {
+
+        Entidad usuario = null;
+        try {
+            boolean validador  = validadorString(datosCuenta);
+            if( validador ){
+                String decodifico;
+                decodifico = URLDecoder.decode(datosCuenta,"UTF-8");
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
+                JsonObject usuarioJSON = reader.readObject();           
+                reader.close();
+                usuario = FabricaEntidad.obtenerUsuario(0,
+                usuarioJSON.getString("u_nombre"),
+                usuarioJSON.getString("u_apellido"),
+                usuarioJSON.getString("u_correo"),
+                usuarioJSON.getString("u_usuario"),
+                usuarioJSON.getString("u_password"),
+                usuarioJSON.getString("u_pregunta"),
+                usuarioJSON.getString("u_respuesta"),null,null);
+            }
+        } catch (DataReaderException ex) {
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
+        }
+          
+        return usuario;
+    }
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti que contiene la respuesta
+     * @return Si se inserta el usuario devuelve un String con el mensaje
+     * "1", De lo contrario devuelve el mensaje "0"
+    */
+    private String obtenerRespuestaRegistrarUsuario(Entidad enti) 
+            throws DataReaderException{
+          String respuesta;
+        if(validadorEntidad(enti)) {
+            if(((SimpleResponse) enti).getStatus() == 1){
+                respuesta = "1";
+            }else{
+                respuesta = "0";
+            }
+        }else {
+            respuesta = "Error Entidad nula o Vacia";
+        }
+        return respuesta;
     }
 
     /**
      * Funcion que verifica disponibilidad de nombre de usuario.
      *
      * @param usuario String del nombre de usuario a consultar.
-     * @return Si el nombre ya existe devuelve "No Disponible", Si no existe
-     * devuelve "Usuario Disponible"
+     * @return Si el nombre ya existe devuelve "4", Si no existe
+     * devuelve "3"
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
-    public String verificarUsuario(@QueryParam("nombreUsuario") String usuario) {
-        ComandoVerificarUsuario cvu = FabricaComando.instanciarComandoVerificarUsuario(usuario);
-        cvu.ejecutar();
+    public String verificarUsuario(@QueryParam("nombreUsuario") String usuario){
+        String resultado = "";
+        try { 
+            Comando cvu = FabricaComando.
+                    instanciarComandoVerificarUsuario(usuario);
+            cvu.ejecutar();
+            Entidad respuesta = cvu.getResponse();
+            resultado = obtenerRespuestaVerificarUsuario(respuesta); 
+        } catch (VerificarUsuarioException ex) {
+            resultado = "3";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "3";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+               
         return resultado;
     }
 
+    
+  /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti que contiene la respuesta
+     * @return Si el nombre ya existe devuelve "4", Si no existe
+     * devuelve "3"
+     */
+    private String obtenerRespuestaVerificarUsuario(Entidad enti) 
+            throws DataReaderException{
+          String respuesta = "";
+        if(validadorEntidad(enti)) {
+            if(((SimpleResponse) enti).getStatus() == 4){
+                respuesta = "4";//EN USO
+            }else if(((SimpleResponse) enti).getStatus() == 3){
+                respuesta = "3";//DISPONIBLE
+            }
+            return respuesta;
+
+        } else {
+            return "Error Entidad nula o Vacia";
+        }
+    }
+    
     /**
      * Función que verifica existencia de un usuario en el sistema y de existir
      * verifica si el password recibido es igual al que está almacenado en la BD
@@ -166,76 +321,146 @@ public class Modulo1sResource {
      * @param usuario JSON.toString() con los "atributos" u_usuario y u_password
      * @return De existir el usuario y la contraseña coincide retorna un JSON en
      * String con todos los datos del usuario. De lo contrario retorna el String
-     * "ERROR"
+     * "7"
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/iniciarSesion")
     public String iniciarSesion(@QueryParam("datosUsuario") String usuario) {
-        String decodifico = URLDecoder.decode(usuario);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        ComandoIniciarSesion cis = FabricaComando.instanciarComandoIniciarSesion(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
-        cis.ejecutar();
-        return resultado;
-    }
-
-    /**
-     * Funcion que convierte un string con estructura JSON en JsonObject
-     *
-     * @param decodifico String con estructura json
-     * @return JsonObject del string
-     */
-    private JsonObject stringToJSON(String decodifico) {
-        JsonReader reader = Json.createReader(new StringReader(decodifico));
-        JsonObject jsonObj = reader.readObject();
-        reader.close();
-        return jsonObj;
-    }
-
-    /**
-     * Funcion que retorna un JsonObject con los datos del usuario recibido en
-     * ResultSet
-     *
-     * @param rs ResultSet de la consulta de base de datos realizada
-     * @return JSONobject del usuario con los atributos: u_id, u_usuario,
-     * u_nombre, u_apellido, u_correo, u_pregunta y u_password
-     */
-    private JsonObject crearUsuarioJson(ResultSet rs) {
+         Entidad usuarioi;
+         String resultado = "";
         try {
-            JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-            usuarioBuilder.add("u_id", rs.getString("id"));
-            usuarioBuilder.add("u_usuario", rs.getString("usuario"));
-            usuarioBuilder.add("u_nombre", rs.getString("nombre"));
-            usuarioBuilder.add("u_apellido", rs.getString("apellido"));
-            usuarioBuilder.add("u_correo", rs.getString("correo"));
-            usuarioBuilder.add("u_pregunta", rs.getString("pregunta"));
-            usuarioBuilder.add("u_respuesta", rs.getString("respuesta"));
-            usuarioBuilder.add("u_password", rs.getString("password"));
-            return usuarioBuilder.build();
-        } catch (SQLException ex) {
-            Logger.getLogger(Modulo1sResource.class.getName()).log(Level.SEVERE, null, ex);
+            usuarioi = entidadiniciarSesion(usuario);
+            Comando cru = FabricaComando.
+                    instanciarComandoIniciarSesion(usuarioi);
+            cru.ejecutar();
+            Entidad respuesta = cru.getResponse();
+            resultado = obtenerRespuestaIniciarsesion(respuesta);
+        } catch (DataReaderException ex) {
+            resultado = "7";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
-        return null;
+        catch (IniciarSesionException ex) {
+            resultado = "7";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "7";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        return resultado;
+        
+      
     }
 
-    /**
-     * Función que verifica existencia de un usuario en el sistema y de existir
-     * verifica si el password recibo es igual al que está almacenado en la BD
-     *
+/**
+     * Metodo encargado de la construccion de los JSON para iniciar sesion
      * @param usuario JSON.toString() con los "atributos" u_usuario y u_password
+     * @return Entidad con los datos del usuario
+     */
+    private Entidad entidadiniciarSesion (@QueryParam("datosUsuario") 
+            String usuario)  throws DataReaderException {
+        Entidad usuarioi = null;
+        String decodifico;
+        try {
+            boolean validador  = validadorString(usuario);
+            if( validador ){
+                decodifico = URLDecoder.decode(usuario,"UTF-8");
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
+                JsonObject usuarioJSON = reader.readObject();           
+                reader.close();
+                usuarioi = FabricaEntidad.obtenerUsuario(0,
+                null,null,null,
+                usuarioJSON.getString("u_usuario"),
+                usuarioJSON.getString("u_password"),null,null,null,null);
+            }
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        return usuarioi;
+    }
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti que contiene la respuesta
      * @return De existir el usuario y la contraseña coincide retorna un JSON en
      * String con todos los datos del usuario. De lo contrario retorna el String
+     * "7"
+     */
+     private String obtenerRespuestaIniciarsesion(Entidad enti) 
+             throws DataReaderException{
+          String respuesta;
+        if(validadorEntidad(enti)) {
+            respuesta = ((SimpleResponse) enti).getDescripcion();
+        }else {
+            respuesta = "Error Entidad nula o Vacia";
+        }
+        return respuesta;
+    }
+
+    /**
+     * Función que verifica existencia de un usuario en el sistema
+     *
+     * @param usuario JSON.toString() con el "atributos" u_usuario
+     * @return De existir el usuario retorna un JSON en String con todos los 
+     * datos del usuario. De lo contrario retorna el String
      * "ERROR"
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
-
-        ComandoRecuperarClave crc = FabricaComando.instanciarComandoRecuperarClave(usuario);
-        crc.ejecutar();
+        String resultado = "";
+        try {
+            Comando crc = FabricaComando.
+                    instanciarComandoRecuperarClave(usuario);
+            crc.ejecutar();
+            Entidad respuesta = crc.getResponse();
+            resultado = obtenerRespuestaRecuperarClave(respuesta);
+        }  catch (DataReaderException ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }catch (RecuperarClaveException ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "ERROR";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        
+        
         return resultado;
+        
+        
     }
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti que contiene la respuesta
+     * @return De existir el usuario coincide retorna un JSON en
+     * String con todos los datos del usuario. De lo contrario retorna el String
+     * "ERROR"
+     */
+    private String obtenerRespuestaRecuperarClave(Entidad enti) 
+            throws DataReaderException{
+        String respuesta = "";
+        if(validadorEntidad(enti)) {
+            respuesta = ((SimpleResponse) enti).getDescripcion();
+        }else {
+            respuesta = "Error Entidad nula o Vacia";
+        }
+        return respuesta;
+    }
+    
     
     
     /**
@@ -243,21 +468,92 @@ public class Modulo1sResource {
      *
      * @param datosUsuario JSON.toString() que tenga los "atributos" 
      * u_usuario , u_password
-     * @return De existir el usuario y la contraseña coincide retorna un JSON en
-     * String con todos los datos del usuario. De lo contrario retorna el String
-     * "ERROR"
+     * @return Si se actualiza correctamente retorna un String con "5" de no 
+     * actualiza correctamente retorna "6"
      */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/actualizarClave")
-    public String actualizarClave(@QueryParam("datosUsuario") String datosUsuario) {
-        String decodifico = URLDecoder.decode(datosUsuario);
-        JsonObject usuarioJSON = this.stringToJSON(decodifico);
-        ComandoActualizarClave cis = FabricaComando.instanciarComandoActualizarClave(usuarioJSON.getString("u_usuario"),usuarioJSON.getString("u_password"));
-        cis.ejecutar();
+    public String actualizarClave(@QueryParam("datosUsuario") 
+            String datosUsuario) {
+        Entidad usuario;
+        String resultado = "";
+        try {
+            usuario = entidadActualizarClave(datosUsuario);
+            Comando cis = FabricaComando.
+                    instanciarComandoActualizarClave(usuario);
+            cis.ejecutar();
+            Entidad respuesta = cis.getResponse();
+            resultado = obtenerRespuestaActualizarClave(respuesta);
+        } catch (DataReaderException ex) {
+            resultado = "6";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }catch (ActualizarClaveException ex) {
+            resultado = "6";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            resultado = "6";
+            Logger.getLogger(Modulo1sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
         return resultado;
     }
+    
+    /**
+     * Metodo encargado de la construccion de los JSON para iniciar sesion
+     * @param usuario JSON.toString() con los "atributos" u_usuario y u_password
+     * @return Entidad con los datos del usuario
+     */
+    
+    private Entidad entidadActualizarClave (@QueryParam("datosUsuario") 
+            String datosUsuario)  throws DataReaderException  {
 
+        Entidad usuarioi = null; 
+        try {
+            boolean validador  = validadorString(datosUsuario);
+            if( validador ){
+                String decodifico;
+                decodifico = URLDecoder.decode(datosUsuario,"UTF-8");
+                JsonReader reader = Json.
+                        createReader(new StringReader(decodifico));
+                JsonObject usuarioJSON = reader.readObject();           
+                reader.close();
+                usuarioi = FabricaEntidad.obtenerUsuario(0,
+                null,null,null,usuarioJSON.getString("u_usuario"),
+                usuarioJSON.getString("u_password"),null,null,null,null);
+            }
+        } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Modulo1sResource.class.getName()).
+                        log(Level.SEVERE, null, ex);
+        }
+        return usuarioi;
+    }
+    
+    
+    /**
+     * Metodo para obtener la respuesta que se le envia al cliente
+     * @param enti que contiene la respuesta
+     * @return Si se actualiza correctamente retorna un String con "5" de no 
+     * actualiza correctamente retorna "6"
+     */
+    private String obtenerRespuestaActualizarClave(Entidad enti) 
+            throws DataReaderException{
+          String respuesta;
+        if(validadorEntidad(enti)) {
+            if(((SimpleResponse) enti).getStatus() == 5){
+                respuesta = "5"; //Correctamente
+            }else{
+                respuesta = "6"; //Incorrecto
+            }
+        }else {
+            respuesta = "error";
+        }
+        return respuesta;
+        
+    }
     /**
      * POST method for creating an instance of Modulo1Resource
      *

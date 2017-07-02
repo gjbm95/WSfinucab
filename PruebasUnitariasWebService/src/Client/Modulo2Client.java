@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
  *        client.close();
  * </pre>
  *
- * @author Junior
+ * @author Alejandro Negrin
  */
 public class Modulo2Client {
 
@@ -34,19 +34,93 @@ public class Modulo2Client {
         webTarget = client.target(BASE_URI).path("Modulo2");
     }
 
-    public String getPruebaJson() throws ClientErrorException {
+    public String agregarTDC(String datosTDC) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path("prueba");
+        if (datosTDC != null) {
+            resource = resource.queryParam("datosTDC", datosTDC);
+        }
+        resource = resource.path("agregarTDC");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    public Response postJson(Object requestEntity) throws ClientErrorException {
-        return webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON), Response.class);
+    public String actualizarTDC(String datosTDC) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (datosTDC != null) {
+            resource = resource.queryParam("datosTDC", datosTDC);
+        }
+        resource = resource.path("actualizarTDC");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
-    public String getPruebaDataBase() throws ClientErrorException {
+    public String agregarCuentaBancaria(String datosCuenta) throws ClientErrorException {
         WebTarget resource = webTarget;
-        resource = resource.path("pruebaDB");
+        if (datosCuenta != null) {
+            resource = resource.queryParam("datosCuenta", datosCuenta);
+        }
+        resource = resource.path("agregarCuentaBancaria");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String eliminarCuentaBancaria(String idCuenta) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (idCuenta != null) {
+            resource = resource.queryParam("idCuenta", idCuenta);
+        }
+        resource = resource.path("eliminarCuentaBancaria");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String eliminarTDC(String idtdc) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (idtdc != null) {
+            resource = resource.queryParam("idtdc", idtdc);
+        }
+        resource = resource.path("eliminarTDC");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String consultarTDC(String idUsuario) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (idUsuario != null) {
+            resource = resource.queryParam("idUsuario", idUsuario);
+        }
+        resource = resource.path("consultarTDC");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String consultarCuentas(String idUsuario) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (idUsuario != null) {
+            resource = resource.queryParam("idUsuario", idUsuario);
+        }
+        resource = resource.path("consultarCuentas");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String actualizarDatosUsuario(String datosUsuario) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (datosUsuario != null) {
+            resource = resource.queryParam("datosUsuario", datosUsuario);
+        }
+        resource = resource.path("actualizarDatosUsuario");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String actualizarCuentaBancaria(String datosCuenta) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (datosCuenta != null) {
+            resource = resource.queryParam("datosCuenta", datosCuenta);
+        }
+        resource = resource.path("actualizarCuentaBancaria");
+        return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
+    }
+
+    public String consultarEstadisticas(String idUsuario) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        if (idUsuario != null) {
+            resource = resource.queryParam("idUsuario", idUsuario);
+        }
+        resource = resource.path("consultarEstadisticas");
         return resource.request(javax.ws.rs.core.MediaType.TEXT_PLAIN).get(String.class);
     }
 
