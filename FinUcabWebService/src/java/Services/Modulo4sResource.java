@@ -127,9 +127,7 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            System.out.println(objectResponse);
             respuesta = obtenerRespuestaAgregar(objectResponse);
-            System.out.println(respuesta);
         } catch (Exception ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
             

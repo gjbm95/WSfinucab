@@ -14,7 +14,7 @@ import Logica.Comando;
 
 /**
  *
- * @author Jeffrey
+ * @author MariPerez
  */
 public class ComandoModificarCategoria extends Comando{
     public Entidad categoria;
