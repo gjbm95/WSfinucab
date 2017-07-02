@@ -16,7 +16,7 @@ AS $function$
 
 DECLARE
  result integer;
-
+ 
 BEGIN
   INSERT INTO Pago (pg_monto , pg_fecha , pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
       (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria);

@@ -16,6 +16,7 @@ import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
 import Logica.Modulo5.ModificarPagoException;
+import Registro.RegistroBaseDatos;
 import Registro.RegistroIdentityMap;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -48,7 +49,7 @@ public class DAOPago extends DAO implements IDAOPago{
         try {                
             
             Connection conn = Conexion.conectarADb();
-            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
+            pag = conn.prepareCall(RegistroBaseDatos.AGREGAR_PAGO);
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
@@ -56,7 +57,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             
-            if (rs.next()){
+            if (rs.next() ){
                 idPago = rs.getInt(1); 
             }else{
                 throw FabricaExcepcion.instanciarAgregarPagoException(100);
@@ -105,7 +106,7 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             
             //System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
+            cstmt = conn.prepareCall(RegistroBaseDatos.MODIFICAR_PAGO);
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
@@ -113,18 +114,13 @@ public class DAOPago extends DAO implements IDAOPago{
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
-            System.out.println("DAO");
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
-            System.out.println("DAO");
         } catch (SQLException ex) {
-            System.out.println(ex.getSQLState());
-            System.out.println(ex.getMessage());
             throw FabricaExcepcion.instanciarModificarPagoException(998);
             
         }
         
-            System.out.println("DAO");
         return pago;
     }
          
@@ -142,7 +138,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.OBTENER_PAGO);
                 a.setInt(1, idPago);
                 a.executeQuery();
 
@@ -178,7 +174,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ListaPagos(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.LISTAR_PAGOS);
                 a.setInt(1, idUsuario);
                 a.executeQuery();
 
