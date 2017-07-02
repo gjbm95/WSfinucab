@@ -40,6 +40,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * REST Web Service
@@ -48,7 +50,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/Modulo5")
 public class Modulo5sResource {
-
+        final static Logger log = LogManager.getLogger();
     @Context
     private UriInfo context;
 
@@ -347,8 +349,9 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos)  {
-        
-
+          
+        log.debug("Registrar Pago ");
+            
          String respuesta = "";
          
         try {
@@ -358,14 +361,24 @@ public class Modulo5sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
            respuesta = obtenerRespuestaAgregar(objectResponse);
+           log.info("Pago Registrado");
            
         }  catch (AgregarPagoException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
+            log.error("Error registrando pago");
+            ex.printStackTrace();
+            
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error registrando pago");
+            ex.printStackTrace();
+            
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error registrando pago");
+            ex.printStackTrace();
+            
         }
         
         
@@ -388,6 +401,8 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
+        
+        log.debug("Obteniendo Pago con id: " + idPago);
 
         String respuesta ="";
         try { 
@@ -402,15 +417,23 @@ public class Modulo5sResource {
             }
         }catch (ConsultarPagoException e) {
             respuesta = e.getOwnMessage();
+            log.error("Error obteniendo Pago" + e.getMessage());
+            e.printStackTrace();
         }  catch (DataReaderException ex) {
+            log.error("Error obteniendo Pago" + ex.getMessage());
+            ex.printStackTrace();
             
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error obteniendo Pago" + ex.getMessage());
+            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error obteniendo Pago" + ex.getMessage());
+            ex.printStackTrace();
         }
-        
+         log.info("Retornando pago"+idPago);   
          return respuesta;
     }
 
@@ -429,6 +452,8 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
+        
+        log.debug("Listando Pagos de usuario con id:" + idPago);
 
         String respuesta ="";
         try{
@@ -441,13 +466,19 @@ public class Modulo5sResource {
         }
         catch (ListarPagosException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
+            log.error("Error obteniendo presupuestos del usuario con id: " + idPago);
+            ex.printStackTrace();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error obteniendo presupuestos del usuario con id: " + idPago);
+            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error obteniendo presupuestos del usuario con id: " + idPago);
+            ex.printStackTrace();
         }
-
+        log.info("Retornando Pagos de usuario con id:" + idPago);   
         return respuesta;
     }
     
@@ -467,7 +498,7 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
-           
+            log.debug("Modificando pago");
         String respuesta = "";       
 
         try {
@@ -479,14 +510,20 @@ public class Modulo5sResource {
                 
         }catch (ModificarPagoException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
+            log.error("Error modificando pago "+datosPagos);
+            ex.printStackTrace();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error modificando pago "+datosPagos);
+            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
+            log.error("Error modificando pago "+datosPagos);
+            ex.printStackTrace();
         }
         
-        
+       log.info("Respuesta modificado: " + respuesta); 
        return respuesta;
     }
     
