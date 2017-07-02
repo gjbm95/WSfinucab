@@ -412,23 +412,13 @@ public class Modulo5sResource {
                 respuesta =obtenerRespuestaConsultar(objectResponse);
                         
             }
-        }catch (ConsultarPagoException e) {
-            respuesta = e.getOwnMessage();
-            SingletonLog.getInstance().error("Error obteniendo Pago" + e.getMessage());
-            e.printStackTrace();
-        }  catch (DataReaderException ex) {
-            SingletonLog.getInstance().error("Error obteniendo Pago" + ex.getMessage());
-            ex.printStackTrace();
-            
+        }catch (ConsultarPagoException | DataReaderException ex) {
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error obteniendo Pago" + ex.getMessage());
-            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error obteniendo Pago" + ex.getMessage());
-            ex.printStackTrace();
         }
          SingletonLog.getInstance().info("Retornando pago"+idPago);   
          return respuesta;
@@ -463,17 +453,11 @@ public class Modulo5sResource {
         }
         catch (ListarPagosException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
-            SingletonLog.getInstance().error("Error obteniendo presupuestos del usuario con id: " + idPago);
-            ex.printStackTrace();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error obteniendo presupuestos del usuario con id: " + idPago);
-            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error obteniendo presupuestos del usuario con id: " + idPago);
-            ex.printStackTrace();
         }
         SingletonLog.getInstance().info("Retornando Pagos de usuario con id:" + idPago);   
         return respuesta;
@@ -507,17 +491,11 @@ public class Modulo5sResource {
                 
         }catch (ModificarPagoException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
-            SingletonLog.getInstance().error("Error modificando pago "+datosPagos);
-            ex.printStackTrace();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error modificando pago "+datosPagos);
-            ex.printStackTrace();
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
-            SingletonLog.getInstance().error("Error modificando pago "+datosPagos);
-            ex.printStackTrace();
         }
         
        SingletonLog.getInstance().info("Respuesta modificado: " + respuesta); 

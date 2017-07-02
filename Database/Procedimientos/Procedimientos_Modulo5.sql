@@ -20,7 +20,7 @@ DECLARE
 
 BEGIN
   INSERT INTO Pago (pg_monto , pg_fecha , pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
-      (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria) returning pr_id into result;
+      (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria) returning pg_id into result;
 
      if found then
   foo := 1;
