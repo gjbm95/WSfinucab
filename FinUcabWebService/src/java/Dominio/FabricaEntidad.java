@@ -66,10 +66,20 @@ public class FabricaEntidad {
       new Pago( categoria, descripcion, total, tipo);
     } 
     
+     public static Pago obtenerPago( int categoria, String descripcion, float total, String tipo, String nombreCategoria){
+       return 
+      new Pago( categoria, descripcion, total, tipo, nombreCategoria);
+    }
+    
     public static Pago obtenerPago(  int pago, int categoria, String descripcion, float total, String tipo){
        return 
       new Pago(  pago ,categoria, descripcion, total, tipo);
-    }   
+    }  
+    
+    public static Pago obtenerPago(  int pago, int categoria, String descripcion, float total, String tipo, String nombreCategoria){
+       return 
+      new Pago(  pago ,categoria, descripcion, total, tipo, nombreCategoria);
+    }  
     
     public static ListaEntidad obtenerListaEntidad(ArrayList<Entidad> lista){
        return new ListaEntidad(lista);
@@ -93,7 +103,14 @@ public class FabricaEntidad {
        return new SimpleResponse(id,status, descripcion);
     } 
     
+
+    public static SimpleResponse obtenerSimpleResponse(String descripcion){
+       return new SimpleResponse(descripcion);
+    } 
+    
+    
     public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria) {
+
         return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
     

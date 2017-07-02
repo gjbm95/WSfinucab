@@ -65,9 +65,7 @@ public class Presupuesto extends Entidad{
         this._categoria = _categoria;
         this._tipo = _tipo;
     }
-
-    
-    
+ 
     public Presupuesto() {
     }
 

@@ -1,39 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logica.Modulo1;
 
-import BaseDatosDAO.DaoUsuario;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOUsuario;
+import Dominio.Entidad;
 import Logica.Comando;
-import Services.Modulo1sResource;
 
 /**
- *
- * @author Oswaldo
+ * Modulo 1 - Modulo de Presupuestos 
+ * Desarrolladores:*Mariángel Pérez / Oswaldo López / Aquiles Pulido 
+ * Descripción de la clase: Clase encargada de realizar la llamada al DAOUsuario
+ * para actualizar la clave del usuario
  */
 public class ComandoActualizarClave extends Comando{
-    String usuario, clave;
-
-    public ComandoActualizarClave(String usuario, String clave) {
+    Entidad usuario;
+    
+    //Constructor
+    public ComandoActualizarClave(Entidad usuario) {
         this.usuario = usuario;
-        this.clave = clave;
     }
     
+    /**
+     * Procedimiento que se encarga de realizar la llamada al DAOUsuario
+     * para actualizar la clave del usuario
+     */
     @Override
-    public void ejecutar(){
-        DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
-     
-        int respuesta = dao.ActualizarClave(usuario,clave);
-        if(respuesta == 5){
-            Modulo1sResource.resultado = "5";
-        }else {
-            Modulo1sResource.resultado = "6";
-        }
-       
-        
-        //return null;
+    public void ejecutar() throws ActualizarClaveException{
+        IDAOUsuario dao = FabricaDAO.instanciasDaoUsuario();
+        this.response = dao.ActualizarClave(usuario);
     }
 }

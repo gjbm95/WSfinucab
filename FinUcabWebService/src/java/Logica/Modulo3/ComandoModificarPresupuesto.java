@@ -27,7 +27,7 @@ public class ComandoModificarPresupuesto extends Comando{
     @Override
     public void ejecutar() throws FinUCABException{
         
-        IDAOPresupuesto dao = FabricaDAO.instanciarDAOPresupuesto();
+        IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
         this.response = dao.modificar(presupuesto);
         
     }
