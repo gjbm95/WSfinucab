@@ -5,6 +5,7 @@
  */
 package Client;
 
+import java.net.URLEncoder;
 import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,6 +42,7 @@ public class Modulo5ClientTest {
     /**
      * Test of getPruebaJson method, of class Modulo5Client.
      */
+    /*
     @Test
     public void testGetPruebaJson() {
         System.out.println("getPruebaJson");
@@ -55,6 +57,7 @@ public class Modulo5ClientTest {
     /**
      * Test of postJson method, of class Modulo5Client.
      */
+    /*
     @Test
     public void testPostJson() {
         System.out.println("postJson");
@@ -70,21 +73,35 @@ public class Modulo5ClientTest {
     /**
      * Test of modificarPago method, of class Modulo5Client.
      */
+    
     @Test
+    
     public void testModificarPago() {
-        System.out.println("modificarPago");
-        String datosPago = "";
+       String datosPago ="{\"pg_monto\":1.0,\"pg_tipoTransaccion\":\"hjotla\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+        datosPago = URLEncoder.encode(datosPago);
+        
+        
+        
         Modulo5Client instance = new Modulo5Client();
-        String expResult = "";
-        String result = instance.modificarPago(datosPago);
-        assertEquals(expResult, result);
+        String result = instance.registrarPago(datosPago);
+        String resulta = instance.consultarPago(result);
+        String datosPagomodificar ="{\"pg_id\":"+result+",\"pg_monto\":9999.0,\"pg_tipoTransaccion\":\"Modificado\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" Gaste en la universidad\"}";
+        String datosPagoMod = URLEncoder.encode(datosPagomodificar);
+        
+        String modificar = instance.modificarPago(datosPagoMod);
+        String EntiMod =  instance.consultarPago(result);
+        String PagoArray[] = EntiMod.split(",");
+        String PagoArray2[] = PagoArray[1].split(":");
+        assertEquals("9999.0", PagoArray2[1]);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
+
 
     /**
      * Test of getPruebaDataBase method, of class Modulo5Client.
      */
+    /*
     @Test
     public void testGetPruebaDataBase() {
         System.out.println("getPruebaDataBase");
@@ -99,39 +116,53 @@ public class Modulo5ClientTest {
     /**
      * Test of registrarPago method, of class Modulo5Client.
      */
+    
     @Test
-    public void testRegistrarPago() {
-        System.out.println("registrarPago");
-        String datosPago = "";
+    public void testRegistrarPagoExito() {
+       
+        String datosPago ="{\"pg_monto\":2.0,\"pg_tipoTransaccion\":\"hola\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+        datosPago = URLEncoder.encode(datosPago);
+        
         Modulo5Client instance = new Modulo5Client();
-        String expResult = "";
+        
         String result = instance.registrarPago(datosPago);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println(datosPago);
+        String resulta = instance.consultarPago(result);
+        String PagoArray[] = resulta.split(",");
+        String Pago1Array[] = PagoArray[0].split(":");
+        assertEquals(result, Pago1Array[1]);
+        
     }
 
-    /**
+   /**
      * Test of consultarPago method, of class Modulo5Client.
      */
+    
     @Test
+   
     public void testConsultarPago() {
-        System.out.println("consultarPago");
-        String datosPago = "";
+       
+        String datosPago ="{\"pg_monto\":4.0,\"pg_tipoTransaccion\":\"hola\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+        datosPago = URLEncoder.encode(datosPago);
+        
         Modulo5Client instance = new Modulo5Client();
-        String expResult = "";
-        String result = instance.consultarPago(datosPago);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+        String result = instance.registrarPago(datosPago);
+        String resulta = instance.consultarPago(result);
+        String PagoArray[] = resulta.split(",");
+        String Pago1Array[] = PagoArray[0].split(":");
+        assertEquals(Pago1Array[1],result);
+        
+    
+}
+}
+    
     /**
      * Test of visualizarPago method, of class Modulo5Client.
      */
+    /*
     @Test
     public void testVisualizarPago() {
-        System.out.println("visualizarPago");
+        
         String datosPago = "";
         Modulo5Client instance = new Modulo5Client();
         String expResult = "";
@@ -144,6 +175,7 @@ public class Modulo5ClientTest {
     /**
      * Test of close method, of class Modulo5Client.
      */
+    /*
     @Test
     public void testClose() {
         System.out.println("close");
@@ -154,3 +186,4 @@ public class Modulo5ClientTest {
     }
     
 }
+*/

@@ -256,6 +256,7 @@ public class Modulo5sResource {
         boolean validador  =validadorEntidad(objeto);
         if( validador ){
             
+
                 ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();                
 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
@@ -263,6 +264,7 @@ public class Modulo5sResource {
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
                     
+
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
@@ -273,9 +275,11 @@ public class Modulo5sResource {
                     list.add( pagoJsonObject.toString());
                     
                 }
+
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
+
         }
         
         return respuesta;
@@ -305,7 +309,8 @@ public class Modulo5sResource {
                 String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
                 JsonReader reader = Json.createReader(new StringReader(decodifico));
                 JsonObject pagoJSON = reader.readObject();
-                reader.close();  
+                reader.close(); 
+                
                 ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ; 
                 
             }
@@ -345,15 +350,17 @@ public class Modulo5sResource {
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos)  {
         
+
          String respuesta = "";
          
         try {
+            
             Entidad e = entidadAgregarPago(datosPagos);
             Comando c = FabricaComando.instanciarComandoAgregarPago(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            respuesta = obtenerRespuestaAgregar(objectResponse);
-            
+           respuesta = obtenerRespuestaAgregar(objectResponse);
+           
         }  catch (AgregarPagoException | DataReaderException ex) {
             respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
@@ -383,7 +390,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                      
+
         String respuesta ="";
         try { 
                          
@@ -424,7 +431,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
-        
+
         String respuesta ="";
         try{
             if( validadorInteger(idPago) ){
@@ -442,8 +449,7 @@ public class Modulo5sResource {
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
         }
-        
-        
+
         return respuesta;
     }
     
@@ -463,7 +469,7 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
-            System.out.println("modificarPago");
+           
         String respuesta = "";       
 
         try {
@@ -483,7 +489,7 @@ public class Modulo5sResource {
             respuesta = Registro.RegistroError.error_default;
         }
         
-        System.out.println(respuesta);
+        
        return respuesta;
     }
     

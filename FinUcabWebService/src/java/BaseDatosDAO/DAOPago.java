@@ -44,7 +44,7 @@ public class DAOPago extends DAO implements IDAOPago{
         Pago pago = (Pago) e;
         CallableStatement pag;
         int idPago = 0;
-        
+         
         try {                
             
             Connection conn = Conexion.conectarADb();
@@ -76,6 +76,16 @@ public class DAOPago extends DAO implements IDAOPago{
     }
     
     
+    private boolean containString(String[] cases, String text){
+        
+        for (String aCase : cases) {
+            if (aCase.equals(text))
+                return true;
+        }
+        
+        return false;
+    }
+    
 
     @Override
     public Entidad modificar(Entidad e) throws ModificarPagoException {
@@ -83,8 +93,16 @@ public class DAOPago extends DAO implements IDAOPago{
         Pago pago = (Pago) e;
         CallableStatement cstmt;
         
+        String[] tipos = new String[2];
+        tipos[0] = "ingreso";
+        tipos[1] = "egreso";
+        
+        if (!containString(tipos, pago.getTipo()))
+            throw FabricaExcepcion.instanciarModificarPagoException(102);
+        
         try {
             
+           
             Connection conn = Conexion.conectarADb();
             
             System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
@@ -101,8 +119,6 @@ public class DAOPago extends DAO implements IDAOPago{
             
             System.out.println("DAO");
         } catch (SQLException ex) {
-            System.out.println(ex.getErrorCode()+": "+ex.getMessage());
-            System.out.println(ex.getErrorCode()+": "+ex.getSQLState());
             throw FabricaExcepcion.instanciarModificarPagoException(998);
             
         }

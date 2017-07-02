@@ -31,7 +31,7 @@ END;
 $function$;
 
 
-CREATE OR REPLACE FUNCTION ModificarPago(idpago integer, monto float,
+CREATE OR REPLACE FUNCTION ModificarPago(pag integer, monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -47,7 +47,7 @@ UPDATE PAGO SET
 					pg_descripcion=descripcion , 
 					pg_tipotransaccion=transaccion , 
 					categoriaca_id= categoria
-				    where pg_id = idpago;
+				    where pg_id = pag;
     if found then
 	result := 1;
 	else result := 0;
