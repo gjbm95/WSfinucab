@@ -56,6 +56,7 @@ public class Modulo4ClientTest {
         String CategoriaArrayAux[] = CategoriaArray[0].split(":");
 
             assertEquals(CategoriaArrayAux[1],result );
+            assertNotNull(resulta);
  
     
     }
