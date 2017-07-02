@@ -23,7 +23,6 @@ public class ComandoAgregarCuenta extends Comando {
 
     private Cuenta_Bancaria cuenta ;
     
-    
     public ComandoAgregarCuenta(Cuenta_Bancaria cuenta) {
         this.cuenta  = cuenta;
     }

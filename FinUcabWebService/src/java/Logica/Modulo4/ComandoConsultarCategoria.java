@@ -29,7 +29,7 @@ public class ComandoConsultarCategoria extends Comando{
      
         IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
         this.response = dao.consultar(idcategoria);
-
+        System.out.println("responsecosnsultar"+this.response);
         
     }
     

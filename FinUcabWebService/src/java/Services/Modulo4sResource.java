@@ -127,8 +127,9 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
+            System.out.println(objectResponse);
             respuesta = obtenerRespuestaAgregar(objectResponse);
-            
+            System.out.println(respuesta);
         } catch (Exception ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
             
@@ -232,7 +233,7 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            respuesta = obtenerRespuestaModificar(objectResponse);
+            //respuesta = obtenerRespuestaModificar(objectResponse);
            } catch (Exception e) {
 
             System.out.println(e.getMessage());
@@ -265,7 +266,7 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoConsultarCategoria(datosCategoria);
             c.ejecutar();
             Entidad objectResponse = c.getResponse(); 
-            respuesta =obtenerRespuestaConsultar(objectResponse);
+            respuesta = obtenerRespuestaConsultar(objectResponse);
             }
             else{
             
@@ -295,7 +296,7 @@ public class Modulo4sResource {
                 
                 for (Entidad enti : lista) {
                     Categoria categoria = (Categoria) enti;
-                    categoriaBuilder.add("ca_id",categoria.getIdcategoria());
+                    categoriaBuilder.add("ca_id",categoria.getId());
                     categoriaBuilder.add("ca_nombre",categoria.getNombre());
                     categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
                     categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());
@@ -389,13 +390,13 @@ public class Modulo4sResource {
     private String verCategoria(Entidad Objeto)throws DataReaderException{
         
          String respuesta ="";
-         boolean validador  =validadorEntidad(Objeto);
+         boolean validador  = validadorEntidad(Objeto);
           try{
                 if( validador ){
                 JsonObjectBuilder categoriaBuilder = Json.createObjectBuilder();
                 
                  Categoria categoria = (Categoria) Objeto;                  
-                categoriaBuilder.add("ca_id",categoria.getIdcategoria());
+                categoriaBuilder.add("ca_id",categoria.getId());
                 categoriaBuilder.add("ca_nombre",categoria.getNombre());
                 categoriaBuilder.add("ca_descripcion",categoria.getDescripcion());
                 categoriaBuilder.add("ca_eshabilitado",categoria.isEstaHabilitado());

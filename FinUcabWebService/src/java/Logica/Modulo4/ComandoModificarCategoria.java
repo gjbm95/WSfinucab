@@ -7,6 +7,7 @@ package Logica.Modulo4;
 
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
+import BaseDatosDAO.Interfaces.IDAOCategoria;
 import Dominio.Entidad;
 import Exceptions.FinUCABException;
 import Logica.Comando;
@@ -24,15 +25,8 @@ public class ComandoModificarCategoria extends Comando{
 
     @Override
     public void ejecutar() throws FinUCABException {
-        DAO dao = FabricaDAO.instanciasDaoCategoria();
-        Entidad respuesta = dao.modificar(categoria);
-        /*if (respuesta != null){
-            return respuesta;
-        }
-        else {
-            return "Error";
-        }
-           */ 
+        IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+        this.response = dao.modificar(categoria);
 
     }
     
