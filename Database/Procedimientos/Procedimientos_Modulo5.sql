@@ -16,14 +16,13 @@ AS $function$
 
 DECLARE
  result integer;
- foo integer;
-
+ 
 BEGIN
   INSERT INTO Pago (pg_monto , pg_fecha , pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
-      (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria) returning pg_id into result;
+      (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria);
 
-     if found then
-  foo := 1;
+    if found then
+  result :=(Select pg_id from Pago where pg_descripcion = descripcion and pg_monto = monto and categoriaca_id = categoria  );
   else result := 0;
   end if;
   RETURN result;
