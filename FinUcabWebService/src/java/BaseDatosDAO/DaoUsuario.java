@@ -81,8 +81,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             } else {
                 st.close();
                 respuesta = 0;//No se agrega el usuario
-                throw FabricaExcepcion.
-                        instanciarRegistrarIncorrectoException(200);
+          
             }
 
         } catch (SQLException ex) {
@@ -125,8 +124,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{ 
                    st.close();
                    respuesta =  6; //No se modifica la clave
-                  // throw FabricaExcepcion.
-                          // instanciarActualizarClaveException(201);
+                   throw FabricaExcepcion.
+                           instanciarActualizarClaveException(201);
                 }
             }
          
@@ -246,10 +245,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             throw FabricaExcepcion.
                     instanciarIniciarSesionException(ex.getErrorCode(),
                             ex.getMessage());  
-        } catch (Exception e) {
-            respuesta= "7";
-            throw FabricaExcepcion.instanciarIniciarSesionException(202);
-        }
+        } 
         
     return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
@@ -298,7 +294,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
-                //throw FabricaExcepcion.instanciarRecuperarClaveException(203);
+               throw FabricaExcepcion.instanciarRecuperarClaveException(202);
                 
             }
             

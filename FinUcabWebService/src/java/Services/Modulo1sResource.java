@@ -417,8 +417,8 @@ public class Modulo1sResource {
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
         String resultado = "";
         try {
-            Comando crc = FabricaComando.
-                    instanciarComandoRecuperarClave(usuario);
+            Comando crc = FabricaComando
+                    .instanciarComandoRecuperarClave(usuario);
             crc.ejecutar();
             Entidad respuesta = crc.getResponse();
             resultado = obtenerRespuestaRecuperarClave(respuesta);
@@ -456,7 +456,7 @@ public class Modulo1sResource {
         if(validadorEntidad(enti)) {
             respuesta = ((SimpleResponse) enti).getDescripcion();
         }else {
-            respuesta = "Error Entidad nula o Vacia";
+            respuesta = "ERROR";
         }
         return respuesta;
     }

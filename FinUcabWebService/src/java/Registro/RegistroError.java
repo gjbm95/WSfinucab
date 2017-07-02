@@ -28,7 +28,8 @@ public class RegistroError {
     private static final String error_agregar_pago = "Ocurrio un error al agregar su nuevo pago";
     private static final String error_tipo_nopermitido = "El tipo proporcionado no esta permitida (debe ser o ingreso o egreso) ";
 
-        private static final String error_actualizar_clave = "Ha ocurrido un error actualizando la clave";
+    private static final String error_actualizar_clave = "Ha ocurrido un error actualizando la clave";
+    private static final String error_recuperar_clave = "Ha ocurrido un error recuperando la clave";
 
     
     private static final String error_base_datos = "Ocurrio un error interno en la base de datos";
@@ -50,6 +51,7 @@ public class RegistroError {
         errorsLocal.put(102, error_tipo_nopermitido);
         
         errorsLocal.put(201, error_actualizar_clave);
+        errorsLocal.put(202, error_recuperar_clave);
         
         errorsLocal.put(998, error_base_datos);        
         errorsLocal.put(999, error_decode);
