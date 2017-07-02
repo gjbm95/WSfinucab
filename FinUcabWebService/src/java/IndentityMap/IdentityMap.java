@@ -27,8 +27,15 @@ public class IdentityMap {
         return _instancia; 
     }
     
+    public static IdentityMap getInstance() {
+        return SingletonIdentityMapHolder.INSTANCE;
+    }
     
-    public IdentityMap(){
+    private static class SingletonIdentityMapHolder {
+        private static final IdentityMap INSTANCE = new IdentityMap();
+    }
+    
+    private IdentityMap(){
         
         this._cache = new HashMap<>();
     }
