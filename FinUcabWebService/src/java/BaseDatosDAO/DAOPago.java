@@ -56,7 +56,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             
-            if (rs.next() || rs.getInt(1) == 0){
+            if (rs.next() ){
                 idPago = rs.getInt(1); 
             }else{
                 throw FabricaExcepcion.instanciarAgregarPagoException(100);
