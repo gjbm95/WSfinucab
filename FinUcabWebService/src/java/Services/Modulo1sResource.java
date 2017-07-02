@@ -185,10 +185,10 @@ public class Modulo1sResource {
             
         } catch (DataReaderException ex) {
             resultado = "0";
-            log.error("Error registrando usuario");
+            log.error("Error registrando usuario" +ex.getOwnMessage());
         } catch (RegistrarIncorrectoException ex) {
             resultado = "0";
-            log.error("Error registrando usuario");
+            log.error("Error registrando usuario" + ex.getOwnMessage());
         } catch (Exception ex) {
             resultado = "0";
             log.error("Error registrando usuario");
@@ -226,10 +226,7 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_pregunta"),
                 usuarioJSON.getString("u_respuesta"),null,null);
             }
-        } catch (DataReaderException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).
-                        log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
+        }  catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Modulo1sResource.class.getName()).
                         log(Level.SEVERE, null, ex);
         }
@@ -280,11 +277,11 @@ public class Modulo1sResource {
             log.info("Usuario Verificado");
         } catch (VerificarUsuarioException ex) {
             resultado = "3";
-            log.error("Error verificando usuario" + ex.getMessage());
+            log.error("Error verificando usuario" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "3";
-            log.error("Error verificando usuario" + ex.getMessage());
+            log.error("Error verificando usuario");
         }
                
         return resultado;
@@ -339,15 +336,15 @@ public class Modulo1sResource {
             log.info("Se inicio sesion correctamente");
         } catch (DataReaderException ex) {
             resultado = "7";
-            log.error("Error iniciando sesion" + ex.getMessage());
+            log.error("Error iniciando sesion" + ex.getOwnMessage());
         }
         catch (IniciarSesionException ex) {
             resultado = "7";
-            log.error("Error iniciando sesion" + ex.getMessage());
+            log.error("Error iniciando sesion" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "7";
-            log.error("Error iniciando sesion" + ex.getMessage());
+            log.error("Error iniciando sesion");
         }
         return resultado;
         
@@ -424,14 +421,14 @@ public class Modulo1sResource {
             log.info("Clave Recuperada con Exito");
         }  catch (DataReaderException ex) {
             resultado = "ERROR";
-            log.error("Error Recuperar Clave" + ex.getMessage());
+            log.error("Error Recuperar Clave" + ex.getOwnMessage());
         }catch (RecuperarClaveException ex) {
             resultado = "ERROR";
-            log.error("Error Recuperar Clave" + ex.getMessage());
+            log.error("Error Recuperar Clave" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "ERROR";
-            log.error("Error Recuperar Clave" + ex.getMessage());
+            log.error("Error Recuperar Clave");
         }
         
         
@@ -486,14 +483,14 @@ public class Modulo1sResource {
             log.info("Se actualizo la clave con exito");
         } catch (DataReaderException ex) {
             resultado = "6";
-            log.error("Error actualizando la clave" + ex.getMessage());
+            log.error("Error actualizando la clave" + ex.getOwnMessage());
         }catch (ActualizarClaveException ex) {
             resultado = "6";
-            log.error("Error actualizando la clave" + ex.getMessage());
+            log.error("Error actualizando la clave" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "6";
-            log.error("Error actualizando la clave" + ex.getMessage());
+            log.error("Error actualizando la clave");
         }
         return resultado;
     }
