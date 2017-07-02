@@ -2,10 +2,16 @@ package Services;
 
 import BaseDatosDAO.Conexion;
 import Dominio.*;
+import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
+import IndentityMap.IdentityMap;
 import Logica.Comando;
 import Logica.FabricaComando;
-import Logica.Modulo2.Excepciones.ConversionFallidaException;
+import Logica.Modulo2.AgregarFallidoException;
+import Logica.Modulo2.ConversionFallidaException;
+import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
+import Logica.Modulo2.ModificarFallidoException;
 import java.io.StringReader;
 import java.net.URLDecoder;
 import java.sql.CallableStatement;
@@ -67,7 +73,8 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de Actualizar datos de usuario recibida");
+            Level.INFO, "Solicitud de Actualizar datos de "
+                    + "usuario recibida de: " + datosCuenta);
         try {
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
             Usuario usuario = FabricaEntidad.obtenerUsuario();
@@ -77,6 +84,10 @@ public class Modulo2sResource {
             command.ejecutar(); 
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ModificarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -110,16 +121,24 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = null;
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de agregar cuenta bancaria recibida");
+            Level.INFO, "Solicitud de agregar cuenta"
+                    + " bancaria recibida de: " + datosCuenta);
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
             Cuenta_Bancaria cuenta = jsonToCuenta (cuentaJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaNueva", cuenta);
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
             command.ejecutar();
             cuenta = (Cuenta_Bancaria) command.getResponse();
             resultado = Integer.toString(cuenta.getId());
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("CuentaNueva");
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (AgregarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -157,18 +176,26 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(datosCuenta);
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de Actualizar datos de Cuenta Bancaria recibida");
+            Level.INFO, "Solicitud de Actualizar datos de "
+                    + "Cuenta Bancaria recibida de: " + datosCuenta);
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
             Cuenta_Bancaria cuenta = jsonToCuentaM (cuentaJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaModificada", cuenta);
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("CuentaModificada");
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
         }catch (NullPointerException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ModificarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -202,7 +229,8 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(idCuenta);
         int resultado = 1;
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de eliminar cuenta bancaria recibida");
+            Level.INFO, "Solicitud de eliminar cuenta bancaria"
+                    + " recibida de id: " +idCuenta);
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoEliminarCuenta(id);
@@ -210,6 +238,10 @@ public class Modulo2sResource {
             resultado = command.getResponse().getId();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (EliminarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
@@ -240,16 +272,24 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(datosTDC);
         int resultado = 0;
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de agregar tarjeta de credito recibida");
+            Level.INFO, "Solicitud de agregar tarjeta de "
+                    + "credito recibida de: " + datosTDC);
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);   
             Tarjeta_Credito tdc = jsonToTarjeta (tdcJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaNueva", tdc);
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
             command.ejecutar();
             tdc = (Tarjeta_Credito) command.getResponse();
             resultado = tdc.getId();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("TarjetaNueva");
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (AgregarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
@@ -287,14 +327,22 @@ public class Modulo2sResource {
         String decodifico = datosTDC;
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de Actualizar datos de tarjeta de credito recibida");
+            Level.INFO, "Solicitud de Actualizar datos de tarjeta de "
+                    + "credito recibida de: "+datosTDC);
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
             Tarjeta_Credito tdc = jsonToTarjetaM (tdcJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaModificada", tdc);
             Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
             command.ejecutar();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("TarjetaModificada");
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = "0";
+        }catch (ModificarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = "0";
@@ -326,7 +374,8 @@ public class Modulo2sResource {
         int resultado = 0;
         String decodifico = idtdc;
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de eliminar datos de tarjeta de credito recibida");
+            Level.INFO, "Solicitud de eliminar datos de tarjeta de credito "
+                    + "recibida de: " + idtdc);
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoEliminarTDC(id);
@@ -334,6 +383,10 @@ public class Modulo2sResource {
             resultado = command.getResponse().getId();
             Conexion.conectarADb().close();
         }catch (SQLException ex) {
+            Logger.getLogger(Modulo2sResource.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            resultado = 0;
+        }catch (EliminarFallidoException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
             resultado = 0;
@@ -361,7 +414,8 @@ public class Modulo2sResource {
         String decodifico = idUsuario;
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de consultar tarjetas de credito recibida");
+            Level.INFO, "Solicitud de consultar tarjetas de credito recibida de:"
+                    + " " + idUsuario);
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoConsultarTDC(id);
@@ -399,7 +453,8 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de consultar cuentas bancarias recibida");
+            Level.INFO, "Solicitud de consultar cuentas bancarias recibida de:"
+                    + " " + idUsuario);
         try{
         int id = Integer.parseInt(decodifico);
         Comando command = FabricaComando.instanciarComandoConsultarCuentas(id);
@@ -439,7 +494,7 @@ public class Modulo2sResource {
         String decodifico = URLDecoder.decode(idUsuario);
         String resultado = "1";
         Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Solicitud de consultar estadisticas recibida");
+            Level.INFO, "Solicitud de consultar estadisticas recibida de: " + idUsuario);
         try {
             int id = Integer.parseInt(decodifico);
             Comando command = FabricaComando.instanciarComandoConsultarEstadisticas(id);
@@ -469,10 +524,12 @@ public class Modulo2sResource {
      * @param decodifico String con estructura json
      * @return JsonObject del string
      */
-    private JsonObject stringToJSON(String decodifico) throws ConversionFallidaException{
+    private JsonObject stringToJSON(String decodifico) 
+            throws ConversionFallidaException{
         if (decodifico.length()==0){
            ConversionFallidaException ex = 
-                   new ConversionFallidaException("No hay datos entrantes");       
+                   FabricaExcepcion.instanciarConversionFallidaException
+        (1,"No hay datos entrantes");       
                 throw ex;
         } 
         JsonReader reader = Json.createReader(new StringReader(decodifico));

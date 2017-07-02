@@ -42,8 +42,9 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * Modulo 3 - Modulo de Presupuestos Desarrolladores:*Mariángel Pérez / Oswaldo
- * López / Aquiles Pulido Descripción de la clase: Clase encargada de Agregar,
+ * Modulo 3 - Modulo de Presupuestos Desarrolladores:*William Lopez
+ * / Christian Leon / Eduardo Lorenzo 
+ * Descripción de la clase: Clase encargada de Agregar,
  * modificar, eliminar y visualizar los presupuestos ademas de obtener la lista
  * de categorias
  */
@@ -178,10 +179,10 @@ public class Modulo3sResource {
         
         String respuesta ="0";
         try {
-           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
-           command.ejecutar();
-           Entidad objectResponse = command.getResponse();
-           respuesta = String.valueOf(objectResponse.getId());
+//           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
+//           command.ejecutar();
+//           Entidad objectResponse = command.getResponse();
+//           respuesta = String.valueOf(objectResponse.getId());
         } catch (Exception e) {
             log.error("Error eliminando presupuesto con id: " + idPresupuesto);
             e.printStackTrace();
@@ -323,11 +324,11 @@ public class Modulo3sResource {
         log.debug("Verificando nombre "+nombrePresupuesto);
         String respuesta = "0";
         try {
-            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
-            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
-            command.ejecutar();
-            Entidad objectResponse = command.getResponse();
-            respuesta = String.valueOf(objectResponse.getId());
+//            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
+//            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
+//            command.ejecutar();
+//            Entidad objectResponse = command.getResponse();
+//            respuesta = String.valueOf(objectResponse.getId());
 
         } catch (Exception e) {
             log.error("Error verificando nombre presupuesto: " + nombrePresupuesto);

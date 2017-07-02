@@ -7,7 +7,12 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
-import Logica.Modulo2.Excepciones.ModificarFallidoException;
+import Exceptions.FabricaExcepcion;
+import IndentityMap.IdentityMap;
+import Logica.Modulo2.AgregarFallidoException;
+import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
+import Logica.Modulo2.ModificarFallidoException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,8 +47,9 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      * @return Objeto de tipo Cuenta_Bancaria (Entidad sin castear)
      */
     @Override
-    public Entidad agregar(Entidad e) {
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+    public Entidad agregar(Entidad e) throws AgregarFallidoException {
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj =(Cuenta_Bancaria) cache.getEntidad("CuentaNueva");      
         CallableStatement cstmt;
         int idCuenta = 0;
         try {
@@ -59,13 +65,16 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             idCuenta = rs.getInt(1);
             obj.setId(idCuenta);
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Agregado Cuenta Bancaria con exito");
+            Level.FINER, "Agregado Cuenta Bancaria de id: "+idCuenta);
             cstmt.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Agregado Cuenta Bancaria con exito");
+            Level.INFO, "Agregado Cuenta Bancaria de id: "+idCuenta);
         }catch (SQLException ex) {
-            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarAgregarFallidoException
+        (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -79,8 +88,9 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      * @param e Entidad Cuenta_Bancaria a ser modificada
      * @return Objeto de tipo Cuenta_Bancaria (Entidad sin castear)
      */
-    public Entidad modificar(Entidad e){
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+    public Entidad modificar(Entidad e) throws ModificarFallidoException{
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj = (Cuenta_Bancaria)cache.getEntidad("CuentaModificada");
         CallableStatement cstmt;
         try {
             cstmt = conn.prepareCall("{ call modificarCuentaBancaria(?,?,?,?,?)}");
@@ -90,15 +100,19 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             cstmt.setFloat(4, obj.getSaldoActual());
             cstmt.setInt(5, obj.getId());
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Modificado Cuenta Bancaria con exito");
+            Level.FINER, "Modificado Cuenta Bancaria de id: "+obj.getId());
             cstmt.execute();
             cstmt.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Modificado Cuenta Bancaria con exito");
+            Level.INFO, "Modificado Cuenta Bancaria de id:"+obj.getId());
         } catch (SQLException ex) {
-            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarModificarFallidoException
+        (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
-            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).
+                    log(Level.SEVERE, null, ex);
         }
         return obj;
     }
@@ -110,10 +124,11 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
     /**
      * Metodo encargado de eliminar Cuentas Bancarias en la base de datos 
      * 
+     * @param id
      * @param e Id del usuario titular de la cuenta a eliminar
      * @return Id de la cuenta eliminada
      */
-    public int eliminar(int id) {
+    public int eliminar(int id) throws EliminarFallidoException{
         CallableStatement cstmt;
         int idCuenta = 0;
         try {
@@ -124,12 +139,15 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             rs.next();
             idCuenta = rs.getInt(1);
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Eliminado Cuenta Bancaria con exito");
+            Level.FINER, "Eliminado Cuenta Bancaria de id: "+id);
             cstmt.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Eliminado Cuenta Bancaria con exito");
+            Level.INFO, "Eliminado Cuenta Bancaria de id: "+id);
         } catch (SQLException ex) {
-            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DaoCuenta_Bancaria.class.getName()).
+                    log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarEliminarFallidoException
+        (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -166,12 +184,12 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             JsonArray array = arrayBuilder.build();
             respuesta = array.toString();
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Lista de Cuentas Bancarias obtenidas con exito");
+            Level.FINER, "Lista de Cuentas Bancarias obtenidas del usuario de id: "+id);
             cstm.close();
             st.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Lista de Cuentas Bancarias obtenidas con exito");
+            Level.INFO, "Lista de Cuentas Bancarias obtenidas del usuario de id: "+id);
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -206,12 +224,12 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
                 respuesta = "";
             }
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Saldo obtenido con exito");
+            Level.FINER, "Saldo obtenido del usuario de id: "+id);
             cstm.close();
             st.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Saldo obtenido con exito");
+            Level.INFO, "Saldo obtenido del usuario de id: "+id);
         } catch (SQLException ex) {
             Logger.getLogger(DaoCuenta_Bancaria.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";

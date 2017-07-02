@@ -6,6 +6,11 @@ import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Tarjeta_Credito;
+import Exceptions.FabricaExcepcion;
+import Logica.Modulo2.AgregarFallidoException;
+import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
+import Logica.Modulo2.ModificarFallidoException;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -45,8 +50,9 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
      */
     @Override
-    public Entidad agregar(Entidad e) {
-        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+    public Entidad agregar(Entidad e)throws AgregarFallidoException {
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();   
+        Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaNueva");    
         CallableStatement cstmt;
         int idtarjeta = 0;
         try {
@@ -68,13 +74,15 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             idtarjeta = rs.getInt(1);
             obj.setId(idtarjeta);
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Agregado Tarjeta de credito con exito");
+            Level.FINER, "Agregado Tarjeta de credito de id: " + idtarjeta);
             cstmt.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Agregado Tarjeta de credito con exito");
+            Level.INFO, "Agregado Tarjeta de credito de id: "+ idtarjeta);
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarAgregarFallidoException
+             (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -89,8 +97,9 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
      */
     @Override
-    public Entidad modificar(Entidad e) {
-        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+    public Entidad modificar(Entidad e) throws ModificarFallidoException {
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();   
+        Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaModificada");   
         CallableStatement cstmt;
         try {
             cstmt = conn.prepareCall("{ call modificarTarjetaCredito(?,?,?,?,?)}");
@@ -107,12 +116,14 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             cstmt.setInt(5, obj.getId());
             cstmt.execute();
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER,"Modificado Tarjeta de credito con exito");
+            Level.FINER,"Modificado Tarjeta de credito de id: "+ obj.getId());
             cstmt.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Modificado Tarjeta de credito con exito");
+            Level.INFO, "Modificado Tarjeta de credito de id: "+ obj.getId());
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarModificarFallidoException
+        (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,7 +145,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      * @param e Id de las tarjetas de credito a ser almacenadas. 
      * @return Objeto de tipo Tarjeta_Credito (Entidad sin castear)
      */
-    public int eliminar(int id) {
+    public int eliminar(int id) throws EliminarFallidoException {
         CallableStatement cstmt;
         int idtarjeta = 0;
         try {
@@ -145,13 +156,15 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             rs.next();
             idtarjeta = rs.getInt(1);
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Eliminado Tarjeta de credito con exito");
+            Level.FINER, "Eliminado Tarjeta de credito de id: "+ idtarjeta);
             cstmt.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Eliminado Tarjeta de credito con exito");
+            Level.INFO, "Eliminado Tarjeta de credito de id: " + idtarjeta);
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            throw FabricaExcepcion.instanciarEliminarFallidoException
+           (ex.getErrorCode(),ex.getMessage() );
         }catch (Exception ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -188,12 +201,12 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
             JsonArray array = arrayBuilder.build();
             respuesta = array.toString();
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Obtenido lista de Tarjetas de credito con exito");
+            Level.FINER, "Obtenido lista de Tarjetas de credito del usuario de id: "+id);
             cstm.close();   
             st.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Obtenido lista de Tarjetas de credito con exito");
+            Level.INFO, "Obtenido lista de Tarjetas de credito del usuario de id: "+id);
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "0";
@@ -226,12 +239,12 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
                 respuesta = "";
             }
             Logger.getLogger(getClass().getName()).log(
-            Level.FINER, "Obtenido saldo de deuda de Tarjeta de credito con exito");
+            Level.FINER, "Obtenido saldo de deuda de Tarjeta de credito del usuario de id: "+id);
             cstm.close();
             st.close();
             rs.close();
             Logger.getLogger(getClass().getName()).log(
-            Level.INFO, "Obtenido saldo de deuda de Tarjeta de credito con exito");
+            Level.INFO, "Obtenido saldo de deuda de Tarjeta de credito del usuario de id: "+id);
         } catch (SQLException ex) {
             Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
             respuesta = "e";

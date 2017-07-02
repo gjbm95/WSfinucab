@@ -32,10 +32,11 @@ public class ComandoEliminarTDC extends Comando {
      * Metodo encargado de la ejecucion de eliminar tarjetas de credito.
      */
     @Override
-    public void ejecutar() {
-
-        DaoTarjeta_Credito daoTarjeta_credito = FabricaDAO.instanciasDaoTarjeta_Credito();
-        super.response = FabricaEntidad.obtenerSimpleResponse(daoTarjeta_credito.eliminar(tdc));
+    public void ejecutar() throws EliminarFallidoException {
+        DaoTarjeta_Credito daoTarjeta_credito = 
+                FabricaDAO.instanciasDaoTarjeta_Credito();
+        super.response = 
+        FabricaEntidad.obtenerSimpleResponse(daoTarjeta_credito.eliminar(tdc));
     }
     
     

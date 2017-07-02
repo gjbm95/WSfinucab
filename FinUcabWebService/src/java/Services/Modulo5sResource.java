@@ -137,12 +137,21 @@ public class Modulo5sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor) throws DataReaderException{
+    private boolean validadorString(String valor, String[] check) throws DataReaderException{
         
         if (valor == null) {
             throw FabricaExcepcion.instanciarDataReaderException(3);
         }else if(valor.equals("")) {
             throw FabricaExcepcion.instanciarDataReaderException(4);
+        }else if(check != null ) {
+            
+            for (String strCheck : check) {
+                if(valor.equals(strCheck)){
+                    return true;
+                }
+            }
+            
+            throw FabricaExcepcion.instanciarDataReaderException(102);
         }else{
             return true;
         }
@@ -193,7 +202,7 @@ public class Modulo5sResource {
                  
             try{       
                 
-                boolean validador  =validadorString(datosPagos);
+                boolean validador  =validadorString(datosPagos,null);
                 if( validador ){
          
                     String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
@@ -204,7 +213,7 @@ public class Modulo5sResource {
 
                 }
             }catch (UnsupportedEncodingException ex1) {
-                throw FabricaExcepcion.instanciarDataReaderException(999,ex1.getMessage());
+                throw FabricaExcepcion.instanciarDataReaderException(999);
             }
         return ex;
     }
@@ -256,17 +265,15 @@ public class Modulo5sResource {
         boolean validador  =validadorEntidad(objeto);
         if( validador ){
             
-               
+
                 ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();                
-               
 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
-               
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
                     
-                    
+
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
@@ -277,11 +284,11 @@ public class Modulo5sResource {
                     list.add( pagoJsonObject.toString());
                     
                 }
-                                              
+
+                
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-                
-                
+
         }
         
         return respuesta;
@@ -298,8 +305,12 @@ public class Modulo5sResource {
 
         
         Entidad ex = null;
+        String[] tipos = new String[2];
+        tipos[0] = "ingreso";
+        tipos[1] = "egreso";
+        
         try {  
-            boolean validador  =validadorString(datosPagos);
+            boolean validador  =validadorString(datosPagos,tipos);
                 
             if( validador ){
             
@@ -314,7 +325,7 @@ public class Modulo5sResource {
             }
       
         } catch (UnsupportedEncodingException ex1) {
-            throw FabricaExcepcion.instanciarDataReaderException(999,ex1.getMessage());
+            throw FabricaExcepcion.instanciarDataReaderException(999);
         }
 
         return ex;
@@ -348,7 +359,7 @@ public class Modulo5sResource {
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos)  {
         
-           
+
          String respuesta = "";
          
         try {
@@ -368,7 +379,6 @@ public class Modulo5sResource {
             respuesta = Registro.RegistroError.error_default;
         }
         
-       
         
         return respuesta;
     }
@@ -389,8 +399,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                      
-           
+
         String respuesta ="";
         try { 
                          
@@ -431,8 +440,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
-        
-           
+
         String respuesta ="";
         try{
             if( validadorInteger(idPago) ){
@@ -450,9 +458,7 @@ public class Modulo5sResource {
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
         }
-        
-        
-        
+
         return respuesta;
     }
     
@@ -479,8 +485,11 @@ public class Modulo5sResource {
                 Entidad ex = entidadModificarPago(datosPagos);
                 Comando c = FabricaComando.instanciarComandoModificarPago(ex);
                 c.ejecutar();
+                System.out.println("METODO WEB");
                 Entidad objectResponse = c.getResponse();
+                System.out.println("METODO WEB");
                 respuesta = obtenerRespuestaModificar(objectResponse);
+                System.out.println("METODO WEB");
                 
         }catch (ModificarPagoException | DataReaderException ex) {
             respuesta = ex.getMessage();

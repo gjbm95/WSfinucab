@@ -18,13 +18,16 @@ public class SingletonDAOPago {
     private SingletonDAOPago() {
     }
     
+    private static IDAOPago INSTANCE; 
+    
     public static IDAOPago getInstance() {
         
-        return SingletonDAOPagoHolder.INSTANCE;
+        if (INSTANCE == null){
+            INSTANCE = FabricaDAO.instanciasDAOPago();
+        }
+        
+        return SingletonDAOPago.INSTANCE;
     }
     
-    private static class SingletonDAOPagoHolder {
 
-        private static final IDAOPago INSTANCE = FabricaDAO.instanciasDAOPago();
-    }
 }

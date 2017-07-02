@@ -13,13 +13,7 @@ import java.io.Serializable;
  */
 
 public class Categoria  extends Entidad implements Serializable{
-    public int getIdcategoria() {
-        return idcategoria;
-    }
 
-    public void setIdcategoria(int idcategoria) {
-        this.idcategoria = idcategoria;
-    }
         public int getIdUsario() {
         return idusuario;
     }
@@ -60,7 +54,6 @@ public class Categoria  extends Entidad implements Serializable{
         this.esIngreso = esIngreso;
     }
 
-    private int idcategoria;
     private int idusuario;
     private String nombre;
     private String descripcion;
@@ -68,8 +61,7 @@ public class Categoria  extends Entidad implements Serializable{
     private boolean esIngreso;
 
     public Categoria(int idcategoria, String nombre, String descripcion, boolean estaHabilitado, boolean esIngreso,int idusuario) {
-        //super(idcategoria);
-        this.idcategoria=idcategoria;
+        super(idcategoria);
         this.idusuario=idusuario;
         this.nombre = nombre;
         this.descripcion = descripcion;

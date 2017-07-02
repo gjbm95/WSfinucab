@@ -5,6 +5,11 @@
  */
 package PruebasModulo1;
 
+import BaseDatosDAO.DaoUsuario;
+import Dominio.Entidad;
+import Services.Modulo1sResource;
+import java.net.URLEncoder;
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,10 +41,7 @@ public class PruebasModulo1 {
     @After
     public void tearDown() {
     }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
+    
+    
+    
 }

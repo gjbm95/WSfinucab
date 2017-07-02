@@ -5,6 +5,10 @@
  */
 package PruebasModulo4;
 
+import BaseDatosDAO.DAOCategoria;
+import BaseDatosDAO.FabricaDAO;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,7 +18,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Junior
+ * @author Jeffrey
  */
 public class PruebasModulo4 {
     
@@ -40,6 +44,13 @@ public class PruebasModulo4 {
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
-    // @Test
-    // public void hello() {}
+     @Test
+     public void TestAgregar() {
+     
+         Entidad categoria = FabricaEntidad.obtenerCategoria(1,"sueldo","suedo del mes",true,true);
+         DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
+         dao.agregar(categoria);
+         
+         
+     }
 }

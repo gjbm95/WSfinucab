@@ -28,6 +28,7 @@ public class ComandoModificarPago extends Comando{
     public void ejecutar() throws FinUCABException{
         IDAOPago dao = SingletonDAOPago.getInstance();
         this.response = dao.modificar(pago);
+                System.out.println("COOMANDO");
         
     }
     

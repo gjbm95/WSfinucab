@@ -13,7 +13,7 @@ import javax.json.JsonObject;
 /**
 *Modulo 2 - Modulo de Home
 *Desarrolladores:
-*Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
+* Garry Jr. Bruno / Erbin Rodriguez / Alejandro Negrin
 *Descripción de la clase:
 *Metodos del servicio web destinados para las funcionalidades de Home y 
 * Tarjetas de Credito y Cuentas Bancarias. 
@@ -22,7 +22,6 @@ import javax.json.JsonObject;
 public class ComandoAgregarCuenta extends Comando {
 
     private Cuenta_Bancaria cuenta ;
-    
     
     public ComandoAgregarCuenta(Cuenta_Bancaria cuenta) {
         this.cuenta  = cuenta;
@@ -33,7 +32,7 @@ public class ComandoAgregarCuenta extends Comando {
      * Metodo encargado de la ejecucion de registro de cuentas bancarias.
      */
     @Override
-    public void ejecutar() {
+    public void ejecutar() throws AgregarFallidoException {
         
         DaoCuenta_Bancaria daoCuenta = FabricaDAO.instanciasDaoCuenta_Bancaria();
         cuenta = (Cuenta_Bancaria) daoCuenta.agregar(cuenta);

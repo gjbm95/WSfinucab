@@ -67,7 +67,7 @@ public class DAOPago extends DAO implements IDAOPago{
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
         } catch (SQLException ex) {
-            throw FabricaExcepcion.instanciarAgregarPagoException(ex.getErrorCode(),ex.getMessage());                
+            throw FabricaExcepcion.instanciarAgregarPagoException(998);                
         }
         
 
@@ -87,6 +87,7 @@ public class DAOPago extends DAO implements IDAOPago{
            
             Connection conn = Conexion.conectarADb();
             
+            System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getDescripcion()+"-"+pago.getCategoria());
             cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
@@ -95,11 +96,15 @@ public class DAOPago extends DAO implements IDAOPago{
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
+            System.out.println("DAO");
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
+            System.out.println("DAO");
         } catch (SQLException ex) {
-            throw FabricaExcepcion.instanciarModificarPagoException(ex.getErrorCode(),ex.getMessage());
+            throw FabricaExcepcion.instanciarModificarPagoException(998);
         }
+        
+            System.out.println("DAO");
         return pago;
     }
          
@@ -132,7 +137,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
-                throw FabricaExcepcion.instanciarConsultarPagoException(ex.getErrorCode(),ex.getMessage());
+                throw FabricaExcepcion.instanciarConsultarPagoException(998);
             }
         }
         
@@ -170,7 +175,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
                 
             } catch (SQLException ex) {
-                throw FabricaExcepcion.instanciarListarPagosException(ex.getErrorCode(),ex.getMessage());
+                throw FabricaExcepcion.instanciarListarPagosException(998);
             }
         }
         
@@ -235,8 +240,12 @@ public class DAOPago extends DAO implements IDAOPago{
             cstm.close();
             st.close();
             rs.close();
+            Logger.getLogger(getClass().getName()).log(
+            Level.FINER, "Balance obtenido del usuario de id: "+id);
+            Logger.getLogger(getClass().getName()).log(
+            Level.INFO, "Balance obtenido del usuario de id: "+id);
         } catch (SQLException ex) {
-            Logger.getLogger(DaoTarjeta_Credito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
 
         }
         return cuentaJsonObject;
