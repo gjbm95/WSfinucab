@@ -33,7 +33,7 @@ public class FabricaDAO {
         return new DAOPago();
     }
     
-    public static DAOPresupuesto instanciarDAOPresupuesto() {
+    public static DAOPresupuesto instanciasDAOPresupuesto() {
         return new DAOPresupuesto();
     }
     

@@ -10,21 +10,19 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Dominio.SimpleResponse;
+import Exceptions.DataReaderException;
+import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
-import Logica.Modulo5.EmptyEntityException;
-import Logica.Modulo5.EmptyStringException;
 import Logica.Modulo5.ListarPagosException;
 import Logica.Modulo5.ModificarPagoException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -83,14 +81,11 @@ public class Modulo5sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaAgregar(Entidad enti){
+    private String obtenerRespuestaAgregar(Entidad enti) throws DataReaderException{
           
-        if(validadorEntidad(enti)) 
-        
+        validadorEntidad(enti);
         return String.valueOf(((SimpleResponse) enti).getId());
-        else {
-            return "Error Entidad nula o Vacia";
-        }
+        
     }
     
     
@@ -100,14 +95,11 @@ public class Modulo5sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaConsultar(Entidad enti) throws EmptyEntityException{
+    private String obtenerRespuestaConsultar(Entidad enti) throws DataReaderException{
          
-        if(validadorEntidad(enti)) 
-        
+        validadorEntidad(enti);
         return stringVerPago(enti);
-        else {
-            return "Error Entidad nula o Vacia";
-        }
+        
     }
      
      
@@ -117,15 +109,11 @@ public class Modulo5sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaLista(Entidad enti) throws EmptyStringException{
+    private String obtenerRespuestaLista(Entidad enti) throws DataReaderException{
          
-        if(validadorEntidad(enti)) {
-        
+        validadorEntidad(enti);
         return stringListaPago(enti);
-        }
-        else {
-            return "Error Entidad nula o Vacia";
-        }
+        
     }
     
     
@@ -135,14 +123,11 @@ public class Modulo5sResource {
      * @param enti
      * @return 
      */
-    private String obtenerRespuestaModificar(Entidad enti){
+    private String obtenerRespuestaModificar(Entidad enti) throws DataReaderException{
           
-        if(validadorEntidad(enti)) 
-        
+        validadorEntidad(enti);
         return String.valueOf(((SimpleResponse) enti).getId());
-        else {
-            return "Error Entidad nula o Vacia";
-        }
+        
     }
     
     
@@ -152,12 +137,12 @@ public class Modulo5sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor) throws EmptyStringException, NullPointerException{
+    private boolean validadorString(String valor) throws DataReaderException{
         
         if (valor == null) {
-            throw new NullPointerException();
+            throw FabricaExcepcion.instanciarDataReaderException(3);
         }else if(valor.equals("")) {
-            throw new EmptyStringException();
+            throw FabricaExcepcion.instanciarDataReaderException(4);
         }else{
             return true;
         }
@@ -171,9 +156,12 @@ public class Modulo5sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorInteger(int valor){
+    private boolean validadorInteger(int valor) throws DataReaderException{
         
-        return (valor!=0);
+        if (valor == 0) {
+            throw FabricaExcepcion.instanciarDataReaderException(6);
+        }
+        return true;
     }
     
    
@@ -183,9 +171,12 @@ public class Modulo5sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorEntidad(Entidad valor){
+    private boolean validadorEntidad(Entidad valor) throws DataReaderException{
         
-        return (valor!= null) && (!valor.equals(""));
+        if (valor == null)
+            throw FabricaExcepcion.instanciarDataReaderException(5);
+     
+        return true;
     }
     
     
@@ -196,7 +187,7 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-    private Entidad entidadAgregarPago (@QueryParam("datosPago") String datosPagos)    {
+    private Entidad entidadAgregarPago (@QueryParam("datosPago") String datosPagos) throws DataReaderException    {
 
         Entidad ex = null;
                  
@@ -209,20 +200,11 @@ public class Modulo5sResource {
                     JsonReader reader = Json.createReader(new StringReader(decodifico));
                     JsonObject pagoJSON = reader.readObject();           
                     reader.close();
-                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ;
 
                 }
-            
-            }catch(EmptyStringException e){
-                System.out.println(e.EmptyString());
-                
-                }catch(NullPointerException e){
-                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
-                
-            }
-                
-            catch (UnsupportedEncodingException ex1) {
-               Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1); 
+            }catch (UnsupportedEncodingException ex1) {
+                throw FabricaExcepcion.instanciarDataReaderException(999);
             }
         return ex;
     }
@@ -235,16 +217,11 @@ public class Modulo5sResource {
      * @param Objeto
      * @return String
      */
-    private String stringVerPago(Entidad Objeto) throws EmptyEntityException{
-
+    private String stringVerPago(Entidad Objeto) throws DataReaderException{
        
-         String respuesta ="";
-         
-         
-         
+        String respuesta ="";
         boolean validador  =validadorEntidad(Objeto);
-
-           try{     
+     
                 if( validador ){
               
                     JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
@@ -259,13 +236,6 @@ public class Modulo5sResource {
                     respuesta = pagoJsonObject.toString();
 
                 }
-                else{
-                    
-                    throw new EmptyEntityException();  
-                }
-           } catch (Exception ex) {
-            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
           
             return respuesta;
     } 
@@ -278,46 +248,34 @@ public class Modulo5sResource {
      * @param objeto
      * @return String
      */
-    private String stringListaPago (Entidad objeto) {
+    private String stringListaPago (Entidad objeto) throws DataReaderException {
 
        
     String respuesta = "";
         
         boolean validador  =validadorEntidad(objeto);
-                
         if( validador ){
-               
-            try{
-                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
+            
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();                
+
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
-              
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
+                    
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                    pagoBuilder.add("pg_nombre_categoria",pago.getNombreCategoria());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
-                                                  
                     list.add( pagoJsonObject.toString());
                     
                 }
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
-                
-            }
-            
-            catch(Exception e){
-                System.out.println(e);
-
-            }
-        }
-        
-        else {
-            System.out.println("Error");   
         }
         
         return respuesta;
@@ -330,42 +288,28 @@ public class Modulo5sResource {
      * @param datosPagos
      * @return Entidad
      */
-    private Entidad entidadModificarPago(@QueryParam("datosPago") String datosPagos){
+    private Entidad entidadModificarPago(@QueryParam("datosPago") String datosPagos) throws DataReaderException{
 
         
         Entidad ex = null;
-      try {  
-       boolean validador  =validadorString(datosPagos);
+        try {  
+            boolean validador  =validadorString(datosPagos);
                 
-        if( validador ){
+            if( validador ){
             
             
                 String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
                 JsonReader reader = Json.createReader(new StringReader(decodifico));
                 JsonObject pagoJSON = reader.readObject();
                 reader.close();  
-                ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ; 
+                ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ; 
                 
-        }
-            
-        
+            }
       
-        else {
-            
-           System.out.println("Parametro de entrada nulo o vacio");  
+        } catch (UnsupportedEncodingException ex1) {
+            throw FabricaExcepcion.instanciarDataReaderException(999);
         }
-      }
-        catch(EmptyStringException e){
-                System.out.println(e.EmptyString());
 
-          
-
-            } catch (UnsupportedEncodingException ex1) {
-                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-            catch (NullPointerException ex1) {
-                Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
-            }
         return ex;
         
     }
@@ -405,11 +349,17 @@ public class Modulo5sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
             respuesta = obtenerRespuestaAgregar(objectResponse);
-        }  catch (AgregarPagoException ex) {
-            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex);
-        }  catch (Exception ex) {
+            
+        }  catch (AgregarPagoException | DataReaderException ex) {
+            respuesta = ex.getMessage();
+        }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
         
+        }  catch (Exception ex) {
+            respuesta = Registro.RegistroError.error_default;
         }
+        
+        
         return respuesta;
     }
     
@@ -429,7 +379,7 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                        
+                      
         String respuesta ="";
         try { 
                          
@@ -440,14 +390,16 @@ public class Modulo5sResource {
                 Entidad objectResponse = c.getResponse();
                 respuesta =obtenerRespuestaConsultar(objectResponse);
                         
-            }else {
-                System.out.println("Parametro de entrada nulo o vacio");  
             }
         }catch (ConsultarPagoException e) {
-            respuesta = "Error :"+e.getMessage();
-        }
-        catch (Exception e) {
-            respuesta = "Error :"+e.getMessage();
+            respuesta = e.getMessage();
+        }  catch (DataReaderException ex) {
+            
+        }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
+        
+        }  catch (Exception ex) {
+            respuesta = Registro.RegistroError.error_default;
         }
         
          return respuesta;
@@ -470,23 +422,23 @@ public class Modulo5sResource {
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
         
         String respuesta ="";
-            
         try{
             if( validadorInteger(idPago) ){
-                        Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
-                        c.ejecutar();
-                        Entidad objectResponse = c.getResponse();
-                        respuesta =obtenerRespuestaLista(objectResponse);
-            }else {
-                        System.out.println("Parametro de entrada nulo o vacio");  
+                Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
+                c.ejecutar();
+                Entidad objectResponse = c.getResponse();
+                respuesta =obtenerRespuestaLista(objectResponse);
             }
         }
-        catch (ListarPagosException e) {
-            respuesta = e.getMessage();
+        catch (ListarPagosException | DataReaderException ex) {
+            respuesta = ex.getMessage();
+        }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
+        
+        }  catch (Exception ex) {
+            respuesta = Registro.RegistroError.error_default;
         }
-        catch (Exception e) {
-            respuesta = e.getMessage();
-        }   
+        
         
         return respuesta;
     }
@@ -507,6 +459,7 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
+            System.out.println("modificarPago");
         String respuesta = "";       
 
         try {
@@ -516,12 +469,16 @@ public class Modulo5sResource {
                 Entidad objectResponse = c.getResponse();
                 respuesta = obtenerRespuestaModificar(objectResponse);
                 
-        }catch (ModificarPagoException e) {
-            respuesta = e.getMessage();
+        }catch (ModificarPagoException | DataReaderException ex) {
+            respuesta = ex.getMessage();
+        }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
+        
+        }  catch (Exception ex) {
+            respuesta = Registro.RegistroError.error_default;
         }
-        catch (Exception e) {
-            respuesta = e.getMessage();
-        }
+        
+        System.out.println(respuesta);
        return respuesta;
     }
     
