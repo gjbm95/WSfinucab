@@ -109,12 +109,12 @@ public class FabricaEntidad {
     } 
     
     
-    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria) {
+    public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria, String tipo) {
 
         return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
     
-    public static Presupuesto obtenerPresupuesto(int id, String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria){
+    public static Presupuesto obtenerPresupuesto(int id, String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria, String tipo){
         return new Presupuesto(id, nombre, monto, clasificacion, duracion, usuario, categoria);
     }
 

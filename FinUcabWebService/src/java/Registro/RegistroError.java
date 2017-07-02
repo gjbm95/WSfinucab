@@ -30,6 +30,9 @@ public class RegistroError {
 
     private static final String error_actualizar_clave = "Ha ocurrido un error actualizando la clave";
     private static final String error_recuperar_clave = "Ha ocurrido un error recuperando la clave";
+    
+    private static final String ERROR_AGREGAR = "Ha ocurrido un error al agregar un presupuesto";
+    private static final String ERROR_ELIMINAR = "Presupuesto no encontrado";
 
     
     private static final String error_base_datos = "Ocurrio un error interno en la base de datos";
@@ -52,6 +55,9 @@ public class RegistroError {
         
         errorsLocal.put(201, error_actualizar_clave);
         errorsLocal.put(202, error_recuperar_clave);
+        
+        errorsLocal.put(300, ERROR_AGREGAR);
+        errorsLocal.put(301, ERROR_ELIMINAR);
         
         errorsLocal.put(998, error_base_datos);        
         errorsLocal.put(999, error_decode);

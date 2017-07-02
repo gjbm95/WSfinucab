@@ -1,24 +1,16 @@
 package Services;
 
-import BaseDatosDAO.Conexion;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
 import Exceptions.FinUCABException;
+import Exceptions.Presupuesto.*;
 import Logica.Comando;
 import Logica.FabricaComando;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.logging.Level;
 import java.util.ArrayList;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -84,55 +76,22 @@ public class Modulo3sResource {
             Entidad objectResponse = comando.getResponse();
             respuesta = creaPresupuestoJson(objectResponse);
 
-        } catch (Exception e) {
-            log.error("rror obteniendo presupuesto" + e.getMessage());
+        } catch (ConsultarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error obteniendo presupuesto "+idPresupuesto+ " " + e.getOwnMessage());
+            e.printStackTrace();
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error obteniendo presupuesto "+idPresupuesto+ " " + e.getMessage());
+        } catch (Exception e){
+            log.error("Error general "+e.getMessage());
             e.printStackTrace();
         }
         log.info("Retornando presupuesto con id: " + idPresupuesto);
         return respuesta;
     }
 
-    /**
-     * Se encarga de devolver la lista de categorias por usuario
-     *
-     * @param Usuario
-     * @return
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/ObtenerSpinnerCategoria")
-    public String ObtenerSpinnerCategoria(@QueryParam("usuarioid") int idUsuario) {
-        //TODO return proper representation object
-        String respuesta = "";
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-
-            ResultSet rs = st.executeQuery("Select ca_id|| '- ' || ca_nombre "
-                    + "from categoria "
-                    + "where usuariou_id=1 and ca_eshabilitado = true "
-                    + "and ca_id <> -1;");
-            JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rs.next()) {
-                //Creo el objeto Json!             
-
-                usuarioBuilder.add("Nombre", rs.getString(1));
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                arrayBuilder.add(usuarioJsonObject);
-            }
-            JsonArray array = arrayBuilder.build();
-            respuesta = array.toString();
-
-            rs.close();
-            st.close();
-
-            return respuesta;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
+    
     /**
      * Se encarga de devolver la lista de presupuesto por usuario
      *
@@ -144,7 +103,7 @@ public class Modulo3sResource {
     @Path("/ListaPresupuesto")
     public String getListaPresupuesto(@QueryParam("idUsuario") int idUsuario) {
 
-        log.debug("Listando presupuestos de usuario con id:_" + idUsuario);
+        log.debug("Listando presupuestos de usuario con id: " + idUsuario);
 
         String respuesta = "0";
         try {
@@ -153,11 +112,19 @@ public class Modulo3sResource {
             Entidad objectResponse = comando.getResponse();
             respuesta = creaListaPresupuestos(objectResponse);
 
-        } catch (Exception e) {
-            log.error("Error obteniendo presupuestos del usuario con id: " + idUsuario);
+        } catch (ListarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error listando los presupuestos del usuario con id: "+idUsuario+ " " + e.getOwnMessage());
             e.printStackTrace();
-            respuesta = "2";
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error listando los presupuesto del usuario con id: "+idUsuario+ " " + e.getMessage());
+        } catch (Exception e){
+            respuesta = "Error";
+            log.error("Error general "+e.getMessage());
+            e.printStackTrace();
         }
+        
         log.info("Retornando presupuestos de usuario: " + idUsuario);
         return respuesta;
     }
@@ -175,19 +142,27 @@ public class Modulo3sResource {
     @Path("/EliminarPresupuesto")
     public String getEliminarPresupuesto(@QueryParam("idPresupuesto") int idPresupuesto) {
 
-        log.debug("Eliminando presupuesto con id:_" + idPresupuesto);
+        log.debug("Eliminando presupuesto con id: " + idPresupuesto);
         
         String respuesta ="0";
         try {
-//           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
-//           command.ejecutar();
-//           Entidad objectResponse = command.getResponse();
-//           respuesta = String.valueOf(objectResponse.getId());
-        } catch (Exception e) {
-            log.error("Error eliminando presupuesto con id: " + idPresupuesto);
+           Comando command = FabricaComando.instanciarComandoEliminarPresupuesto(idPresupuesto);
+           command.ejecutar();
+           Entidad objectResponse = command.getResponse();
+           respuesta = String.valueOf(objectResponse.getId());
+        } catch (EliminarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error eliminando presupuesto "+idPresupuesto+ " " + e.getOwnMessage());
             e.printStackTrace();
-            respuesta = "2";
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error eliminando presupuesto "+idPresupuesto+ " " + e.getMessage());
+        } catch (Exception e){
+            respuesta ="Error";
+            log.error("Error general "+e.getMessage());
+            e.printStackTrace();
         }
+        
         log.info("Presupuesto eliminado: " + idPresupuesto + " codigo de respuesta "+respuesta);
         return respuesta;
     }
@@ -202,7 +177,7 @@ public class Modulo3sResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPresupuesto")
-    public String registrarPresupuesto(@QueryParam("usuarioid") String nombreusuario, @QueryParam("datosPresupuesto") String datosPresupuesto) {
+    public String registrarPresupuesto(@QueryParam("datosPresupuesto") String datosPresupuesto) {
 
         log.debug("Registrando presupuesto ");
         String respuesta = "0";
@@ -213,20 +188,25 @@ public class Modulo3sResource {
             Entidad objectResponse = command.getResponse();
             respuesta = String.valueOf(objectResponse.getId());
             log.info("Presupuesto registrado con id: " + respuesta);
-        } catch (FinUCABException ex) {
-            log.error("Error registrando presupuesto");
-            ex.printStackTrace();
-            respuesta = "2";
+        } catch (AgregarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error agregando presupuesto "+datosPresupuesto+ " " + e.getOwnMessage());
+            e.printStackTrace();
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error agregando presupuesto "+datosPresupuesto+ " " + e.getMessage());
+        } catch (Exception e){
+            respuesta = "Error";
+            log.error("Error general "+e.getMessage());
+            e.printStackTrace();
         }
-
+        log.info("Presupuesto registrado: "+respuesta);
         return respuesta;
     }
 
     /**
      * Se encarga de modificar el presupuesto seleccionado
      *
-     * @param nombrePresupuesto
-     * @param nombreusuario
      * @param datosPresupuesto
      * @return
      */
@@ -243,17 +223,22 @@ public class Modulo3sResource {
             Comando command = FabricaComando.instanciarComandoModificarPresupuesto(e);
             command.ejecutar();
             Entidad resultado = command.getResponse();
+            respuesta = String.valueOf(resultado.getId());
             
-            if (resultado != null) {
-                respuesta = "1";
-            }
-        } catch (FinUCABException ex) {
-            log.error("Error modificando presupuesto "+datosPresupuesto);
-            ex.printStackTrace();
-            respuesta = "2";
+        } catch (ModificarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error modificando presupuesto "+datosPresupuesto+ " " + e.getOwnMessage());
+            e.printStackTrace();
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error modificando presupuesto "+datosPresupuesto+ " " + e.getMessage());
+        } catch (Exception e){
+            respuesta = "Error";
+            log.error("Error general "+e.getMessage());
+            e.printStackTrace();
         }
-
-        log.info("Respuesta: " + respuesta);
+        
+        log.info("Presupuesto modificado: " + respuesta);
 
         return respuesta;
     }
@@ -268,45 +253,30 @@ public class Modulo3sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/ListaPresupuestoExportar")
     public String getTodoslosPresupuestos(@QueryParam("idUsuario") int idUsuario) {
-        //TODO return proper representation object
-        String respuesta = "";
+        
+        log.debug("Exportando presupuestos de usuario con id: " + idUsuario);
+
+        String respuesta = "0";
         try {
-            
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
+            Comando comando = FabricaComando.instanciarComandoExportarPresupuesto(idUsuario);
+            comando.ejecutar();
+            Entidad objectResponse = comando.getResponse();
+            respuesta = creaListaPresupuestos(objectResponse);
 
-            ResultSet rs = st.executeQuery("SELECT p.pr_nombre,c.ca_nombre,"
-                    + "p.pr_monto, p.pr_duracion,p.pr_clasificacion,"
-                    + "c.ca_esingreso FROM Presupuesto p, Categoria c "
-                    + "where p.categoriaca_id=c.ca_id and p.usuariou_id="
-                    + idUsuario + " ORDER BY p.pr_clasificacion DESC;");
-
-            JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            while (rs.next()) {
-                //Creo el objeto Json!             
-
-                usuarioBuilder.add("Nombre", rs.getString(1));
-                usuarioBuilder.add("Categoria", rs.getString(2));
-                usuarioBuilder.add("Monto", rs.getString(3));
-                usuarioBuilder.add("Duracion", rs.getString(4));
-                usuarioBuilder.add("Clasificacion", rs.getString(5));
-                usuarioBuilder.add("Tipo", rs.getString(6));
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                arrayBuilder.add(usuarioJsonObject);
-
-            }
-            JsonArray array = arrayBuilder.build();
-            respuesta = array.toString();
-
-            rs.close();
-            st.close();
-
+        } catch (ExportarPresupuestoException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error exportando los presupuestos del usuario con id: "+idUsuario+ " " + e.getOwnMessage());
+            e.printStackTrace();
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error exportando los presupuestos del usuario con id: " + idUsuario + " " + e.getMessage());
         } catch (Exception e) {
-            respuesta = e.getMessage();
+            respuesta = "Error";
+            log.error("Error general " + e.getMessage());
+            e.printStackTrace();
         }
-        
-        
+
+        log.info("Retornando presupuestos de usuario: " + idUsuario);
         return respuesta;
     }
 
@@ -324,16 +294,23 @@ public class Modulo3sResource {
         log.debug("Verificando nombre "+nombrePresupuesto);
         String respuesta = "0";
         try {
-//            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
-//            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
-//            command.ejecutar();
-//            Entidad objectResponse = command.getResponse();
-//            respuesta = String.valueOf(objectResponse.getId());
+            nombrePresupuesto = nombrePresupuesto.replace('_', ' ');
+            Comando command = FabricaComando.instanciarComandoVerificarNombre(nombrePresupuesto);
+            command.ejecutar();
+            Entidad objectResponse = command.getResponse();
+            respuesta = String.valueOf(objectResponse.getId());
 
-        } catch (Exception e) {
-            log.error("Error verificando nombre presupuesto: " + nombrePresupuesto);
+        } catch (VerificarNombreException e) {
+            respuesta = e.getOwnMessage();
+            log.error("Error verificando el nombre: "+nombrePresupuesto+ " " + e.getOwnMessage());
             e.printStackTrace();
-            respuesta = "2";
+        } catch (FinUCABException e){
+            respuesta = "Error";
+            log.error("Error verificando el nombre: "+nombrePresupuesto+ " " + e.getMessage());
+        } catch (Exception e) {
+            respuesta = "Error";
+            log.error("Error general " + e.getMessage());
+            e.printStackTrace();
         }
         
         log.info("Presupuesto verificado: " +nombrePresupuesto + " "+ respuesta);
@@ -375,7 +352,7 @@ public class Modulo3sResource {
             e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getInt("pr_id"), presupuestoJSON.getString("pr_nombre"),
                     Double.valueOf(presupuestoJSON.getString("pr_monto")),
                     presupuestoJSON.getString("pr_clasificacion"), presupuestoJSON.getInt("pr_duracion"),
-                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"));
+                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"), "true");
         } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
@@ -395,7 +372,7 @@ public class Modulo3sResource {
             e = FabricaEntidad.obtenerPresupuesto(presupuestoJSON.getString("pr_nombre"),
                     Double.valueOf(presupuestoJSON.getString("pr_monto")),
                     presupuestoJSON.getString("pr_clasificacion"), presupuestoJSON.getInt("pr_duracion"),
-                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"));
+                    presupuestoJSON.getInt("pr_usuarioid"), presupuestoJSON.getString("categoriaca_id"), "true");
         } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }

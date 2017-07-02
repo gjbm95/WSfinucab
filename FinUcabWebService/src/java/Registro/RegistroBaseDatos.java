@@ -20,6 +20,7 @@ public class RegistroBaseDatos {
     public static final String AGREGAR_PRESUPUESTO = " select agregarpresupuesto (?,?::real,?,?,?,?)";
     public static final String MODIFICAR_PRESUPUESTO = " select modificarpresupuesto (?,?::real,?,?,?,?,?)";
     public static final String LISTAR_PRESUPUESTOS = " select * from obtenerlistapresupuesto(?)";
+    public static final String LISTAR_PRESUPUESTOS_EXPORTAR = " select * from obtenerlistapresupuestodesc(?)";
     public static final String OBTENER_PRESUPUESTO = " select * from obtenerpresupuesto(?)";
     public static final String ELIMINAR_PRESUPUESTO = " select eliminarpresupuesto(?)";
     public static final String VERIFICAR_NOMBRE = " select verificarnombre(?)";
