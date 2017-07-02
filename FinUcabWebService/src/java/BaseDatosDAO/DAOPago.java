@@ -87,19 +87,24 @@ public class DAOPago extends DAO implements IDAOPago{
             
             Connection conn = Conexion.conectarADb();
             
+            System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getDescripcion()+"-"+pago.getCategoria());
             cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
-            cstmt.setString(4,pago.getDescripcion());
+            cstmt.setString(4,pago.getTipo());
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
+            System.out.println("DAO");
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
+            System.out.println("DAO");
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarModificarPagoException(998);
         }
+        
+            System.out.println("DAO");
         return pago;
     }
          
