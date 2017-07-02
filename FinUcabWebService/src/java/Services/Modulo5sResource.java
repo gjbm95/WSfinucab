@@ -193,7 +193,7 @@ public class Modulo5sResource {
                  
             try{       
                 
-                boolean validador  =validadorString(datosPagos);
+                boolean validador  =validadorString(datosPagos); 
                 if( validador ){
          
                     String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
@@ -296,9 +296,7 @@ public class Modulo5sResource {
 
         
         Entidad ex = null;
-        String[] tipos = new String[2];
-        tipos[0] = "ingreso";
-        tipos[1] = "egreso";
+        
         
         try {  
             boolean validador  =validadorString(datosPagos);
@@ -480,7 +478,6 @@ public class Modulo5sResource {
                 respuesta = obtenerRespuestaModificar(objectResponse);
                 
         }catch (ModificarPagoException | DataReaderException ex) {
-            System.out.println("EXCEPTION: "+ ex.getOwnMessage());
             respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;

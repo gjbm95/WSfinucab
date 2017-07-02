@@ -101,11 +101,10 @@ public class DAOPago extends DAO implements IDAOPago{
             throw FabricaExcepcion.instanciarModificarPagoException(102);
         
         try {
-            
            
             Connection conn = Conexion.conectarADb();
             
-            System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
+            //System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
             cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
@@ -119,6 +118,8 @@ public class DAOPago extends DAO implements IDAOPago{
             
             System.out.println("DAO");
         } catch (SQLException ex) {
+            System.out.println(ex.getSQLState());
+            System.out.println(ex.getMessage());
             throw FabricaExcepcion.instanciarModificarPagoException(998);
             
         }

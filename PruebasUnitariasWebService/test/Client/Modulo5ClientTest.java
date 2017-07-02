@@ -77,7 +77,7 @@ public class Modulo5ClientTest {
     @Test
     
     public void testModificarPago() {
-       String datosPago ="{\"pg_monto\":1.0,\"pg_tipoTransaccion\":\"hjotla\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+       String datosPago ="{\"pg_monto\":11433.0,\"pg_tipoTransaccion\":\"ingreso\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
         datosPago = URLEncoder.encode(datosPago);
         
         
@@ -85,9 +85,9 @@ public class Modulo5ClientTest {
         Modulo5Client instance = new Modulo5Client();
         String result = instance.registrarPago(datosPago);
         String resulta = instance.consultarPago(result);
-        String datosPagomodificar ="{\"pg_id\":"+result+",\"pg_monto\":9999.0,\"pg_tipoTransaccion\":\"Modificado\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" Gaste en la universidad\"}";
+        String datosPagomodificar ="{\"pg_id\":"+result+",\"pg_monto\":9999.0,\"pg_tipoTransaccion\":\"egereso\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" Gaste en la universidad\"}";
         String datosPagoMod = URLEncoder.encode(datosPagomodificar);
-        
+        System.out.println(datosPagoMod);
         String modificar = instance.modificarPago(datosPagoMod);
         String EntiMod =  instance.consultarPago(result);
         String PagoArray[] = EntiMod.split(",");
@@ -120,7 +120,7 @@ public class Modulo5ClientTest {
     @Test
     public void testRegistrarPagoExito() {
        
-        String datosPago ="{\"pg_monto\":2.0,\"pg_tipoTransaccion\":\"hola\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+        String datosPago ="{\"pg_monto\":27.0,\"pg_tipoTransaccion\":\"ingreso\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
         datosPago = URLEncoder.encode(datosPago);
         
         Modulo5Client instance = new Modulo5Client();
@@ -134,15 +134,14 @@ public class Modulo5ClientTest {
         
     }
 
-   /**
-     * Test of consultarPago method, of class Modulo5Client.
-     */
+   
+     
     
     @Test
    
     public void testConsultarPago() {
        
-        String datosPago ="{\"pg_monto\":4.0,\"pg_tipoTransaccion\":\"hola\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
+        String datosPago ="{\"pg_monto\":47.0,\"pg_tipoTransaccion\":\"ingreso\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
         datosPago = URLEncoder.encode(datosPago);
         
         Modulo5Client instance = new Modulo5Client();
@@ -155,11 +154,7 @@ public class Modulo5ClientTest {
     
 }
 }
-    
-    /**
-     * Test of visualizarPago method, of class Modulo5Client.
-     */
-    /*
+/*
     @Test
     public void testVisualizarPago() {
         
