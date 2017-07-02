@@ -11,6 +11,7 @@ import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
 import Logica.Comando;
 import Logica.FabricaComando;
+import static Services.Modulo3sResource.log;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -37,6 +38,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * REST Web Service
@@ -45,7 +47,10 @@ import javax.ws.rs.core.Response;
  */
 @Path("/Modulo4")
 public class Modulo4sResource {
-
+    
+    final static org.apache.logging.log4j.Logger log = LogManager.getLogger();
+    
+    
     @Context
     private UriInfo context;
 
@@ -120,18 +125,20 @@ public class Modulo4sResource {
     @Path("/registrarCategoria")
     public String registrarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
         String respuesta = "";
-
+        log.debug("Registrando Categoria ");
         try {
 
             Entidad e = registroCategoria(datosCategoria);
             Comando c = FabricaComando.instanciarComandoAgregarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            System.out.println(objectResponse);
             respuesta = obtenerRespuestaAgregar(objectResponse);
-            System.out.println(respuesta);
+            log.info("Categoria registrado con id: " + respuesta);
+            
         } catch (Exception ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error registrando Categoria");
+            ex.printStackTrace();
             
         }
          return respuesta;
@@ -154,6 +161,7 @@ public class Modulo4sResource {
     @Path("/eliminarCategoria")
     public String eliminarCategoria(@QueryParam("datosCategoria") int datosCategoria) {
         
+        log.debug("Eliminando categoria con id:_" + datosCategoria);
         String respuesta="";
         try {
             Comando c = FabricaComando.instanciarComandoEliminarCategoria(datosCategoria);
@@ -163,8 +171,10 @@ public class Modulo4sResource {
             
         } catch (FinUCABException ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error eliminando categoria con id: " + datosCategoria);
+            ex.printStackTrace();
         }
-        
+        log.info("Categoria eliminada: " + datosCategoria + "respuesta "+respuesta);
         return respuesta;
     }
     
@@ -186,6 +196,7 @@ public class Modulo4sResource {
     @Path("/visualizarCategoria")
     public String VisualizarCategoria(@QueryParam("datosCategoria") int usuario) {
         
+        log.debug("Obteniendo Categorias del usuario con id: " + usuario);
             String respuesta ="";
             
         try{
@@ -204,7 +215,11 @@ public class Modulo4sResource {
            }
         catch(Exception e) {
             respuesta = "Error Vacio :"+e.getMessage();
+            log.error("Error obteniendo Categorias" + e.getMessage());
+            e.printStackTrace();
         }
+        
+        log.info("Retornando Categorias del usuario: " + usuario);
         return respuesta;
     }
 
@@ -226,6 +241,7 @@ public class Modulo4sResource {
     @Path("/modificarCategoria")
     public String modificarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
         String respuesta="";
+        log.debug("Modificando categoria");
       
         try {
            
@@ -238,8 +254,11 @@ public class Modulo4sResource {
 
             System.out.println(e.getMessage());
             respuesta = "0";
+            log.error("Error modificando categoria "+datosCategoria);
+            e.printStackTrace();
 
         }
+         log.info("Respuesta: " + respuesta);
         return respuesta;
         
     }
@@ -259,6 +278,8 @@ public class Modulo4sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/buscarCategoria")
     public String buscarCategoria(@QueryParam("datosCategoria") int datosCategoria){
+        
+        log.debug("Obteniendo Categoria con id: " + datosCategoria);
         String respuesta ="";
         try{
             if( validadorInteger(datosCategoria)){
@@ -274,9 +295,13 @@ public class Modulo4sResource {
         }
         catch(DataReaderException e){
             respuesta = "Error :"+e.getOwnMessage();
+            log.error("Error obteniendo categoria" + e.getMessage());
+            e.printStackTrace();
         }
         catch(Exception e) {
             respuesta = "Error :"+e.getMessage();
+            log.error("Error obteniendo categoria" + e.getMessage());
+            e.printStackTrace();
         }
     return respuesta;
     }

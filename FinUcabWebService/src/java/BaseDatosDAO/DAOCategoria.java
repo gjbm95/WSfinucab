@@ -11,7 +11,8 @@ import Dominio.Entidad;
 import java.sql.CallableStatement;
 import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
-import IndentityMap.SingletonIdentityMap;
+import IndentityMap.FabricaIdentityMap;
+import IndentityMap.IdentityMap;
 import Registro.RegistroIdentityMap;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -50,7 +51,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             
             categoria.setId(idCategoria);
             System.out.println(idCategoria+"id super");
-            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             System.out.println(categoria.getId()+"id normal");
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,7 +78,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setInt(5, categoria.getId());
             cstmt.execute();
             System.out.println("despues del stored");
-            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
+            IdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,7 +90,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     @Override
     public Entidad consultar(int idcategoria) {
         
-         Entidad categoria = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.categoria_listado, idcategoria);          
+         Entidad categoria = FabricaIdentityMap.obtenerIdentityMap().getInstance().getEntidadEnLista(RegistroIdentityMap.categoria_listado, idcategoria);          
 
          if (categoria == null){
                             
@@ -121,7 +122,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     @Override
     public ListaEntidad consultarTodos(int idUsuario) {
         
-        ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.categoria_listado);
+        ListaEntidad listaEntidad = FabricaIdentityMap.obtenerIdentityMap().getInstance().getListaEntidad(RegistroIdentityMap.categoria_listado);
         
         if (listaEntidad.getLista().isEmpty() ){
             
@@ -140,7 +141,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                 }            
                 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaCategorias);
-                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.categoria_listado, listaEntidad);
+                FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.categoria_listado, listaEntidad);
                 
             } catch (SQLException ex) {
                 Logger.getLogger(DAOPago.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,7 +166,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             ResultSet rs = cat.getResultSet();
             rs.next();
             
-            SingletonIdentityMap.getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
+            FabricaIdentityMap.obtenerIdentityMap().getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
             
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);

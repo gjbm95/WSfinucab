@@ -11,7 +11,8 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Exceptions.FabricaExcepcion;
-import IndentityMap.SingletonIdentityMap;
+import IndentityMap.FabricaIdentityMap;
+import IndentityMap.IdentityMap;
 import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
@@ -38,6 +39,17 @@ import javax.json.JsonObjectBuilder;
  */
 public class DAOPago extends DAO implements IDAOPago{
 
+    private DAOPago(){
+    }
+    
+    public static DAOPago getInstance() {
+        return SingletonDAOPagoHolder.INSTANCE;
+    }
+    
+    private static class SingletonDAOPagoHolder {
+        private static final DAOPago INSTANCE = new DAOPago();
+    }
+    
     @Override
     public Entidad agregar(Entidad e) throws AgregarPagoException {
 
@@ -65,7 +77,7 @@ public class DAOPago extends DAO implements IDAOPago{
            
             pago.setId(idPago);
             
-            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+            IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarAgregarPagoException(998);                
@@ -114,7 +126,7 @@ public class DAOPago extends DAO implements IDAOPago{
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
-            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+            FabricaIdentityMap.obtenerIdentityMap().getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarModificarPagoException(998);
@@ -130,7 +142,7 @@ public class DAOPago extends DAO implements IDAOPago{
     public Entidad consultar(int idPago ) throws ConsultarPagoException{
 
         
-        Entidad pago = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
+        Entidad pago = FabricaIdentityMap.obtenerIdentityMap().getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
         if (pago == null ){
                 
             try {
@@ -150,7 +162,7 @@ public class DAOPago extends DAO implements IDAOPago{
                     throw FabricaExcepcion.instanciarConsultarPagoException(101);
                 }
                 
-                SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+                FabricaIdentityMap.obtenerIdentityMap().getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
                 throw FabricaExcepcion.instanciarConsultarPagoException(998);
@@ -166,7 +178,7 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPagosException {
         
-        ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
+        ListaEntidad listaEntidad = FabricaIdentityMap.obtenerIdentityMap().getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
         if (listaEntidad.getLista().isEmpty()){
             try {
                 
@@ -188,7 +200,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPagos);
                 
-                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
+                FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
                 
             } catch (SQLException ex) {
                 throw FabricaExcepcion.instanciarListarPagosException(998);
