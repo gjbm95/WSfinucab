@@ -57,14 +57,15 @@ END;
 $$ 
 
 
-CREATE OR REPLACE FUNCTION ConsultarPago(x
+CREATE OR REPLACE FUNCTION ConsultarPago(
 	idpago integer,
     
 	OUT pg_id integer,
 	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipoTransaccion character varying,
-	OUT categoriaca_id integer)
+	OUT categoriaca_id integer,
+	OUT categoriaca_nombre character varying)
     RETURNS record
     LANGUAGE 'sql'
     
