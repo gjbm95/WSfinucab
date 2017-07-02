@@ -71,6 +71,15 @@ public class Pago  extends Entidad implements Serializable{
         
     }
     
+    public Pago( int categoria, String descripcion, float total, String tipo, String nombreCategoria) {
+        this.categoria = categoria;
+        this.descripcion = descripcion;
+        this.total = total;
+        this.tipo = tipo;
+        this.nombreCategoria = nombreCategoria;
+        
+    }
+    
     public Pago( int id, int categoria, String descripcion, float total, String tipo, String nombreCategoria) {
         super(id);
         this.categoria = categoria;

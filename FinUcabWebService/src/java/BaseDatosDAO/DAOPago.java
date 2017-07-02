@@ -44,8 +44,7 @@ public class DAOPago extends DAO implements IDAOPago{
         Pago pago = (Pago) e;
         CallableStatement pag;
         int idPago = 0;
-
-
+        
         try {                
             
             Connection conn = Conexion.conectarADb();
@@ -56,6 +55,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.setInt(4, pago.getCategoria());
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
+            
             if (rs.next()){
                 idPago = rs.getInt(1); 
             }else{
@@ -65,7 +65,6 @@ public class DAOPago extends DAO implements IDAOPago{
             pago.setId(idPago);
             
             SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
-                        
 
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarAgregarPagoException(ex.getErrorCode(),ex.getMessage());                
@@ -124,7 +123,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
                 ResultSet rs = a.getResultSet();
                 if (rs.next()){
-                    pago =  FabricaEntidad.obtenerPago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4) );
+                    pago =  FabricaEntidad.obtenerPago( rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getString(6) );
                 }else{
                     
                     throw FabricaExcepcion.instanciarConsultarPagoException(101);
@@ -147,7 +146,6 @@ public class DAOPago extends DAO implements IDAOPago{
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPagosException {
         
         ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
-        
         if (listaEntidad.getLista().isEmpty()){
             try {
                 
@@ -163,7 +161,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
                 while (rs.next())
                 {
-                    Pago pago = FabricaEntidad.obtenerPago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getString(5) );
+                    Pago pago = FabricaEntidad.obtenerPago(rs.getInt(1), rs.getInt(5), rs.getString(3), rs.getFloat(2), rs.getString(4), rs.getString(6) );
                     listaPagos.add(pago);
                 }
 

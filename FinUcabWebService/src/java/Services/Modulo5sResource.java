@@ -23,8 +23,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -202,11 +200,11 @@ public class Modulo5sResource {
                     JsonReader reader = Json.createReader(new StringReader(decodifico));
                     JsonObject pagoJSON = reader.readObject();           
                     reader.close();
-                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ;
+                    ex = FabricaEntidad.obtenerPago( pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ;
 
                 }
             }catch (UnsupportedEncodingException ex1) {
-               Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1); 
+                throw FabricaExcepcion.instanciarDataReaderException(999,ex1.getMessage());
             }
         return ex;
     }
@@ -256,29 +254,40 @@ public class Modulo5sResource {
     String respuesta = "";
         
         boolean validador  =validadorEntidad(objeto);
-                
         if( validador ){
             
-                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();
+                System.out.println(((ListaEntidad) objeto));
+                ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();                
+                System.out.println(lista);                
+                System.out.println(lista.size());
+
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
                 JsonArrayBuilder list = Json.createArrayBuilder();
-              
+                System.out.println("size:"+lista.size());
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
+                    
+                    System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getTipo()+"-"+pago.getNombreCategoria()+"-"+pago.getCategoria()+"-"+pago.getDescripcion());
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
+                    pagoBuilder.add("pg_nombre_categoria",pago.getNombreCategoria());
                     pagoBuilder.add("pg_categoria",pago.getCategoria());
                     pagoBuilder.add("pg_descripcion",pago.getDescripcion());
                     JsonObject pagoJsonObject = pagoBuilder.build();  
-                                                  
+                    System.out.println(pagoJsonObject.toString());       
                     list.add( pagoJsonObject.toString());
                     
                 }
                 
+                System.out.println("AQUIO");
+                
                 JsonArray listJsonObject = list.build();
+                
+                System.out.println("AQUIO");
                 respuesta = listJsonObject.toString();
                 
+                System.out.println("AQUIO");
         }
         
         return respuesta;
@@ -305,12 +314,12 @@ public class Modulo5sResource {
                 JsonReader reader = Json.createReader(new StringReader(decodifico));
                 JsonObject pagoJSON = reader.readObject();
                 reader.close();  
-                ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion")) ; 
+                ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ; 
                 
             }
       
         } catch (UnsupportedEncodingException ex1) {
-            Logger.getLogger(Modulo5sResource.class.getName()).log(Level.SEVERE, null, ex1);
+            throw FabricaExcepcion.instanciarDataReaderException(999,ex1.getMessage());
         }
 
         return ex;
@@ -344,6 +353,7 @@ public class Modulo5sResource {
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos)  {
         
+            System.out.println("registrarPago");
          String respuesta = "";
          
         try {
@@ -353,15 +363,16 @@ public class Modulo5sResource {
             Entidad objectResponse = c.getResponse();
             respuesta = obtenerRespuestaAgregar(objectResponse);
             
-        }  catch (AgregarPagoException ex) {
-            
-        }  catch (DataReaderException ex) {
-            
+        }  catch (AgregarPagoException | DataReaderException ex) {
+            respuesta = ex.getMessage();
         }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
-        
+            respuesta = Registro.RegistroError.error_default;
         }
+        
+        System.out.println(respuesta);
         
         return respuesta;
     }
@@ -382,7 +393,8 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                        
+                      
+            System.out.println("consultarPago");  
         String respuesta ="";
         try { 
                          
@@ -393,19 +405,20 @@ public class Modulo5sResource {
                 Entidad objectResponse = c.getResponse();
                 respuesta =obtenerRespuestaConsultar(objectResponse);
                         
-            }else {
-                System.out.println("Parametro de entrada nulo o vacio");  
             }
         }catch (ConsultarPagoException e) {
             respuesta = e.getMessage();
         }  catch (DataReaderException ex) {
             
         }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
-        
+            respuesta = Registro.RegistroError.error_default;
         }
         
+        
+        System.out.println(respuesta);
          return respuesta;
     }
 
@@ -425,8 +438,8 @@ public class Modulo5sResource {
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
         
+            System.out.println("visualizarPago");
         String respuesta ="";
-         System.out.println("AQUIIII");
         try{
             if( validadorInteger(idPago) ){
                 Comando c = FabricaComando.instanciarComandoListarPagos(idPago);
@@ -435,16 +448,17 @@ public class Modulo5sResource {
                 respuesta =obtenerRespuestaLista(objectResponse);
             }
         }
-        catch (ListarPagosException e) {
-            respuesta = e.getMessage();
-        }  catch (DataReaderException ex) {
-            
+        catch (ListarPagosException | DataReaderException ex) {
+            respuesta = ex.getMessage();
         }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
+            respuesta = Registro.RegistroError.error_default;
+        }
         
-        }  
         
+        System.out.println(respuesta);
         return respuesta;
     }
     
@@ -464,6 +478,7 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
+            System.out.println("modificarPago");
         String respuesta = "";       
 
         try {
@@ -473,15 +488,16 @@ public class Modulo5sResource {
                 Entidad objectResponse = c.getResponse();
                 respuesta = obtenerRespuestaModificar(objectResponse);
                 
-        }catch (ModificarPagoException e) {
-            respuesta = e.getMessage();
-        }  catch (DataReaderException ex) {
-            
+        }catch (ModificarPagoException | DataReaderException ex) {
+            respuesta = ex.getMessage();
         }  catch (FinUCABException ex) {
+            respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
-        
+            respuesta = Registro.RegistroError.error_default;
         }
+        
+        System.out.println(respuesta);
        return respuesta;
     }
     
