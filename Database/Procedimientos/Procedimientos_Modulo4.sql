@@ -26,7 +26,7 @@ BEGIN
       (usuariou_i, ca_nombr , c_descripcio , ca_esingres , ca_eshabilitad);
 
     if found then
-  result := (Select ca_id from Categoria where ca_nombre = ca_nombr and ca_descripcion = ca_descripcio and usuariou_id = usuariou_i);
+  result := (Select ca_id from Categoria where ca_nombre = ca_nombr and c_descripcion = c_descripcio and usuariou_id = usuariou_i);
   else result := 0;
   end if;
   RETURN result;

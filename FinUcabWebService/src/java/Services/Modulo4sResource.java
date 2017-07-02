@@ -234,7 +234,7 @@ public class Modulo4sResource {
             Comando c = FabricaComando.instanciarComandoModificarCategoria(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            respuesta = obtenerRespuestaModificar(objectResponse);
+            //respuesta = obtenerRespuestaModificar(objectResponse);
            } catch (Exception e) {
 
             System.out.println(e.getMessage());

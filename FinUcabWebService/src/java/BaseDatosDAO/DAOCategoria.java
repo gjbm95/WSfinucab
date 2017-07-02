@@ -66,6 +66,8 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     public Entidad modificar(Entidad e) {
         Categoria categoria = (Categoria) e;        
         try {
+            System.out.println("entrando modificar");
+            System.out.println(categoria.getId());
             CallableStatement cstmt;
             cstmt = conn.prepareCall("{ call ModificarCategoria(?,?,?,?,?) }");
             cstmt.setString(1,categoria.getNombre());
@@ -74,11 +76,13 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getId());
             cstmt.execute();
+            System.out.println("despues del stored");
             SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return categoria;
     } 
     
