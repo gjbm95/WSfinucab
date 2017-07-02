@@ -9,6 +9,7 @@ import Dominio.Tarjeta_Credito;
 import Exceptions.FabricaExcepcion;
 import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
 import Logica.Modulo2.ModificarFallidoException;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -50,7 +51,8 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      */
     @Override
     public Entidad agregar(Entidad e)throws AgregarFallidoException {
-        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();   
+        Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaNueva");    
         CallableStatement cstmt;
         int idtarjeta = 0;
         try {
@@ -96,7 +98,8 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      */
     @Override
     public Entidad modificar(Entidad e) throws ModificarFallidoException {
-        Tarjeta_Credito obj = (Tarjeta_Credito) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();   
+        Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaModificada");   
         CallableStatement cstmt;
         try {
             cstmt = conn.prepareCall("{ call modificarTarjetaCredito(?,?,?,?,?)}");

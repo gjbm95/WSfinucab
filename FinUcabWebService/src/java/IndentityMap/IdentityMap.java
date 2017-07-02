@@ -17,7 +17,16 @@ import java.util.HashMap;
  */
 public class IdentityMap {
     
+    private static IdentityMap _instancia; 
     private HashMap<String, Entidad> _cache;
+    
+    public static IdentityMap obtenerInstancia(){
+      if (_instancia==null)
+          _instancia = new IdentityMap();
+      
+        return _instancia; 
+    }
+    
     
     public IdentityMap(){
         

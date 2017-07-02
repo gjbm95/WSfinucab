@@ -4,11 +4,13 @@ import BaseDatosDAO.Conexion;
 import Dominio.*;
 import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
+import IndentityMap.IdentityMap;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.ConversionFallidaException;
 import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
 import Logica.Modulo2.ModificarFallidoException;
 import java.io.StringReader;
 import java.net.URLDecoder;
@@ -124,11 +126,14 @@ public class Modulo2sResource {
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
             Cuenta_Bancaria cuenta = jsonToCuenta (cuentaJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaNueva", cuenta);
             Comando command = FabricaComando.instanciarComandoAgregarCuenta(cuenta);
             command.ejecutar();
             cuenta = (Cuenta_Bancaria) command.getResponse();
             resultado = Integer.toString(cuenta.getId());
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("CuentaNueva");
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -176,9 +181,12 @@ public class Modulo2sResource {
         try {
             JsonObject cuentaJSON = this.stringToJSON(decodifico);
             Cuenta_Bancaria cuenta = jsonToCuentaM (cuentaJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaModificada", cuenta);
             Comando command = FabricaComando.instanciarComandoActualizarCuenta(cuenta);
             command.ejecutar();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("CuentaModificada");
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -269,11 +277,14 @@ public class Modulo2sResource {
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);   
             Tarjeta_Credito tdc = jsonToTarjeta (tdcJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaNueva", tdc);
             Comando command = FabricaComando.instanciarComandoAgregarTDC(tdc);
             command.ejecutar();
             tdc = (Tarjeta_Credito) command.getResponse();
             resultado = tdc.getId();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("TarjetaNueva");
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);
@@ -321,9 +332,12 @@ public class Modulo2sResource {
         try {
             JsonObject tdcJSON = this.stringToJSON(decodifico);
             Tarjeta_Credito tdc = jsonToTarjetaM (tdcJSON);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaModificada", tdc);
             Comando command = FabricaComando.instanciarComandoActualizarTDC(tdc);
             command.ejecutar();
             Conexion.conectarADb().close();
+            cache.eliminarEntidad("TarjetaModificada");
         }catch (SQLException ex) {
             Logger.getLogger(Modulo2sResource.class.getName()).
                     log(Level.SEVERE, null, ex);

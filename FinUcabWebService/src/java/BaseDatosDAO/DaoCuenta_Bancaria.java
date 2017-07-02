@@ -8,8 +8,10 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import Exceptions.FabricaExcepcion;
+import IndentityMap.IdentityMap;
 import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
 import Logica.Modulo2.ModificarFallidoException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -46,7 +48,8 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      */
     @Override
     public Entidad agregar(Entidad e) throws AgregarFallidoException {
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj =(Cuenta_Bancaria) cache.getEntidad("CuentaNueva");      
         CallableStatement cstmt;
         int idCuenta = 0;
         try {
@@ -86,7 +89,8 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      * @return Objeto de tipo Cuenta_Bancaria (Entidad sin castear)
      */
     public Entidad modificar(Entidad e) throws ModificarFallidoException{
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj = (Cuenta_Bancaria)cache.getEntidad("CuentaModificada");
         CallableStatement cstmt;
         try {
             cstmt = conn.prepareCall("{ call modificarCuentaBancaria(?,?,?,?,?)}");
