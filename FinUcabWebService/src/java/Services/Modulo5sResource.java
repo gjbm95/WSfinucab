@@ -137,22 +137,15 @@ public class Modulo5sResource {
      * @param valor
      * @return boolean
      */
-    private boolean validadorString(String valor, String[] check) throws DataReaderException{
+    private boolean validadorString(String valor) throws DataReaderException{
         
         if (valor == null) {
             throw FabricaExcepcion.instanciarDataReaderException(3);
         }else if(valor.equals("")) {
             throw FabricaExcepcion.instanciarDataReaderException(4);
-        }else if(check != null ) {
-            
-            for (String strCheck : check) {
-                if(valor.equals(strCheck)){
-                    return true;
-                }
-            }
-            
-            throw FabricaExcepcion.instanciarDataReaderException(102);
-        }else{
+        }
+      
+        else{
             return true;
         }
 
@@ -202,7 +195,7 @@ public class Modulo5sResource {
                  
             try{       
                 
-                boolean validador  =validadorString(datosPagos,null);
+                boolean validador  =validadorString(datosPagos); 
                 if( validador ){
          
                     String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
@@ -305,12 +298,10 @@ public class Modulo5sResource {
 
         
         Entidad ex = null;
-        String[] tipos = new String[2];
-        tipos[0] = "ingreso";
-        tipos[1] = "egreso";
+        
         
         try {  
-            boolean validador  =validadorString(datosPagos,tipos);
+            boolean validador  =validadorString(datosPagos);
                 
             if( validador ){
             
@@ -485,11 +476,8 @@ public class Modulo5sResource {
                 Entidad ex = entidadModificarPago(datosPagos);
                 Comando c = FabricaComando.instanciarComandoModificarPago(ex);
                 c.ejecutar();
-                System.out.println("METODO WEB");
                 Entidad objectResponse = c.getResponse();
-                System.out.println("METODO WEB");
                 respuesta = obtenerRespuestaModificar(objectResponse);
-                System.out.println("METODO WEB");
                 
         }catch (ModificarPagoException | DataReaderException ex) {
             respuesta = ex.getMessage();
