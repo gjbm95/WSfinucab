@@ -29,4 +29,12 @@ public class RegistroBaseDatos {
     public static final String LISTAR_PAGOS = "{ call ListaPagos(?) }";
     public static final String OBTENER_PAGO = "{ call ConsultarPago(?) }";
     
+    public static final String AGREGAR_USUARIO = "{ call Registrar(?,?,?,?,?,?,?) }";
+    public static final String ACTUALIZAR_CLAVE = "{ call ActualizarClave(?,?) }";
+    public static final String VERIFICAR_USUARIO = "{ call verificarUsuario(?) }";
+    public static final String INICIO_SESION = "{ call iniciarSesion(?,?) }";
+    public static final String RECUPERAR_CLAVE = "{ call recuperarclave(?) }";
+    
+            
+    
 }

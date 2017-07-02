@@ -13,6 +13,7 @@ import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
 import Logica.Modulo1.RegistrarIncorrectoException;
 import Logica.Modulo1.VerificarUsuarioException;
+import Registro.RegistroBaseDatos;
 import Registro.RegistroError;
 import Services.Modulo1sResource;
 import java.net.URLDecoder;
@@ -67,7 +68,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a = 
-                    conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.AGREGAR_USUARIO);
             a.setString(1, usuario.getUsuario());
             a.setString(2, usuario.getNombre());
             a.setString(3, usuario.getApellido());
@@ -111,7 +112,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a =
-                    conn.prepareCall("{ call ActualizarClave(?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.ACTUALIZAR_CLAVE);
             a.setString(1,usuario.getUsuario());
             a.setString(2,usuario.getContrasena());
             a.execute();
@@ -158,7 +159,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a =
-                    conn.prepareCall("{ call verificarUsuario(?) }");
+                    conn.prepareCall(RegistroBaseDatos.VERIFICAR_USUARIO);
             
             a.setString(1, usuario);
             a.execute();
@@ -213,7 +214,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Statement st = conn.createStatement();
             
             CallableStatement a = 
-                    conn.prepareCall("{ call iniciarSesion(?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.INICIO_SESION);
             a.setString(1,  objeto.getUsuario());
             a.setString(2,  objeto.getContrasena());
             a.execute();
@@ -272,7 +273,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Statement st = conn.createStatement();
             //String query = "SELECT * from recuperarclave('" + usuario+"');";
             CallableStatement a = 
-                    conn.prepareCall("{ call recuperarclave(?) }");
+                    conn.prepareCall(RegistroBaseDatos.RECUPERAR_CLAVE);
             a.setString(1, usuario);
             a.execute(); 
             ResultSet rs = a.getResultSet();

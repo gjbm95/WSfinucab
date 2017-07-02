@@ -21,7 +21,6 @@ import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
 import Logica.Modulo1.RegistrarIncorrectoException;
 import Logica.Modulo1.VerificarUsuarioException;
-import static Services.Modulo5sResource.log;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -153,7 +152,6 @@ public class Modulo1sResource {
     private boolean validadorEntidad(Entidad valor) throws DataReaderException{
         if (valor == null)
             throw FabricaExcepcion.instanciarDataReaderException(5);
-     
         return true;
     }
 
