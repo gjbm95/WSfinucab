@@ -17,12 +17,16 @@ import Logica.Modulo1.VerificarUsuarioException;
  */
 public interface IDAOUsuario extends IDAO {
     
-    public Entidad ActualizarClave(Entidad entidad) throws ActualizarClaveException;
+    public Entidad ActualizarClave(Entidad entidad) 
+            throws ActualizarClaveException;
     
-    public Entidad verificarUsuario(String usuario)throws VerificarUsuarioException;
+    public Entidad verificarUsuario(String usuario)
+            throws VerificarUsuarioException;
     
-    public Entidad obtenerInicioSesion(Entidad usuario) throws IniciarSesionException;
+    public Entidad obtenerInicioSesion(Entidad usuario)
+            throws IniciarSesionException;
     
-    public Entidad obtenerXRecuperarClave(String usuario) throws RecuperarClaveException;
+    public Entidad obtenerXRecuperarClave(String usuario)
+            throws RecuperarClaveException;
  
 }
