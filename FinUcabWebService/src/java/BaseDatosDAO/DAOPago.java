@@ -16,6 +16,7 @@ import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
 import Logica.Modulo5.ModificarPagoException;
+import Registro.RegistroBaseDatos;
 import Registro.RegistroIdentityMap;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -48,7 +49,7 @@ public class DAOPago extends DAO implements IDAOPago{
         try {                
             
             Connection conn = Conexion.conectarADb();
-            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
+            pag = conn.prepareCall(RegistroBaseDatos.AGREGAR_PAGO);
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
@@ -105,7 +106,7 @@ public class DAOPago extends DAO implements IDAOPago{
             Connection conn = Conexion.conectarADb();
             
             //System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
+            cstmt = conn.prepareCall(RegistroBaseDatos.MODIFICAR_PAGO);
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
@@ -137,7 +138,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.OBTENER_PAGO);
                 a.setInt(1, idPago);
                 a.executeQuery();
 
@@ -173,7 +174,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ListaPagos(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.LISTAR_PAGOS);
                 a.setInt(1, idUsuario);
                 a.executeQuery();
 

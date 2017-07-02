@@ -24,4 +24,9 @@ public class RegistroBaseDatos {
     public static final String ELIMINAR_PRESUPUESTO = " select eliminarpresupuesto(?)";
     public static final String VERIFICAR_NOMBRE = " select verificarnombre(?)";
 
+    public static final String AGREGAR_PAGO = "{ call AgregarPago(?,?,?,?) }";
+    public static final String MODIFICAR_PAGO = "{ call ModificarPago(?,?,?,?,?) }";
+    public static final String LISTAR_PAGOS = "{ call ListaPagos(?) }";
+    public static final String OBTENER_PAGO = "{ call ConsultarPago(?) }";
+    
 }
