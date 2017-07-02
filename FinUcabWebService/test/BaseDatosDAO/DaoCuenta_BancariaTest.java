@@ -10,6 +10,8 @@ import Dominio.ListaEntidad;
 import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.EliminarFallidoException;
 import Logica.Modulo2.ModificarFallidoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,30 +48,42 @@ public class DaoCuenta_BancariaTest {
      * Test of agregar method, of class DaoCuenta_Bancaria.
      */
     @Test
-    public void testAgregar() throws AgregarFallidoException {
-        System.out.println("agregar");
-        Entidad e = null;
-        DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
-        Entidad expResult = null;
-        Entidad result = instance.agregar(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+    public void testAgregar() {
+        try {
+            System.out.println("agregar");
+            Entidad e = null;
+            DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
+            Entidad expResult = null;
+            Entidad result = instance.agregar(e);
+            assertEquals(expResult, result);
+            // TODO review the generated test code and remove the default call to fail.
+            fail("The test case is a prototype.");
+        } catch (AgregarFallidoException ex) {
+            Logger.getLogger(DaoCuenta_BancariaTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
      * Test of modificar method, of class DaoCuenta_Bancaria.
      */
     @Test
-    public void testModificar() throws ModificarFallidoException {
-        System.out.println("modificar");
-        Entidad e = null;
-        DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
-        Entidad expResult = null;
-        Entidad result = instance.modificar(e);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+    public void testModificar() {
+        try {
+            System.out.println("modificar");
+            Entidad e = null;
+            DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
+            Entidad expResult = null;
+            Entidad result = instance.modificar(e);
+            assertEquals(expResult, result);
+            // TODO review the generated test code and remove the default call to fail.
+            fail("The test case is a prototype.");
+        } catch (ModificarFallidoException ex) {
+            Logger.getLogger(DaoCuenta_BancariaTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -96,8 +110,14 @@ public class DaoCuenta_BancariaTest {
         int id = 0;
         DaoCuenta_Bancaria instance = new DaoCuenta_Bancaria();
         int expResult = 0;
-        int result = instance.eliminar(id);
-        assertEquals(expResult, result);
+        int result;
+        try {
+            result = instance.eliminar(id);
+             assertEquals(expResult, result);
+        } catch (EliminarFallidoException ex) {
+            Logger.getLogger(DaoCuenta_BancariaTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
