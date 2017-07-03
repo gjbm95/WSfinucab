@@ -133,11 +133,9 @@ public class Modulo4sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
             respuesta = obtenerRespuestaAgregar(objectResponse);
-<<<<<<< HEAD
-=======
+
             log.info("Categoria registrado con id: " + respuesta);
             
->>>>>>> 5659188a93c78d009e57ca5830a5264e7e2b0b1f
         } catch (Exception ex) {
             Logger.getLogger(Modulo4sResource.class.getName()).log(Level.SEVERE, null, ex);
             log.error("Error registrando Categoria");
