@@ -19,7 +19,6 @@ import Exceptions.Presupuesto.ListarPresupuestoException;
 import Exceptions.Presupuesto.ModificarPresupuestoException;
 import Exceptions.Presupuesto.VerificarNombreException;
 import IndentityMap.FabricaIdentityMap;
-import IndentityMap.IdentityMap;
 import Registro.RegistroBaseDatos;
 import Registro.RegistroIdentityMap;
 import java.sql.CallableStatement;
@@ -75,16 +74,19 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = 1;
             presupuesto.setId(idPresupuesto);
             presupuesto.setTipo("true");
-            IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
+            FabricaIdentityMap.obtenerIdentityMap().addEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (SQLException ex) {
-            log.error("Error agregando presupuesto: "+ex.getMessage());
+            log.error("Error agregando presupuesto: " + ex.getMessage());
             respuesta = 2;
-            throw FabricaExcepcion.instanciarAgregarPresupuestoException(998,ex.getMessage());
-            
+            throw FabricaExcepcion.instanciarAgregarPresupuestoException(998, ex.getMessage());
+        } catch (NullPointerException ex){
+            log.error("Error agregando presupuesto, hay algun dato nulo "+ ex.getMessage());
+            respuesta = 2;
+            throw FabricaExcepcion.instanciarAgregarPresupuestoException(5, ex.getMessage());
         }
 
-        return FabricaEntidad.obtenerSimpleResponse(respuesta);
+        return FabricaEntidad.obtenerSimpleResponse(respuesta, idPresupuesto);
     }
 
     @Override
@@ -113,7 +115,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.close();
             Desconectar(conn);
             presupuesto.setTipo("true");
-            FabricaIdentityMap.obtenerIdentityMap().getInstance().updateEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
+            FabricaIdentityMap.obtenerIdentityMap().updateEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (SQLException ex) {
             log.error("Error modificando presupuesto: "+ex.getMessage());
@@ -125,7 +127,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
     @Override
     public Entidad consultar(int id) throws ConsultarPresupuestoException {
-        Entidad presupuesto = FabricaIdentityMap.obtenerIdentityMap().getInstance().getEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
+        Entidad presupuesto = FabricaIdentityMap.obtenerIdentityMap().getEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
 
         if (presupuesto == null) {
             try {
@@ -143,7 +145,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 } else {
                     throw FabricaExcepcion.instanciarConsultarPresupuestoException(101);
                 }
-                FabricaIdentityMap.obtenerIdentityMap().getInstance().setEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
+                FabricaIdentityMap.obtenerIdentityMap().setEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
             } catch (SQLException e){
                 log.error("Error consultando presupuesto: "+e.getMessage());
                 throw FabricaExcepcion.instanciarConsultarPresupuestoException(998, e.getMessage());
@@ -155,9 +157,10 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
     @Override
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPresupuestoException {
 
-        ListaEntidad listaEntidad = FabricaIdentityMap.obtenerIdentityMap().getInstance().getListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO);
+        ListaEntidad listaEntidad;// = FabricaIdentityMap.obtenerIdentityMap().getListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO);
+                                  
 
-        if (listaEntidad.getLista().isEmpty()) {
+       /* if (listaEntidad.getLista().isEmpty()) */{
 
             try {
                 ArrayList<Entidad> listaPresupuestos = new ArrayList<>();
@@ -178,7 +181,8 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 }
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
-                FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
+                FabricaIdentityMap.obtenerIdentityMap().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
+                //FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
                 throw FabricaExcepcion.instanciarListarPresupuestoException(998, e.getMessage());
@@ -221,14 +225,16 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             ps.executeQuery();
             ResultSet rs = ps.getResultSet(); 
             if(rs.next()){
+                if(rs.getInt("eliminarpresupuesto")==1){
                 respuesta = rs.getInt("eliminarpresupuesto");
-            } else if (respuesta ==0){
+                } else
+                    respuesta = 0;
                 throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(301);
             }
             
             ps.close();
             Desconectar(conn);
-            FabricaIdentityMap.obtenerIdentityMap().getInstance().rmEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
+            FabricaIdentityMap.obtenerIdentityMap().rmEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
         } catch (SQLException e) {
             log.error("Error eliminando presupuestos: "+e.getMessage());
             respuesta = 2;
