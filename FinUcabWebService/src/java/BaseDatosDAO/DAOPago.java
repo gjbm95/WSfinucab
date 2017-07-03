@@ -249,7 +249,7 @@ public class DAOPago extends DAO implements IDAOPago{
         JsonObject cuentaJsonObject = null;
         try {
             Statement st = Conexion.conectarADb().createStatement();
-            cstm = Conexion.conectarADb().prepareCall("{ call obtenerBalance(?)}");
+            cstm = Conexion.conectarADb().prepareCall(RegistroBaseDatos.ESTADISTICA_PAGO);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
