@@ -46,13 +46,9 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             idCategoria = rs.getInt(1);
             
             categoria.setId(idCategoria);
-<<<<<<< HEAD
-            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
-=======
             System.out.println(idCategoria+"id super");
             IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             System.out.println(categoria.getId()+"id normal");
->>>>>>> 5659188a93c78d009e57ca5830a5264e7e2b0b1f
             } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -75,12 +71,9 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getId());
             cstmt.execute();
-<<<<<<< HEAD
-            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
-=======
+
             System.out.println("despues del stored");
             IdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
->>>>>>> 5659188a93c78d009e57ca5830a5264e7e2b0b1f
             
            } catch (SQLException ex) {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
