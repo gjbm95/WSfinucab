@@ -27,7 +27,7 @@ public class Modulo5Client {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/FinUcabWebService/webresources";
+    private static final String BASE_URI = "http://192.168.0.107:8080/FinUcabWebService/webresources";
 
     public Modulo5Client() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

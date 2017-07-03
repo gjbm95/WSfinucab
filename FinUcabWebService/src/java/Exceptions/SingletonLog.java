@@ -3,30 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package BaseDatosDAO.Singleton;
+package Exceptions;
 
+import BaseDatosDAO.Singleton.*;
 import BaseDatosDAO.DAO;
 import BaseDatosDAO.FabricaDAO;
 import BaseDatosDAO.Interfaces.IDAOPago;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Ramon
  */
-public class SingletonDAOPago {
+public class SingletonLog {
     
-    private SingletonDAOPago() {
+    private SingletonLog() {
     }
     
-    private static IDAOPago INSTANCE; 
+    private static Logger INSTANCE; 
     
-    public static IDAOPago getInstance() {
+    public static Logger getInstance() {
         
         if (INSTANCE == null){
-            INSTANCE = FabricaDAO.instanciasDAOPago();
+            INSTANCE = LogManager.getLogger();
         }
         
-        return SingletonDAOPago.INSTANCE;
+        return SingletonLog.INSTANCE;
     }
     
 

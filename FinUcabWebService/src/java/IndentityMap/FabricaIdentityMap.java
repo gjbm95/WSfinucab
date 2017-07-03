@@ -12,6 +12,6 @@ package IndentityMap;
 public class FabricaIdentityMap {
     
     public static IdentityMap obtenerIdentityMap(){
-       return new IdentityMap();
+       return IdentityMap.getInstance();
     }   
 }

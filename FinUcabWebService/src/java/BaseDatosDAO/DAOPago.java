@@ -11,11 +11,13 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Pago;
 import Exceptions.FabricaExcepcion;
-import IndentityMap.SingletonIdentityMap;
+import IndentityMap.FabricaIdentityMap;
+import IndentityMap.IdentityMap;
 import Logica.Modulo5.AgregarPagoException;
 import Logica.Modulo5.ConsultarPagoException;
 import Logica.Modulo5.ListarPagosException;
 import Logica.Modulo5.ModificarPagoException;
+import Registro.RegistroBaseDatos;
 import Registro.RegistroIdentityMap;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -37,6 +39,17 @@ import javax.json.JsonObjectBuilder;
  */
 public class DAOPago extends DAO implements IDAOPago{
 
+    private DAOPago(){
+    }
+    
+    public static DAOPago getInstance() {
+        return SingletonDAOPagoHolder.INSTANCE;
+    }
+    
+    private static class SingletonDAOPagoHolder {
+        private static final DAOPago INSTANCE = new DAOPago();
+    }
+    
     @Override
     public Entidad agregar(Entidad e) throws AgregarPagoException {
 
@@ -44,11 +57,11 @@ public class DAOPago extends DAO implements IDAOPago{
         Pago pago = (Pago) e;
         CallableStatement pag;
         int idPago = 0;
-        
+         
         try {                
             
             Connection conn = Conexion.conectarADb();
-            pag = conn.prepareCall("{ call AgregarPago(?,?,?,?) }");
+            pag = conn.prepareCall(RegistroBaseDatos.AGREGAR_PAGO);
             pag.setFloat(1, pago.getTotal());
             pag.setString(2, pago.getDescripcion());
             pag.setString(3, pago.getTipo());
@@ -56,7 +69,7 @@ public class DAOPago extends DAO implements IDAOPago{
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
             
-            if (rs.next()){
+            if (rs.next() ){
                 idPago = rs.getInt(1); 
             }else{
                 throw FabricaExcepcion.instanciarAgregarPagoException(100);
@@ -64,7 +77,7 @@ public class DAOPago extends DAO implements IDAOPago{
            
             pago.setId(idPago);
             
-            SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+            IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarAgregarPagoException(998);                
@@ -76,6 +89,16 @@ public class DAOPago extends DAO implements IDAOPago{
     }
     
     
+    private boolean containString(String[] cases, String text){
+        
+        for (String aCase : cases) {
+            if (aCase.equals(text))
+                return true;
+        }
+        
+        return false;
+    }
+    
 
     @Override
     public Entidad modificar(Entidad e) throws ModificarPagoException {
@@ -83,23 +106,33 @@ public class DAOPago extends DAO implements IDAOPago{
         Pago pago = (Pago) e;
         CallableStatement cstmt;
         
+        String[] tipos = new String[2];
+        tipos[0] = "ingreso";
+        tipos[1] = "egreso";
+        
+        if (!containString(tipos, pago.getTipo()))
+            throw FabricaExcepcion.instanciarModificarPagoException(102);
+        
         try {
-            
+           
             Connection conn = Conexion.conectarADb();
             
-            cstmt = conn.prepareCall("{ call ModificarPago(?,?,?,?,?) }");
+            //System.out.println(pago.getId()+"-"+pago.getTotal()+"-"+pago.getDescripcion()+"-"+pago.getTipo()+"-"+pago.getCategoria());
+            cstmt = conn.prepareCall(RegistroBaseDatos.MODIFICAR_PAGO);
             cstmt.setInt(1,pago.getId());
             cstmt.setFloat(2,pago.getTotal());
             cstmt.setString(3,pago.getDescripcion());
-            cstmt.setString(4,pago.getDescripcion());
+            cstmt.setString(4,pago.getTipo());
             cstmt.setInt(5,pago.getCategoria());
             cstmt.execute();
             
-            SingletonIdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+            FabricaIdentityMap.obtenerIdentityMap().getInstance().updateEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
             
         } catch (SQLException ex) {
             throw FabricaExcepcion.instanciarModificarPagoException(998);
+            
         }
+        
         return pago;
     }
          
@@ -109,7 +142,7 @@ public class DAOPago extends DAO implements IDAOPago{
     public Entidad consultar(int idPago ) throws ConsultarPagoException{
 
         
-        Entidad pago = SingletonIdentityMap.getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
+        Entidad pago = FabricaIdentityMap.obtenerIdentityMap().getInstance().getEntidadEnLista(RegistroIdentityMap.pago_listado, idPago);
         if (pago == null ){
                 
             try {
@@ -117,7 +150,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ConsultarPago(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.OBTENER_PAGO);
                 a.setInt(1, idPago);
                 a.executeQuery();
 
@@ -129,7 +162,7 @@ public class DAOPago extends DAO implements IDAOPago{
                     throw FabricaExcepcion.instanciarConsultarPagoException(101);
                 }
                 
-                SingletonIdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
+                FabricaIdentityMap.obtenerIdentityMap().getInstance().addEntidadEnLista(RegistroIdentityMap.pago_listado, pago);
 
             } catch (SQLException ex) {
                 throw FabricaExcepcion.instanciarConsultarPagoException(998);
@@ -145,7 +178,7 @@ public class DAOPago extends DAO implements IDAOPago{
     @Override
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPagosException {
         
-        ListaEntidad listaEntidad = SingletonIdentityMap.getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
+        ListaEntidad listaEntidad = FabricaIdentityMap.obtenerIdentityMap().getInstance().getListaEntidad(RegistroIdentityMap.pago_listado);
         if (listaEntidad.getLista().isEmpty()){
             try {
                 
@@ -153,7 +186,7 @@ public class DAOPago extends DAO implements IDAOPago{
                 Connection conn = Conexion.conectarADb();
                 Statement st = conn.createStatement();
 
-                CallableStatement a = conn.prepareCall("{ call ListaPagos(?) }");
+                CallableStatement a = conn.prepareCall(RegistroBaseDatos.LISTAR_PAGOS);
                 a.setInt(1, idUsuario);
                 a.executeQuery();
 
@@ -167,7 +200,7 @@ public class DAOPago extends DAO implements IDAOPago{
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPagos);
                 
-                SingletonIdentityMap.getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
+                FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.pago_listado, listaEntidad);
                 
             } catch (SQLException ex) {
                 throw FabricaExcepcion.instanciarListarPagosException(998);
@@ -216,7 +249,7 @@ public class DAOPago extends DAO implements IDAOPago{
         JsonObject cuentaJsonObject = null;
         try {
             Statement st = Conexion.conectarADb().createStatement();
-            cstm = Conexion.conectarADb().prepareCall("{ call obtenerBalance(?)}");
+            cstm = Conexion.conectarADb().prepareCall(RegistroBaseDatos.ESTADISTICA_PAGO);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

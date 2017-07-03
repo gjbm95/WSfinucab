@@ -8,9 +8,12 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Usuario;
 import Exceptions.FabricaExcepcion;
+import IndentityMap.IdentityMap;
 import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.EliminarFallidoException;
+import Logica.Modulo2.MapaModulo2;
 import Logica.Modulo2.ModificarFallidoException;
+import Registro.RegistroBaseDatos;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -46,11 +49,12 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      */
     @Override
     public Entidad agregar(Entidad e) throws AgregarFallidoException {
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj =(Cuenta_Bancaria) cache.getEntidad("CuentaNueva");      
         CallableStatement cstmt;
         int idCuenta = 0;
         try {
-            cstmt = conn.prepareCall("{ call agregarCuentaBancaria(?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.AGREGAR_CUENTABANCARIA);
             cstmt.setString(1, obj.getNombreBanco());
             cstmt.setString(2, obj.getTipoCuenta());
             cstmt.setString(3, obj.getNumcuenta());
@@ -86,10 +90,11 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
      * @return Objeto de tipo Cuenta_Bancaria (Entidad sin castear)
      */
     public Entidad modificar(Entidad e) throws ModificarFallidoException{
-        Cuenta_Bancaria obj = (Cuenta_Bancaria) e;
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+        Cuenta_Bancaria obj = (Cuenta_Bancaria)cache.getEntidad("CuentaModificada");
         CallableStatement cstmt;
         try {
-            cstmt = conn.prepareCall("{ call modificarCuentaBancaria(?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.MODIFICAR_CUENTABANCARIA);
             cstmt.setString(3, obj.getTipoCuenta());
             cstmt.setString(2, obj.getNumcuenta());
             cstmt.setString(1, obj.getNombreBanco());
@@ -128,7 +133,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         CallableStatement cstmt;
         int idCuenta = 0;
         try {
-            cstmt = conn.prepareCall("{ call eliminarCuentaBancaria(?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.ELIMINAR_CUENTABANCARIA);
             cstmt.setInt(1, id);
             cstmt.executeQuery();
             ResultSet rs = cstmt.getResultSet();
@@ -161,7 +166,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         String respuesta;
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerCuentasBancarias(?,?)}");
+            cstm = conn.prepareCall(RegistroBaseDatos.OBTENER_CUENTASBANCARIAS);
             cstm.setInt(2, id);
             cstm.setString(1, "OBTENERCUENTASUSUARIO");
             System.out.println("Entre con id" + id);
@@ -208,7 +213,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
         String respuesta;
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call getSaldoCuentas(?)}");
+            cstm = conn.prepareCall(RegistroBaseDatos.OBTENER_SALDOCUENTAS);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

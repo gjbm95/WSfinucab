@@ -5,6 +5,8 @@
  */
 package BaseDatosDAO;
 
+import BaseDatosDAO.Singleton.SingletonDAOPago;
+
 /**
  *
  * @author Oswaldo
@@ -30,7 +32,7 @@ public class FabricaDAO {
     }
     
     public static DAOPago instanciasDAOPago() {
-        return new DAOPago();
+        return DAOPago.getInstance();
     }
     
     public static DAOPresupuesto instanciasDAOPresupuesto() {

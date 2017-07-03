@@ -11,14 +11,14 @@ import Exceptions.FinUCABException;
  *
  * @author CHRISTIAN
  */
-public class EliminarPresupuestoExeption extends FinUCABException{
+public class EliminarPresupuestoException extends FinUCABException{
     
-        public EliminarPresupuestoExeption(int code){
-        super(code,EliminarPresupuestoExeption.class);
+        public EliminarPresupuestoException(int code){
+        super(code,EliminarPresupuestoException.class);
     }
     
-    public EliminarPresupuestoExeption(int code, String message){
-        super(code, message,EliminarPresupuestoExeption.class);
+    public EliminarPresupuestoException(int code, String message){
+        super(code, message,EliminarPresupuestoException.class);
     }
     
 }

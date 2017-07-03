@@ -13,6 +13,7 @@ import Logica.Modulo1.IniciarSesionException;
 import Logica.Modulo1.RecuperarClaveException;
 import Logica.Modulo1.RegistrarIncorrectoException;
 import Logica.Modulo1.VerificarUsuarioException;
+import Registro.RegistroBaseDatos;
 import Registro.RegistroError;
 import Services.Modulo1sResource;
 import java.net.URLDecoder;
@@ -67,7 +68,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a = 
-                    conn.prepareCall("{ call Registrar(?,?,?,?,?,?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.AGREGAR_USUARIO);
             a.setString(1, usuario.getUsuario());
             a.setString(2, usuario.getNombre());
             a.setString(3, usuario.getApellido());
@@ -81,8 +82,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             } else {
                 st.close();
                 respuesta = 0;//No se agrega el usuario
-                throw FabricaExcepcion.
-                        instanciarRegistrarIncorrectoException(200);
+          
             }
 
         } catch (SQLException ex) {
@@ -112,7 +112,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a =
-                    conn.prepareCall("{ call ActualizarClave(?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.ACTUALIZAR_CLAVE);
             a.setString(1,usuario.getUsuario());
             a.setString(2,usuario.getContrasena());
             a.execute();
@@ -125,8 +125,8 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
                 }else{ 
                    st.close();
                    respuesta =  6; //No se modifica la clave
-                  // throw FabricaExcepcion.
-                          // instanciarActualizarClaveException(201);
+                   throw FabricaExcepcion.
+                           instanciarActualizarClaveException(201);
                 }
             }
          
@@ -159,7 +159,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Connection conn = Conexion.conectarADb();
             Statement st = conn.createStatement();
             CallableStatement a =
-                    conn.prepareCall("{ call verificarUsuario(?) }");
+                    conn.prepareCall(RegistroBaseDatos.VERIFICAR_USUARIO);
             
             a.setString(1, usuario);
             a.execute();
@@ -214,7 +214,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Statement st = conn.createStatement();
             
             CallableStatement a = 
-                    conn.prepareCall("{ call iniciarSesion(?,?) }");
+                    conn.prepareCall(RegistroBaseDatos.INICIO_SESION);
             a.setString(1,  objeto.getUsuario());
             a.setString(2,  objeto.getContrasena());
             a.execute();
@@ -246,10 +246,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             throw FabricaExcepcion.
                     instanciarIniciarSesionException(ex.getErrorCode(),
                             ex.getMessage());  
-        } catch (Exception e) {
-            respuesta= "7";
-            throw FabricaExcepcion.instanciarIniciarSesionException(202);
-        }
+        } 
         
     return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
@@ -276,7 +273,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             Statement st = conn.createStatement();
             //String query = "SELECT * from recuperarclave('" + usuario+"');";
             CallableStatement a = 
-                    conn.prepareCall("{ call recuperarclave(?) }");
+                    conn.prepareCall(RegistroBaseDatos.RECUPERAR_CLAVE);
             a.setString(1, usuario);
             a.execute(); 
             ResultSet rs = a.getResultSet();
@@ -298,7 +295,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
             if(bandera == 0){
                 st.close();
                 respuesta = "ERROR";
-                //throw FabricaExcepcion.instanciarRecuperarClaveException(203);
+               throw FabricaExcepcion.instanciarRecuperarClaveException(202);
                 
             }
             
@@ -319,7 +316,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         Usuario obj = (Usuario) e;
         CallableStatement cstmt;
         try {
-            cstmt = conn.prepareCall("{ call update_usuario(?,?,?,?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.ACTUALIZAR_USUARIO);
             cstmt.setInt(1, obj.getId());
             cstmt.setString(2, obj.getUsuario());
             cstmt.setString(3, obj.getNombre());

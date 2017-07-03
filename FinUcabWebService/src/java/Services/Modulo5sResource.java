@@ -13,6 +13,7 @@ import Dominio.SimpleResponse;
 import Exceptions.DataReaderException;
 import Exceptions.FabricaExcepcion;
 import Exceptions.FinUCABException;
+import Exceptions.SingletonLog;
 import Logica.Comando;
 import Logica.FabricaComando;
 import Logica.Modulo5.AgregarPagoException;
@@ -40,7 +41,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 /**
  * REST Web Service
  *
@@ -48,7 +48,6 @@ import javax.ws.rs.core.Response;
  */
 @Path("/Modulo5")
 public class Modulo5sResource {
-
     @Context
     private UriInfo context;
 
@@ -193,7 +192,7 @@ public class Modulo5sResource {
                  
             try{       
                 
-                boolean validador  =validadorString(datosPagos);
+                boolean validador  =validadorString(datosPagos); 
                 if( validador ){
          
                     String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
@@ -256,6 +255,7 @@ public class Modulo5sResource {
         boolean validador  =validadorEntidad(objeto);
         if( validador ){
             
+
                 ArrayList<Entidad> lista =  ((ListaEntidad) objeto).getLista();                
 
                 JsonObjectBuilder pagoBuilder = Json.createObjectBuilder();
@@ -263,6 +263,7 @@ public class Modulo5sResource {
                 for (Entidad enti : lista) {
                     Pago pago = (Pago) enti;
                     
+
                     pagoBuilder.add("pg_id",pago.getId());
                     pagoBuilder.add("pg_monto",pago.getTotal());
                     pagoBuilder.add("pg_tipoTransaccion",pago.getTipo());
@@ -273,9 +274,11 @@ public class Modulo5sResource {
                     list.add( pagoJsonObject.toString());
                     
                 }
+
                 
                 JsonArray listJsonObject = list.build();
                 respuesta = listJsonObject.toString();
+
         }
         
         return respuesta;
@@ -292,6 +295,8 @@ public class Modulo5sResource {
 
         
         Entidad ex = null;
+        
+        
         try {  
             boolean validador  =validadorString(datosPagos);
                 
@@ -301,7 +306,8 @@ public class Modulo5sResource {
                 String decodifico = URLDecoder.decode(datosPagos,"UTF-8");
                 JsonReader reader = Json.createReader(new StringReader(decodifico));
                 JsonObject pagoJSON = reader.readObject();
-                reader.close();  
+                reader.close(); 
+                
                 ex = FabricaEntidad.obtenerPago(pagoJSON.getInt("pg_id"),pagoJSON.getInt("pg_categoria"), pagoJSON.getString("pg_descripcion"), pagoJSON.getInt("pg_monto"), pagoJSON.getString("pg_tipoTransaccion"), pagoJSON.getString("pg_nombre_categoria")) ; 
                 
             }
@@ -340,23 +346,36 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/registrarPago")
     public String registrarPago(@QueryParam("datosPago") String datosPagos)  {
-        
+          
+        SingletonLog.getInstance().debug("Registrar Pago ");
+            
          String respuesta = "";
          
         try {
+            
             Entidad e = entidadAgregarPago(datosPagos);
             Comando c = FabricaComando.instanciarComandoAgregarPago(e);
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
-            respuesta = obtenerRespuestaAgregar(objectResponse);
-            
+           respuesta = obtenerRespuestaAgregar(objectResponse);
+            SingletonLog.getInstance().info("Pago Registrado");
+           
         }  catch (AgregarPagoException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            respuesta = ex.getOwnMessage();
+            SingletonLog.getInstance().error("Error registrando pago");
+            ex.printStackTrace();
+            
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
+            SingletonLog.getInstance().error("Error registrando pago");
+            ex.printStackTrace();
+            
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
+            SingletonLog.getInstance().error("Error registrando pago");
+            ex.printStackTrace();
+            
         }
         
         
@@ -379,7 +398,9 @@ public class Modulo5sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/consultarPago")
     public String consultarPago(@QueryParam("datosPago") int idPago) {
-                      
+        
+        SingletonLog.getInstance().debug("Obteniendo Pago con id: " + idPago);
+
         String respuesta ="";
         try { 
                          
@@ -391,17 +412,15 @@ public class Modulo5sResource {
                 respuesta =obtenerRespuestaConsultar(objectResponse);
                         
             }
-        }catch (ConsultarPagoException e) {
-            respuesta = e.getMessage();
-        }  catch (DataReaderException ex) {
-            
+        }catch (ConsultarPagoException | DataReaderException ex) {
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
         }
-        
+         SingletonLog.getInstance().info("Retornando pago"+idPago);   
          return respuesta;
     }
 
@@ -421,6 +440,8 @@ public class Modulo5sResource {
     @Path("/visualizarPago")
     public String visualizarPago(@QueryParam("datosPago") int idPago) {
         
+        SingletonLog.getInstance().debug("Listando Pagos de usuario con id:" + idPago);
+
         String respuesta ="";
         try{
             if( validadorInteger(idPago) ){
@@ -431,15 +452,14 @@ public class Modulo5sResource {
             }
         }
         catch (ListarPagosException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         
         }  catch (Exception ex) {
             respuesta = Registro.RegistroError.error_default;
         }
-        
-        
+        SingletonLog.getInstance().info("Retornando Pagos de usuario con id:" + idPago);   
         return respuesta;
     }
     
@@ -459,7 +479,7 @@ public class Modulo5sResource {
     @Path("/modificarPago")
     public String modificarPago(@QueryParam("datosPago") String datosPagos) {
         
-            System.out.println("modificarPago");
+            SingletonLog.getInstance().debug("Modificando pago");
         String respuesta = "";       
 
         try {
@@ -470,7 +490,7 @@ public class Modulo5sResource {
                 respuesta = obtenerRespuestaModificar(objectResponse);
                 
         }catch (ModificarPagoException | DataReaderException ex) {
-            respuesta = ex.getMessage();
+            respuesta = ex.getOwnMessage();
         }  catch (FinUCABException ex) {
             respuesta = Registro.RegistroError.error_default;
         
@@ -478,7 +498,7 @@ public class Modulo5sResource {
             respuesta = Registro.RegistroError.error_default;
         }
         
-        System.out.println(respuesta);
+       SingletonLog.getInstance().info("Respuesta modificado: " + respuesta); 
        return respuesta;
     }
     

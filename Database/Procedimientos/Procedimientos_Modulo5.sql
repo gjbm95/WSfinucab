@@ -16,7 +16,7 @@ AS $function$
 
 DECLARE
  result integer;
-
+ 
 BEGIN
   INSERT INTO Pago (pg_monto , pg_fecha , pg_descripcion , pg_tipotransaccion , categoriaca_id) VALUES
       (monto,CURRENT_TIMESTAMP,descripcion,transaccion,categoria);
@@ -31,7 +31,7 @@ END;
 $function$;
 
 
-CREATE OR REPLACE FUNCTION ModificarPago(pago integer, monto float,
+CREATE OR REPLACE FUNCTION ModificarPago(pag integer, monto float,
 	descripcion character varying,
 	transaccion character varying,
 	categoria integer)
@@ -42,12 +42,12 @@ result integer;
     
 BEGIN 
 
-UPDATE pago SET 
+UPDATE PAGO SET 
 					pg_monto=monto , 
 					pg_descripcion=descripcion , 
 					pg_tipotransaccion=transaccion , 
 					categoriaca_id= categoria
-				    where pg_id = pago;
+				    where pg_id = pag;
     if found then
 	result := 1;
 	else result := 0;
@@ -64,7 +64,8 @@ CREATE OR REPLACE FUNCTION ConsultarPago(
 	OUT pg_monto real,
 	OUT pg_descripcion character varying,
 	OUT pg_tipoTransaccion character varying,
-	OUT categoriaca_id integer)
+	OUT categoriaca_id integer,
+	OUT categoriaca_nombre character varying)
     RETURNS record
     LANGUAGE 'sql'
     
