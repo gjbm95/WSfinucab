@@ -11,6 +11,7 @@ import Logica.Modulo2.AgregarFallidoException;
 import Logica.Modulo2.EliminarFallidoException;
 import Logica.Modulo2.MapaModulo2;
 import Logica.Modulo2.ModificarFallidoException;
+import Registro.RegistroBaseDatos;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -56,7 +57,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
         CallableStatement cstmt;
         int idtarjeta = 0;
         try {
-            cstmt = conn.prepareCall("{ call agregarTarjetaCredito(?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.AGREGAR_TDC);
             cstmt.setString(1, obj.getTipotdc());
             String datos[] = obj.getFechaven().split("-");
             Calendar calendar = Calendar.getInstance();
@@ -102,7 +103,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
         Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaModificada");   
         CallableStatement cstmt;
         try {
-            cstmt = conn.prepareCall("{ call modificarTarjetaCredito(?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.MODIFICAR_TDC);
             cstmt.setString(1, obj.getTipotdc());
             String datos[] = obj.getFechaven().split("-");
             Calendar calendar = Calendar.getInstance();
@@ -149,7 +150,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
         CallableStatement cstmt;
         int idtarjeta = 0;
         try {
-            cstmt = conn.prepareCall("{ call eliminarTarjetasCredito(?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.ELIMINAR_TDC);
             cstmt.setInt(1, id);
             cstmt.executeQuery();
             ResultSet rs = cstmt.getResultSet();
@@ -183,7 +184,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
         String respuesta ="";
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerTarjetasCredito(?,?)}");
+            cstm = conn.prepareCall(RegistroBaseDatos.OBTENER_TDCS);
             cstm.setInt(2, id);
             cstm.setString(1, "OBTENERTARJETASSUSUARIO");
             ResultSet rs = cstm.executeQuery();
@@ -230,7 +231,7 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
         String respuesta;
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call getSaldoTarjetas(?)}");
+            cstm = conn.prepareCall(RegistroBaseDatos.OBTENER_SALDOTDC);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             if (rs.next()) {

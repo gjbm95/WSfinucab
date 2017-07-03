@@ -11,9 +11,10 @@ import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
 import Exceptions.FabricaExcepcion;
+import Exceptions.FinUCABException;
 import Exceptions.Presupuesto.AgregarPresupuestoException;
 import Exceptions.Presupuesto.ConsultarPresupuestoException;
-import Exceptions.Presupuesto.EliminarPresupuestoExeption;
+import Exceptions.Presupuesto.EliminarPresupuestoException;
 import Exceptions.Presupuesto.ListarPresupuestoException;
 import Exceptions.Presupuesto.ModificarPresupuestoException;
 import Exceptions.Presupuesto.VerificarNombreException;
@@ -51,8 +52,9 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         Presupuesto presupuesto = (Presupuesto) e;
         int respuesta = 0;
         int idPresupuesto =0;
+        String[] idCategoria;
         try {
-
+            idCategoria = presupuesto.getCategoria().split("-");
             Connection conn = Conexion.conectarADb();
             PreparedStatement pag = conn.prepareStatement(RegistroBaseDatos.AGREGAR_PRESUPUESTO);
             pag.setString(1, presupuesto.getNombre());
@@ -60,20 +62,25 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.setString(3, presupuesto.getClasificacion());
             pag.setInt(4, presupuesto.getDuracion());
             pag.setInt(5, presupuesto.getUsuario());
-            pag.setInt(6, Integer.parseInt(presupuesto.getCategoria()));
+            pag.setInt(6, Integer.parseInt(idCategoria[0]));
             pag.executeQuery();
             ResultSet rs = pag.getResultSet();
-            rs.next();
-            idPresupuesto = rs.getInt("agregarpresupuesto");
-            pag.close();
+            if (rs.next()) {
+                idPresupuesto = rs.getInt("agregarpresupuesto");
+                pag.close();
+            } else {
+                throw FabricaExcepcion.instanciarAgregarPresupuestoException(300);
+            }
+            Desconectar(conn);
             respuesta = 1;
             presupuesto.setId(idPresupuesto);
+            presupuesto.setTipo("true");
             IdentityMap.getInstance().addEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (SQLException ex) {
             log.error("Error agregando presupuesto: "+ex.getMessage());
             respuesta = 2;
-            throw FabricaExcepcion.instanciarAgregarPresupuestoException(ex.getErrorCode(),ex.getMessage());
+            throw FabricaExcepcion.instanciarAgregarPresupuestoException(998,ex.getMessage());
             
         }
 
@@ -84,9 +91,11 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
     public Entidad modificar(Entidad e) throws ModificarPresupuestoException {
 
         Presupuesto presupuesto = (Presupuesto) e;
+        String[] idCategoria;
         int respuesta = 0;
 
         try {
+            idCategoria = presupuesto.getCategoria().split("-");
             Connection conn = Conectar();
             PreparedStatement pag = conn.prepareStatement(RegistroBaseDatos.MODIFICAR_PRESUPUESTO);
             pag.setString(1, presupuesto.getNombre());
@@ -94,7 +103,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             pag.setString(3, presupuesto.getClasificacion());
             pag.setInt(4, presupuesto.getDuracion());
             pag.setInt(5, presupuesto.getUsuario());
-            pag.setInt(6, Integer.parseInt(presupuesto.getCategoria()));
+            pag.setInt(6, Integer.parseInt(idCategoria[0]));
             pag.setInt(7, presupuesto.getId());
             System.out.println(pag.toString());
             pag.executeQuery();
@@ -103,12 +112,13 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("modificarpresupuesto");
             pag.close();
             Desconectar(conn);
+            presupuesto.setTipo("true");
             FabricaIdentityMap.obtenerIdentityMap().getInstance().updateEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
 
         } catch (SQLException ex) {
             log.error("Error modificando presupuesto: "+ex.getMessage());
             respuesta = 2;
-            throw FabricaExcepcion.instanciarModificarPresupuestoException(ex.getErrorCode(), ex.getMessage());
+            throw FabricaExcepcion.instanciarModificarPresupuestoException(998, ex.getMessage());
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
@@ -126,15 +136,17 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 ps.executeQuery();
                 
                 ResultSet rs = ps.getResultSet(); 
-                rs.next();
+                if (rs.next()){
                 presupuesto = new Presupuesto(rs.getInt(1), rs.getString(2), rs.getDouble(4),
                         rs.getString(6), rs.getInt(5), String.valueOf(rs.getInt(3)), 
                         String.valueOf(rs.getBoolean(7)));
-                       
+                } else {
+                    throw FabricaExcepcion.instanciarConsultarPresupuestoException(101);
+                }
                 FabricaIdentityMap.obtenerIdentityMap().getInstance().setEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, presupuesto);
             } catch (SQLException e){
                 log.error("Error consultando presupuesto: "+e.getMessage());
-                throw FabricaExcepcion.instanciarConsultarPresupuestoException(e.getErrorCode(), e.getMessage());
+                throw FabricaExcepcion.instanciarConsultarPresupuestoException(998, e.getMessage());
             }
         }
         return presupuesto;
@@ -169,7 +181,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
                 FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
-                throw FabricaExcepcion.instanciarListarPresupuestoException(e.getErrorCode(), e.getMessage());
+                throw FabricaExcepcion.instanciarListarPresupuestoException(998, e.getMessage());
             }
         }
         return listaEntidad;
@@ -192,13 +204,13 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         } catch (SQLException e){
             log.error("Error verificando nombre: "+e.getMessage());
             respuesta = 2;
-            throw FabricaExcepcion.instanciarVerificarNombreException(e.getErrorCode(), e.getMessage());
+            throw FabricaExcepcion.instanciarVerificarNombreException(998, e.getMessage());
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
     @Override
-    public Entidad eliminarPresupuesto(int id) throws EliminarPresupuestoExeption {
+    public Entidad eliminarPresupuesto(int id) throws EliminarPresupuestoException {
         
         int respuesta = 0;
         
@@ -208,26 +220,61 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             ps.setInt(1, id);
             ps.executeQuery();
             ResultSet rs = ps.getResultSet(); 
-            rs.next();
-            respuesta = rs.getInt("eliminarpresupuesto");
+            if(rs.next()){
+                respuesta = rs.getInt("eliminarpresupuesto");
+            } else if (respuesta ==0){
+                throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(301);
+            }
+            
             ps.close();
             Desconectar(conn);
             FabricaIdentityMap.obtenerIdentityMap().getInstance().rmEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
         } catch (SQLException e) {
             log.error("Error eliminando presupuestos: "+e.getMessage());
             respuesta = 2;
-            throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(e.getErrorCode(), e.getMessage());
+            throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(998, e.getMessage());
         }
        
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
+    @Override
+    public ListaEntidad exportar(int idUsuario) throws FinUCABException {
+            ListaEntidad listaEntidad = null;
+        
+        try {
+                ArrayList<Entidad> listaPresupuestos = new ArrayList<>();
+                Connection conn = Conectar();
+                PreparedStatement ps = conn.prepareStatement(RegistroBaseDatos.LISTAR_PRESUPUESTOS_EXPORTAR);
+                ps.setInt(1, idUsuario);
+                System.out.println(ps.toString());
+                ps.executeQuery();
+
+                ResultSet rs = ps.getResultSet();
+
+                while (rs.next()) {
+                    Presupuesto p = new Presupuesto(rs.getInt(1), rs.getString(2),
+                            rs.getDouble(4), rs.getString(6),
+                            rs.getInt(5), rs.getString(3),
+                            String.valueOf(rs.getBoolean(7)));
+                    listaPresupuestos.add(p);
+                }
+
+                listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
+                
+            } catch (SQLException e) {
+                log.error("Error listando presupuestos: "+e.getMessage());
+                throw FabricaExcepcion.instanciarExportarPresupuestoException(998, e.getMessage());
+            }
+        return listaEntidad;
+    }
+        
     public JsonArray getUltimosPresupuestos(int id) {
         CallableStatement cstm;
         JsonArray array = null;
         try {
             Statement st = Conexion.conectarADb().createStatement();
-            cstm =Conexion.conectarADb().prepareCall("{ call obtenerUltimosPresupuestos(?)}");
+            cstm =Conexion.conectarADb().prepareCall(RegistroBaseDatos.ESTADISTICA_PRESUPUESTO);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
