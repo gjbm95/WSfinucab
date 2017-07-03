@@ -133,6 +133,7 @@ public class Modulo4sResource {
             c.ejecutar();
             Entidad objectResponse = c.getResponse();
             respuesta = obtenerRespuestaAgregar(objectResponse);
+
             log.info("Categoria registrado con id: " + respuesta);
             
         } catch (Exception ex) {
@@ -242,7 +243,7 @@ public class Modulo4sResource {
     public String modificarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
         String respuesta="";
         log.debug("Modificando categoria");
-      
+       System.out.println(datosCategoria);
         try {
            
             Entidad e = modCategoria(datosCategoria);

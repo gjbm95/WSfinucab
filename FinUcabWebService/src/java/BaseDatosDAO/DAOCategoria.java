@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOCategoria;
@@ -67,8 +63,6 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     public Entidad modificar(Entidad e) {
         Categoria categoria = (Categoria) e;        
         try {
-            System.out.println("entrando modificar");
-            System.out.println(categoria.getId());
             CallableStatement cstmt;
             cstmt = conn.prepareCall("{ call ModificarCategoria(?,?,?,?,?) }");
             cstmt.setString(1,categoria.getNombre());
@@ -76,7 +70,9 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(3,categoria.isIngreso());
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getId());
+            System.out.println(cstmt.toString());
             cstmt.execute();
+
             System.out.println("despues del stored");
             IdentityMap.getInstance().updateEntidadEnLista(RegistroIdentityMap.categoria_listado, categoria);
             
@@ -106,8 +102,6 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                    while (rs.next()){
                        
                        categoria = new Categoria( rs.getInt(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getInt(6));
-                       System.out.println("estoyaqui");
-                       System.out.println(rs.getInt(1));
                    }
 
                } catch (SQLException ex) {
@@ -132,7 +126,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
                 CallableStatement a = conn.prepareCall("{ call ConsultarTodos(?) }");
                 a.setInt(1, idUsuario);
                 a.executeQuery();
-               ResultSet rs = a.getResultSet();
+                ResultSet rs = a.getResultSet();
 
                 while (rs.next())
                 {
@@ -156,6 +150,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     
     @Override 
     public Entidad eliminarCategoria(int idCategoria){
+        Entidad respuesta = null;
         try {
             Statement st = conn.createStatement();
             EliminarCategoria2(idCategoria, "presupuesto");
@@ -165,6 +160,12 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cat.executeQuery();
             ResultSet rs = cat.getResultSet();
             rs.next();
+            if (rs.getInt(1)==1){
+                respuesta = FabricaEntidad.obtenerSimpleResponse(1);
+                
+            }else{
+                respuesta = FabricaEntidad.obtenerSimpleResponse(0);
+            }
             
             FabricaIdentityMap.obtenerIdentityMap().getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
             
@@ -172,7 +173,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return FabricaEntidad.obtenerSimpleResponse(1);
+        return respuesta;
     }        
     
     public boolean EliminarCategoria2 (int idcat, String tabla){
