@@ -243,7 +243,7 @@ public class Modulo4sResource {
     public String modificarCategoria(@QueryParam("datosCategoria") String datosCategoria) {
         String respuesta="";
         log.debug("Modificando categoria");
-      
+       System.out.println(datosCategoria);
         try {
            
             Entidad e = modCategoria(datosCategoria);

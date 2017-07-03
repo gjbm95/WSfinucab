@@ -70,6 +70,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cstmt.setBoolean(3,categoria.isIngreso());
             cstmt.setBoolean(4,categoria.isEstaHabilitado());
             cstmt.setInt(5, categoria.getId());
+            System.out.println(cstmt.toString());
             cstmt.execute();
 
             System.out.println("despues del stored");

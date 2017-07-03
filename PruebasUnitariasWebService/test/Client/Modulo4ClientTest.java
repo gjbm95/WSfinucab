@@ -114,12 +114,59 @@ public class Modulo4ClientTest {
         assertEquals(result, CategoriaArrayAux[1]);
 
     }
+  
+     @Test 
+    public void testRegistroCategoriaFracaso() {
+        System.out.println("Test Registrar Categoria Fracaso");
+        String datosCategoria = "{ \"c_usuario\" : 1, \"c_nombre\" : \123`,\"c_descripcion\" : \"UCAB\",\"c_ingreso\" : true,\"c_estado\" : true }";
+        datosCategoria = URLEncoder.encode(datosCategoria);
+        
+        Modulo4Client instance = new Modulo4Client();
+        
+        String result = instance.registrarCategoria(datosCategoria);
+        assertEquals(result, "0");
+        
+    }
+    
+    @Test
+    public void testModificarCategoriaFracaso() {
+        System.out.println("Test Modificar Categoria Fracaso");
+        String datosCategoria = "{ \"c_usuario\" : 1, \"c_nombre\" : \"Prueba8\",\"c_descripcion\" : \"UCAB\",\"c_ingreso\" : true,\"c_estado\" : true }";
+        datosCategoria = URLEncoder.encode(datosCategoria);
+        Modulo4Client instance = new Modulo4Client();
+        String result = instance.registrarCategoria(datosCategoria);
+        String resulta = instance.buscarCategoria(result);
+        String modCategoria = "{ \"c_id\":"+ result+",\"c_usuario\" : 1, \"c_nombre\" : \"PruebaMod\",\"c_descripcion\" : 66,\"c_ingreso\" : true,\"c_estado\" : true }";
+        String codmodCategoria = URLEncoder.encode(modCategoria);
+        System.out.println(codmodCategoria);
+        String modificar = instance.modificarCategoria(codmodCategoria);
+        
+            assertEquals(modificar, "0");
+
+    }
+    
+    
+    /**
+     * Test of buscarCategoriaFracaso method, of class Modulo4Client.
+     */
+    @Test
+    public void testBuscarCategoriaFracaso() {
+        System.out.println("Test Buscar Categoria Fracaso");
+
+        Modulo4Client instance = new Modulo4Client();
+        Object resulta = instance.buscarCategoria("999999");
+            assertEquals(resulta, "");
+ 
+    
+    }
+    
     /**
      * Test of VisualizarCategoria method, of class Modulo4Client.
      */
     @Test
     public void testVisualizarCategoria() {
       System.out.println("Test Visualizar Categoria");
+        String idlista1 = "",idlista2 = "";
         String datosCategoria = "{ \"c_usuario\" : 1, \"c_nombre\" : \"Prueba4\",\"c_descripcion\" : \"UCAB\",\"c_ingreso\" : true,\"c_estado\" : true }";
         datosCategoria = URLEncoder.encode(datosCategoria);
         Modulo4Client instance = new Modulo4Client();
@@ -129,11 +176,27 @@ public class Modulo4ClientTest {
         String result2 = instance.registrarCategoria(datosCategoria1);
         String resultVisualizar = instance.VisualizarCategoria("1");
         String ArrayCategoria[] = resultVisualizar.split(",");
-        String ArrayCategoriaAux1[] = ArrayCategoria[18].split(":");
-        String ArrayCategoriaAux2[] = ArrayCategoria[24].split(":");
-        String compararConc = ArrayCategoriaAux1[1]+ArrayCategoriaAux2[1];
-        String insertadosConc = result1+result2;
+        for (int i = 0; i < ArrayCategoria.length; i++){
+            String ArrayCategoriaAux1[] = ArrayCategoria[i].split(":");
+            if (result1.equals(ArrayCategoriaAux1[1])){
+                idlista1 = ArrayCategoriaAux1[1];
+            }
+            if (result2.equals(ArrayCategoriaAux1[1])){
+                idlista2 = ArrayCategoriaAux1[1];
+            }
+
+        }
+        //String ArrayCategoriaAux1[] = ArrayCategoria[24].split(":");
+        //String ArrayCategoriaAux2[] = ArrayCategoria[30].split(":");
+        //String compararConc = ArrayCategoriaAux1[1]+ArrayCategoriaAux2[1];
+        //String insertadosConc = result1+result2;
+          String compararConc = idlista1+ idlista2;
+          String insertadosConc = result1+result2;
         
-        assertEquals(insertadosConc, compararConc);
+        
+        
+        
+        
+       assertEquals(insertadosConc, compararConc);
      }
 }
