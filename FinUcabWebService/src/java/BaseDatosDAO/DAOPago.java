@@ -42,14 +42,29 @@ public class DAOPago extends DAO implements IDAOPago{
     private DAOPago(){
     }
     
+    /**
+     * obteniendo la instancia del Singleton
+     * @return 
+     */
     public static DAOPago getInstance() {
         return SingletonDAOPagoHolder.INSTANCE;
     }
     
+    
+    /**
+     * colocando la instancia igual a DAOPago
+     */
     private static class SingletonDAOPagoHolder {
         private static final DAOPago INSTANCE = new DAOPago();
     }
     
+    
+    /**
+     * metodo que llama al Store Procedure Agregar y devuelve una entidad
+     * @param e
+     * @return
+     * @throws AgregarPagoException 
+     */
     @Override
     public Entidad agregar(Entidad e) throws AgregarPagoException {
 
@@ -88,7 +103,13 @@ public class DAOPago extends DAO implements IDAOPago{
             
     }
     
-    
+            
+    /**
+     * 
+     * @param cases
+     * @param text
+     * @return 
+     */
     private boolean containString(String[] cases, String text){
         
         for (String aCase : cases) {
@@ -99,7 +120,13 @@ public class DAOPago extends DAO implements IDAOPago{
         return false;
     }
     
-
+    
+    /**
+     * metodo que llama al Store Procedure modificar en la base de datos y devuelve una entidad modificada
+     * @param e
+     * @return
+     * @throws ModificarPagoException 
+     */
     @Override
     public Entidad modificar(Entidad e) throws ModificarPagoException {
         
@@ -137,7 +164,12 @@ public class DAOPago extends DAO implements IDAOPago{
     }
          
    
-
+    /**
+     * metodo que llama al Store Procedure consultar en la base de datos y devuelve el pago
+     * @param idPago
+     * @return
+     * @throws ConsultarPagoException 
+     */
     @Override
     public Entidad consultar(int idPago ) throws ConsultarPagoException{
 
@@ -174,7 +206,12 @@ public class DAOPago extends DAO implements IDAOPago{
     }
    
     
-
+    /**
+     * metodo que llama al Store procedure consultar todos en la base de datos y devuelve a lista de los pagos de un usuario
+     * @param idUsuario
+     * @return
+     * @throws ListarPagosException 
+     */
     @Override
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPagosException {
         
@@ -211,7 +248,12 @@ public class DAOPago extends DAO implements IDAOPago{
         
     }
 
-
+    
+    /**
+     * metodo que muestra los tultimos pagos por usuario
+     * @param id
+     * @return 
+     */
     public JsonArray getUltimosPagosXUsuario(int id) {
         CallableStatement cstm;
         String respuesta;
@@ -243,6 +285,12 @@ public class DAOPago extends DAO implements IDAOPago{
         return array;
     }
 
+    
+    /**
+     * metodo que devuelve el balance 
+     * @param id
+     * @return 
+     */
     public JsonObject getBalance(int id) {
         CallableStatement cstm;
         String respuesta;
