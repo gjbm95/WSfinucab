@@ -43,7 +43,7 @@ public class PruebasModulo4 {
     public void tearDown() {
     }
 
-     @Test
+     /*@Test
      public void TestAgregar() {
      
          Entidad categoria = FabricaEntidad.obtenerCategoria(1,"juan","suedo del mes",true,true);
@@ -52,5 +52,5 @@ public class PruebasModulo4 {
          Categoria con = (Categoria)dao.consultar(respuesta.getId());
          assertEquals(respuesta.getId(),con.getId());
          
-     }
+     }*/
 }
