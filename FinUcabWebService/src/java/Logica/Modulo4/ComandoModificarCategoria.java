@@ -26,14 +26,7 @@ public class ComandoModificarCategoria extends Comando{
     @Override
     public void ejecutar() throws FinUCABException {
         IDAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-        Entidad respuesta = dao.modificar(categoria);
-        /*if (respuesta != null){
-            return respuesta;
-        }
-        else {
-            return "Error";
-        }
-           */ 
+        this.response = dao.modificar(categoria);
 
     }
     

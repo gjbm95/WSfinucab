@@ -21,12 +21,8 @@ import Logica.Modulo5.ComandoAgregarPago;
 import Logica.Modulo5.ComandoConsultarPago;
 import Logica.Modulo5.ComandoListarPagos;
 import Logica.Modulo5.ComandoModificarPago;
-import Logica.Modulo3.ComandoAgregarPresupuesto;
-import Logica.Modulo3.ComandoEliminarPresupuesto;
-import Logica.Modulo3.ComandoListarPresupuestos;
-import Logica.Modulo3.ComandoModificarPresupuesto;
-import Logica.Modulo3.ComandoObtenerPresupuesto;
-import Logica.Modulo3.ComandoVerificarNombre;
+import Logica.Modulo3.*;
+
 
 
 /**
@@ -206,5 +202,9 @@ public class FabricaComando {
     public static ComandoVerificarNombre 
         instanciarComandoVerificarNombre(String nombrePresupuesto){
         return new ComandoVerificarNombre(nombrePresupuesto);
+    }
+        
+    public static ComandoExportarPresupuestos instanciarComandoExportarPresupuesto(int idUsuario){
+        return new ComandoExportarPresupuestos(idUsuario);
     }
 }

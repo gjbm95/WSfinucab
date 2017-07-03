@@ -7,7 +7,8 @@ package Exceptions;
 
 import Exceptions.Presupuesto.AgregarPresupuestoException;
 import Exceptions.Presupuesto.ConsultarPresupuestoException;
-import Exceptions.Presupuesto.EliminarPresupuestoExeption;
+import Exceptions.Presupuesto.EliminarPresupuestoException;
+import Exceptions.Presupuesto.ExportarPresupuestoException;
 import Exceptions.Presupuesto.ListarPresupuestoException;
 import Exceptions.Presupuesto.ModificarPresupuestoException;
 import Exceptions.Presupuesto.VerificarNombreException;
@@ -112,12 +113,12 @@ public class FabricaExcepcion {
         return new VerificarNombreException(code, message);
     }
     
-    public static EliminarPresupuestoExeption instanciarEliminarPresupuestoExeption (int code){
-        return new EliminarPresupuestoExeption(code);
+    public static EliminarPresupuestoException instanciarEliminarPresupuestoExeption (int code){
+        return new EliminarPresupuestoException(code);
     }
     
-    public static EliminarPresupuestoExeption instanciarEliminarPresupuestoExeption(int code, String message){
-        return new EliminarPresupuestoExeption(code, message);
+    public static EliminarPresupuestoException instanciarEliminarPresupuestoExeption(int code, String message){
+        return new EliminarPresupuestoException(code, message);
     }
     
     public static ActualizarClaveException instanciarActualizarClaveException
@@ -200,4 +201,8 @@ public class FabricaExcepcion {
         return new EliminarFallidoException(code, message);
     }
         
+    public static ExportarPresupuestoException instanciarExportarPresupuestoException(int code, String message) {
+        return new ExportarPresupuestoException(code, message);
+    }
+    
 }

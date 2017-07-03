@@ -5,6 +5,9 @@
  */
 package PruebasModulo2;
 
+import BaseDatosDAO.DaoUsuario;
+import BaseDatosDAO.FabricaDAO;
+import Dominio.SimpleResponse;
 import Dominio.Usuario;
 import Exceptions.FinUCABException;
 import Logica.Comando;
@@ -63,19 +66,29 @@ public class PruebasModulo2 {
     public void actualizarCuentaTest() {
 
         try {
-            String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"Eoeooeoe\" ,"
+            String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"gjbm\" ,"
                     + " \"u_nombre\" : \"Alejandro\""
                     + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
                     + " \"aledavid21@hotmail.com\", "
                     + "\"u_pregunta\" : \"Nombre de mi mama\" ,"
                     + " \"u_respuesta\" : \"/alejandra\", "
-                    + "\"u_password\" : \"123456\" }";
+                    + "\"u_password\" : \"1509442\" }";
             JsonObject usuarioJSON = this.stringToJSON(decodifico);
             Usuario usuario = new Usuario();
             usuario.jsonToUsuario(usuarioJSON);
             
             Comando command = FabricaComando.instanciarComandoActualizarDatosUsuario(usuario);
             command.ejecutar();
+            
+            DaoUsuario dao = FabricaDAO.instanciasDaoUsuario();
+            SimpleResponse respuesta = (SimpleResponse) dao.obtenerInicioSesion(usuario);
+            String [ ] data = respuesta.getDescripcion().split(":-:");
+            System.out.println(data[0]);
+            JsonObject usuarioJSON2 = this.stringToJSON(data[0]);
+            
+                   
+            assertEquals(usuarioJSON2.getString("u_usuario"),usuario.getUsuario()); 
+            
         } catch (FinUCABException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }

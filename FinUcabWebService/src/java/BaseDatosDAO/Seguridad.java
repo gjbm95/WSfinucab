@@ -27,7 +27,8 @@ import org.apache.commons.codec.binary.Base64;
 public class Seguridad {
   
 private static Seguridad instancia;
-
+public static String data = "gRvpGYTBY/T9L47kChbEeFRwmuf6Usa46P42uTu"
+            + "ozRG7rndXL1tGFl29jo97SBK+wgfKTkUQA86d70hZky2ayw==";
 
 private Seguridad () {}
 
@@ -100,15 +101,8 @@ private String obtenerDatos(){
   String respuesta = "";
         try {       
          
-            FileInputStream fileInputStream = null;
-            
-            File file = obtenerArchivo();
-            byte[] fileArray = new byte[(int) file.length()];
-            // Con este código se obtienen los bytes del archivo.           
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(fileArray);
-            fileInputStream.close();                    
-            respuesta = this.descifra(fileArray);
+                            
+            respuesta = this.Desencriptar(data);
  
         } catch (Exception ex) {
             Logger.getLogger(Seguridad.class.getName()).log(Level.SEVERE,
@@ -177,6 +171,66 @@ private File obtenerArchivo(){
        return null;
     }
 
+
+    /**
+     * Metodo encargado de Encriptar datos de texto 
+     * @param texto Es el texto a encriptar
+     * @return 
+     */
+    public String Encriptar(String texto) {
+ 
+        String secretKey = "qualityinfosolutions"; //llave para encriptar datos
+        String base64EncryptedString = "";
+ 
+        try {
+ 
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+ 
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+ 
+            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.encodeBase64(buf);
+            base64EncryptedString = new String(base64Bytes);
+ 
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+    
+
+    /**
+     * Metodo encargado de Desencriptar datos de texto 
+     * @param texto Es el texto a Desencriptar
+     * @return 
+     */
+    public String Desencriptar(String textoEncriptado) {
+
+        String secretKey = "qualityinfosolutions"; //llave para desenciptar datos
+        String base64EncryptedString = "";
+
+        try {
+            byte[] message = Base64.decodeBase64(textoEncriptado.getBytes("utf-8"));
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            base64EncryptedString = new String(plainText, "UTF-8");
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
 
 
 }

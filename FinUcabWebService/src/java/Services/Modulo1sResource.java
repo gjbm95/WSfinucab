@@ -47,6 +47,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.logging.log4j.LogManager;
 
 /**
 *Modulo 1 - Modulo de Inicio de sesion y registro de usuario.
@@ -60,7 +61,7 @@ import javax.ws.rs.core.Response;
 **/
 @Path("/Modulo1")
 public class Modulo1sResource {
-
+    final static org.apache.logging.log4j.Logger log = LogManager.getLogger();
     @Context
     private UriInfo context;
     private boolean suiche;
@@ -70,61 +71,6 @@ public class Modulo1sResource {
      * Creates a new instance of Modulo1sResource
      */
     public Modulo1sResource(){
-    }
-
-    /**
-     * Retrieves representation of an instance of Services.Modulo1sResource
-     *
-     * @return an instance of javax.json.Json
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/prueba")
-    public String getPruebaJson() {
-        //TODO return proper representation object
-        JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-        usuarioBuilder.add("Nombre", "Jose");
-        usuarioBuilder.add("Apellido", "Rodriguez");
-        usuarioBuilder.add("Usuario", "jose123");
-        JsonObject usuarioJsonObject = usuarioBuilder.build();
-        return usuarioJsonObject.toString();
-    }
-
-    @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("pruebaData")
-    public String getData(@QueryParam("objeto") String objeto) {
-        return "";
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/pruebaDB")
-    public String getPruebaDataBase() {
-        //TODO return proper representation object 
-        String respuesta = "";
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Usuario;");
-            while (rs.next()) {
-                //Creo el objeto Json!             
-                JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                usuarioBuilder.add("Nombre", rs.getString(3));
-                usuarioBuilder.add("Apellido", rs.getString(4));
-                usuarioBuilder.add("Usuario", rs.getString(2));
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                respuesta = usuarioJsonObject.toString();
-            }
-            rs.close();
-            st.close();
-
-            return respuesta;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 
     /**
@@ -151,7 +97,6 @@ public class Modulo1sResource {
     private boolean validadorEntidad(Entidad valor) throws DataReaderException{
         if (valor == null)
             throw FabricaExcepcion.instanciarDataReaderException(5);
-     
         return true;
     }
 
@@ -171,6 +116,7 @@ public class Modulo1sResource {
     @Path("/registrarUsuario")
     public String registrarUsuario(@QueryParam("datosUsuario") 
             String datosCuenta) {
+        log.debug("Registrar Usuario ");
         String resultado = "";
         try {
             Entidad usuario;
@@ -180,19 +126,17 @@ public class Modulo1sResource {
             cru.ejecutar();
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaRegistrarUsuario(respuesta);
+            log.info("Usuario Registrado");
             
         } catch (DataReaderException ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.
-                    class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error registrando usuario" +ex.getOwnMessage());
         } catch (RegistrarIncorrectoException ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.
-                    class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error registrando usuario" + ex.getOwnMessage());
         } catch (Exception ex) {
             resultado = "0";
-            Logger.getLogger(Modulo1sResource.
-                    class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Error registrando usuario");
         }
         return resultado;
     }
@@ -227,10 +171,7 @@ public class Modulo1sResource {
                 usuarioJSON.getString("u_pregunta"),
                 usuarioJSON.getString("u_respuesta"),null,null);
             }
-        } catch (DataReaderException ex) {
-                Logger.getLogger(Modulo1sResource.class.getName()).
-                        log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
+        }  catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(Modulo1sResource.class.getName()).
                         log(Level.SEVERE, null, ex);
         }
@@ -270,6 +211,7 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/verificarUsuario")
     public String verificarUsuario(@QueryParam("nombreUsuario") String usuario){
+        log.debug("Verificando el usuario " + usuario);
         String resultado = "";
         try { 
             Comando cvu = FabricaComando.
@@ -277,15 +219,14 @@ public class Modulo1sResource {
             cvu.ejecutar();
             Entidad respuesta = cvu.getResponse();
             resultado = obtenerRespuestaVerificarUsuario(respuesta); 
+            log.info("Usuario Verificado");
         } catch (VerificarUsuarioException ex) {
             resultado = "3";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error verificando usuario" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "3";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error verificando usuario");
         }
                
         return resultado;
@@ -327,6 +268,7 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/iniciarSesion")
     public String iniciarSesion(@QueryParam("datosUsuario") String usuario) {
+         log.debug("Iniciando sesision con el usuario: " + usuario);
          Entidad usuarioi;
          String resultado = "";
         try {
@@ -336,20 +278,18 @@ public class Modulo1sResource {
             cru.ejecutar();
             Entidad respuesta = cru.getResponse();
             resultado = obtenerRespuestaIniciarsesion(respuesta);
+            log.info("Se inicio sesion correctamente");
         } catch (DataReaderException ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error iniciando sesion" + ex.getOwnMessage());
         }
         catch (IniciarSesionException ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error iniciando sesion" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "7";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error iniciando sesion");
         }
         return resultado;
         
@@ -415,26 +355,25 @@ public class Modulo1sResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/recuperarClave")
     public String recuperarClave(@QueryParam("datosUsuario") String usuario) {
+        log.debug("Recuperar clave del usuario "+usuario);
         String resultado = "";
         try {
-            Comando crc = FabricaComando.
-                    instanciarComandoRecuperarClave(usuario);
+            Comando crc = FabricaComando
+                    .instanciarComandoRecuperarClave(usuario);
             crc.ejecutar();
             Entidad respuesta = crc.getResponse();
             resultado = obtenerRespuestaRecuperarClave(respuesta);
+            log.info("Clave Recuperada con Exito");
         }  catch (DataReaderException ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error Recuperar Clave" + ex.getOwnMessage());
         }catch (RecuperarClaveException ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error Recuperar Clave" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "ERROR";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error Recuperar Clave");
         }
         
         
@@ -456,7 +395,7 @@ public class Modulo1sResource {
         if(validadorEntidad(enti)) {
             respuesta = ((SimpleResponse) enti).getDescripcion();
         }else {
-            respuesta = "Error Entidad nula o Vacia";
+            respuesta = "ERROR";
         }
         return respuesta;
     }
@@ -476,6 +415,7 @@ public class Modulo1sResource {
     @Path("/actualizarClave")
     public String actualizarClave(@QueryParam("datosUsuario") 
             String datosUsuario) {
+        log.debug("Actualizar Clave de usuario "); 
         Entidad usuario;
         String resultado = "";
         try {
@@ -485,19 +425,17 @@ public class Modulo1sResource {
             cis.ejecutar();
             Entidad respuesta = cis.getResponse();
             resultado = obtenerRespuestaActualizarClave(respuesta);
+            log.info("Se actualizo la clave con exito");
         } catch (DataReaderException ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error actualizando la clave" + ex.getOwnMessage());
         }catch (ActualizarClaveException ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error actualizando la clave" + ex.getOwnMessage());
         }
         catch (Exception ex) {
             resultado = "6";
-            Logger.getLogger(Modulo1sResource.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error("Error actualizando la clave");
         }
         return resultado;
     }

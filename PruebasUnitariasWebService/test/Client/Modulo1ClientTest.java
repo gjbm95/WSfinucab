@@ -88,6 +88,17 @@ public class Modulo1ClientTest {
         Assert.assertEquals("0",expected);
         
     }
+    
+    @Test
+    public void testRegistrarUsuarioIncorrectoVacio() {
+        System.out.println("ENTRE EN PRUEBA registrarUsuarioIncorrectoVacio");
+        String datosCuenta = "";
+        datosCuenta = URLEncoder.encode(datosCuenta);
+        Modulo1Client instance = new Modulo1Client();
+        String expected = instance.registrarUsuario(datosCuenta);
+        Assert.assertEquals("0",expected);
+        
+    }
 
 
     /**
@@ -114,6 +125,9 @@ public class Modulo1ClientTest {
         
     }
     
+    
+    
+    
          @Test
     public void testRecuperarClaveIncorrecto() {
         System.out.println("ENTRE EN recuperarClaveIncorrecto");
@@ -124,6 +138,15 @@ public class Modulo1ClientTest {
         String result = instance.recuperarClave(datosUsuario);
   
            
+        Assert.assertEquals("ERROR",result);
+        
+    }
+    @Test
+    public void testRecuperarClaveIncorrectoVacio() {
+        System.out.println("ENTRE EN recuperarClaveIncorrectoVacio");
+        String datosUsuario = "";
+        Modulo1Client instance = new Modulo1Client();
+        String result = instance.recuperarClave(datosUsuario);
         Assert.assertEquals("ERROR",result);
         
     }
@@ -173,6 +196,19 @@ public class Modulo1ClientTest {
         //assertThat(result, either(containsString("\"u_usuario\"")).or(is("ERROR")).or(is("DATOSMAL")));
         
     }
+    
+    @Test
+    public void testIniciarSesionIncorrectoVacio() {
+        System.out.println("ENTRE EN iniciarSesionVacio");
+        String datosUsuario = "";
+        datosUsuario = URLEncoder.encode(datosUsuario);
+
+        Modulo1Client instance = new Modulo1Client();
+
+        String result = instance.iniciarSesion(datosUsuario);
+        Assert.assertEquals("7", result);
+        
+    }
     /**
      * Metodo para probar el correcto funcionamiento de la función
      * actualizarClave() del WebService Modulo1sResources
@@ -198,6 +234,21 @@ public class Modulo1ClientTest {
     public void testActualizarClaveIncorrecto() {
         System.out.println("ENTRE EN actualizarClaveIncorrecto");
         String datosUsuario = "{ \"u_usuario\" : \"UsuarioX\" , \"u_password\" : \"123456\" }";
+        datosUsuario = URLEncoder.encode(datosUsuario);
+
+        Modulo1Client instance = new Modulo1Client();
+
+        String result = instance.actualizarClave(datosUsuario);
+
+        Assert.assertEquals("6", result);
+ 
+
+    }
+    
+    @Test
+    public void testActualizarClaveIncorrectoVacio() {
+        System.out.println("ENTRE EN actualizarClaveIncorrectoVacio");
+        String datosUsuario = "";
         datosUsuario = URLEncoder.encode(datosUsuario);
 
         Modulo1Client instance = new Modulo1Client();
@@ -238,6 +289,16 @@ public class Modulo1ClientTest {
         Modulo1Client instance = new Modulo1Client();
         String result = instance.verificarUsuario(nombreUsuario);
 
+        Assert.assertEquals("3",result);
+       
+    }
+    
+     @Test
+    public void testVerificarUsuarioIncorrectoVacio() {
+        System.out.println("ENTRE EN verificarUsuarioIncorrectoVacio");
+        String nombreUsuario = "";
+        Modulo1Client instance = new Modulo1Client();
+        String result = instance.verificarUsuario(nombreUsuario);
         Assert.assertEquals("3",result);
        
     }

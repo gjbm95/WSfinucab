@@ -17,9 +17,25 @@ import java.util.HashMap;
  */
 public class IdentityMap {
     
+    private static IdentityMap _instancia; 
     private HashMap<String, Entidad> _cache;
     
-    public IdentityMap(){
+    public static IdentityMap obtenerInstancia(){
+      if (_instancia==null)
+          _instancia = new IdentityMap();
+      
+        return _instancia; 
+    }
+    
+    public static IdentityMap getInstance() {
+        return SingletonIdentityMapHolder.INSTANCE;
+    }
+    
+    private static class SingletonIdentityMapHolder {
+        private static final IdentityMap INSTANCE = new IdentityMap();
+    }
+    
+    private IdentityMap(){
         
         this._cache = new HashMap<>();
     }
@@ -40,17 +56,12 @@ public class IdentityMap {
      public ListaEntidad getListaEntidad(String id){
         
         Entidad salida  = this._cache.get(id);
-         //System.out.println("IM");
         if (salida != null ){
-            //System.out.println("IM1");
-            //System.out.println(((ListaEntidad) salida).getLista().toArray().toString());
             return (ListaEntidad) salida;
         }else{
             
-         //System.out.println("IM2");
             ListaEntidad listaEntidad = FabricaEntidad.obtenerListaEntidad(new ArrayList<Entidad>());
             
-            System.out.println(listaEntidad.getLista().toArray());
             setEntidad(id, listaEntidad);
             
             return listaEntidad;

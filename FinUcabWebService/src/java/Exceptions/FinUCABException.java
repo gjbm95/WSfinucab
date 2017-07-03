@@ -21,16 +21,15 @@ public abstract class FinUCABException extends Exception{
         super();        
         this._code = code;
         String message = RegistroError.errores.get(code);
-        
         if(message == null){
             this._message = RegistroError.error_default;
         }else{
             this._message = message;
         }
-        
         this._className = className;
         
-        System.out.println("Error ("+_className+") : "+_code+" - "+ _message);
+        
+        SingletonLog.getInstance().error("Error ("+_className+") : "+_code+" - "+ _message);
     }
     
     public FinUCABException(int code, String message, Class className){
@@ -39,7 +38,11 @@ public abstract class FinUCABException extends Exception{
         this._message = message;
         this._className = className;
         
-        System.out.println("Error ("+_className+") : "+_code+" - "+ _message);
+        SingletonLog.getInstance().error("Error ("+_className+") : "+_code+" - "+ _message);
+    }
+    
+    public String getOwnMessage(){
+        return _message;
     }
     
     

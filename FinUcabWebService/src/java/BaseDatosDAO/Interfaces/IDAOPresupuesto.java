@@ -6,6 +6,7 @@
 package BaseDatosDAO.Interfaces;
 
 import Dominio.Entidad;
+import Dominio.ListaEntidad;
 import Exceptions.FinUCABException;
 
 /**
@@ -16,5 +17,6 @@ public interface IDAOPresupuesto extends IDAO{
     
     Entidad verificarNombre(String nombre) throws FinUCABException;
     Entidad eliminarPresupuesto(int idPresupuesto) throws FinUCABException;
+    ListaEntidad exportar(int idUsuario) throws FinUCABException;
     
 }
