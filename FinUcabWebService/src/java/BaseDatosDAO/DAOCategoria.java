@@ -150,6 +150,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
     
     @Override 
     public Entidad eliminarCategoria(int idCategoria){
+        Entidad respuesta = null;
         try {
             Statement st = conn.createStatement();
             EliminarCategoria2(idCategoria, "presupuesto");
@@ -159,6 +160,12 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             cat.executeQuery();
             ResultSet rs = cat.getResultSet();
             rs.next();
+            if (rs.getInt(1)==1){
+                respuesta = FabricaEntidad.obtenerSimpleResponse(1);
+                
+            }else{
+                respuesta = FabricaEntidad.obtenerSimpleResponse(0);
+            }
             
             FabricaIdentityMap.obtenerIdentityMap().getInstance().rmEntidadEnLista(RegistroIdentityMap.categoria_listado, idCategoria);
             
@@ -166,7 +173,7 @@ public class DAOCategoria extends DAO implements IDAOCategoria {
             Logger.getLogger(DaoUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return FabricaEntidad.obtenerSimpleResponse(1);
+        return respuesta;
     }        
     
     public boolean EliminarCategoria2 (int idcat, String tabla){
