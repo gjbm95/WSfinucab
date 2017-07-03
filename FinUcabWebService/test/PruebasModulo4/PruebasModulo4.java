@@ -41,7 +41,7 @@ public class PruebasModulo4 {
     public void tearDown() {
     }
 
-     @Test
+     /*@Test
      public void TestAgregar() {
      
          Entidad categoria = FabricaEntidad.obtenerCategoria(1,"sueldo","suedo del mes",true,true);
@@ -49,5 +49,5 @@ public class PruebasModulo4 {
          dao.agregar(categoria);
          
          
-     }
+     }*/
 }
