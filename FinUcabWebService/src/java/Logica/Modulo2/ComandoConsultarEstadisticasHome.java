@@ -101,6 +101,7 @@ public class ComandoConsultarEstadisticasHome extends Comando {
         }
 
         JsonArray array = arrayBuilder.build();
+        
         super.response = FabricaEntidad.obtenerSimpleResponse(0,0, array.toString());
     }
 
