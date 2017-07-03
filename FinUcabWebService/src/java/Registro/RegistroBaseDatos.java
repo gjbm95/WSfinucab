@@ -17,6 +17,7 @@ public class RegistroBaseDatos {
     public static String contrasenaDB = seguridad.obtenerContrasenaDB();
     public static String url = seguridad.obtenerServerDB();
     
+    
     public static final String AGREGAR_PRESUPUESTO = " select agregarpresupuesto (?,?::real,?,?,?,?)";
     public static final String MODIFICAR_PRESUPUESTO = " select modificarpresupuesto (?,?::real,?,?,?,?,?)";
     public static final String LISTAR_PRESUPUESTOS = " select * from obtenerlistapresupuesto(?)";
