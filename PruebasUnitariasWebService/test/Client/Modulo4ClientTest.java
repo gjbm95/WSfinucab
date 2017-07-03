@@ -9,11 +9,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
 
 /**
  *
  * @author Junior
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Modulo4ClientTest {
 
     public Modulo4ClientTest() {
@@ -211,5 +214,17 @@ public class Modulo4ClientTest {
         assertEquals(resulta, "0");
  
     
+    }
+    
+    /**
+     * Test of visualizarCategoriaFracaso method, of class Modulo4Client.
+     */
+    @Test
+    public void AtestVisualizarCategoriaFracaso() {
+        System.out.println("Test Visualizar Categoria Fracaso");
+
+        Modulo4Client instance = new Modulo4Client();
+        Object resulta = instance.VisualizarCategoria("9");
+        assertEquals("[]",resulta);
     }
 }
