@@ -15,6 +15,11 @@ import Logica.Comando;
  *
  * @author Juan
  */
+
+/**
+ * Comando para Modificar un Pago
+ * @author Juan
+ */
 public class ComandoModificarPago extends Comando{
     
    private Entidad pago;

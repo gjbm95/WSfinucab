@@ -20,13 +20,14 @@ AS $function$
 
 DECLARE
  result integer;
+ foo integer;
 
 BEGIN
   INSERT INTO categoria ( usuariou_id, ca_nombre , c_descripcion , ca_esingreso , ca_eshabilitado  ) VALUES
-      (usuariou_i, ca_nombr , c_descripcio , ca_esingres , ca_eshabilitad);
+      (usuariou_i, ca_nombr , c_descripcio , ca_esingres , ca_eshabilitad) returning ca_id into result;
 
     if found then
-  result := (Select ca_id from Categoria where ca_nombre = ca_nombr and c_descripcion = c_descripcio and usuariou_id = usuariou_i);
+  foo := 1;
   else result := 0;
   end if;
   RETURN result;

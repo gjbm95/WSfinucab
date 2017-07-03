@@ -14,6 +14,11 @@ import Logica.Comando;
  *
  * @author Juan
  */
+
+/**
+ * Comando Para consultar Pago
+ * @author Juan
+ */
 public class ComandoConsultarPago extends Comando {
     
     private int idPago;

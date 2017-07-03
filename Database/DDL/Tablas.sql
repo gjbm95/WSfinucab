@@ -5,12 +5,12 @@ CREATE TABLE Planificacion (Pa_id SERIAL NOT NULL, Pa_nombre varchar(1000) NOT N
 CREATE TABLE Presupuesto (Pr_id SERIAL NOT NULL, Pr_nombre varchar(255) NOT NULL, Pr_monto real NOT NULL,Pr_fecha date NOT NULL, Pr_clasificacion varchar(255) NOT NULL, Pr_duracion int4 NOT NULL, UsuarioU_id int4, CategoriaCa_id int4 NOT NULL, PRIMARY KEY (Pr_id));
 CREATE TABLE Tarjeta_Credito (Tc_id SERIAL NOT NULL, Tc_tipo varchar(255) NOT NULL, Tc_fechaVencimiento date NOT NULL, Tc_numero varchar(255) NOT NULL UNIQUE, Tc_saldo float4 NOT NULL, UsuarioU_id int4 NOT NULL, PRIMARY KEY (Tc_id));
 CREATE TABLE Usuario (U_id SERIAL NOT NULL, U_usuario varchar(50) NOT NULL UNIQUE, U_password varchar(1000) NOT NULL, U_nombre varchar(50) NOT NULL, U_apellido varchar(50) NOT NULL, U_correo varchar(100) NOT NULL, U_pregunta varchar(1000) NOT NULL, U_respuesta varchar(1000) NOT NULL, PRIMARY KEY (U_id));
-ALTER TABLE Categoria ADD CONSTRAINT FKCategoria441513 FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id);
-ALTER TABLE Presupuesto ADD CONSTRAINT crea FOREIGN KEY (CategoriaCa_id) REFERENCES Categoria (Ca_id);
-ALTER TABLE Pago ADD CONSTRAINT genera FOREIGN KEY (CategoriaCa_id) REFERENCES Categoria (Ca_id);
-ALTER TABLE Tarjeta_Credito ADD CONSTRAINT usuarioPoseeTDC FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id);
-ALTER TABLE Cuenta_Bancaria ADD CONSTRAINT posee FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id);
-ALTER TABLE Presupuesto ADD CONSTRAINT realiza FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id);
-ALTER TABLE Planificacion ADD CONSTRAINT tiene FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id);
-ALTER TABLE Planificacion ADD CONSTRAINT de FOREIGN KEY (categoriaca_id) REFERENCES Categoria (Ca_id);
+ALTER TABLE Categoria ADD CONSTRAINT FKCategoria441513 FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id)ON DELETE CASCADE;
+ALTER TABLE Presupuesto ADD CONSTRAINT crea FOREIGN KEY (CategoriaCa_id) REFERENCES Categoria (Ca_id) ON DELETE CASCADE;
+ALTER TABLE Pago ADD CONSTRAINT genera FOREIGN KEY (CategoriaCa_id) REFERENCES Categoria (Ca_id)ON DELETE CASCADE;
+ALTER TABLE Tarjeta_Credito ADD CONSTRAINT usuarioPoseeTDC FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id)ON DELETE CASCADE;
+ALTER TABLE Cuenta_Bancaria ADD CONSTRAINT posee FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id)ON DELETE CASCADE;
+ALTER TABLE Presupuesto ADD CONSTRAINT realiza FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id) ON DELETE CASCADE;
+ALTER TABLE Planificacion ADD CONSTRAINT tiene FOREIGN KEY (UsuarioU_id) REFERENCES Usuario (U_id)ON DELETE CASCADE;
+ALTER TABLE Planificacion ADD CONSTRAINT de FOREIGN KEY (categoriaca_id) REFERENCES Categoria (Ca_id) ON DELETE CASCADE;
 

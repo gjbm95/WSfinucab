@@ -7,8 +7,10 @@ package PruebasModulo4;
 
 import BaseDatosDAO.DAOCategoria;
 import BaseDatosDAO.FabricaDAO;
+import Dominio.Categoria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;
+import Dominio.SimpleResponse;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,16 +43,14 @@ public class PruebasModulo4 {
     public void tearDown() {
     }
 
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-     @Test
+     /*@Test
      public void TestAgregar() {
      
-         Entidad categoria = FabricaEntidad.obtenerCategoria(1,"sueldo","suedo del mes",true,true);
+         Entidad categoria = FabricaEntidad.obtenerCategoria(1,"juan","suedo del mes",true,true);
          DAOCategoria dao = FabricaDAO.instanciasDaoCategoria();
-         dao.agregar(categoria);
+         SimpleResponse respuesta = (SimpleResponse)dao.agregar(categoria);
+         Categoria con = (Categoria)dao.consultar(respuesta.getId());
+         assertEquals(respuesta.getId(),con.getId());
          
-         
-     }
+     }*/
 }
