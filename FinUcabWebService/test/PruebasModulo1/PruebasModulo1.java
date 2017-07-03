@@ -38,20 +38,19 @@ public class PruebasModulo1 {
     public PruebasModulo1() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
+ /**
+     * Metodo para registrar un usuario cada vez que 
+     * se vaya a testear un metodo
+     */
     
     @Before
     public void DatosUsuario() {
        System.out.println("ENTRE EN PRUEBA registrarUsuarioCorrecto");
-        String datosCuenta = "{ \"u_usuario\" : \"mapg\" , \"u_nombre\" : \"Mariangel\""
-                + ", \"u_apellido\" : \"Perez\", \"u_correo\" : \"mariangel@hotmail.com\", "
-                + "\"u_pregunta\" : \"Nombre de mi mama\" , \"u_respuesta\" : \"/marisol\", "
+        String datosCuenta = "{ \"u_usuario\" : \"mapg\" , "
+                + "\"u_nombre\" : \"Mariangel\" , \"u_apellido\" : \"Perez\", "
+                + "\"u_correo\" : \"mariangel@hotmail.com\", "
+                + "\"u_pregunta\" : \"Nombre de mi mama\" , "
+                + "\"u_respuesta\" : \"/marisol\", "
                 + "\"u_password\" : \"123456\" }";
         datosCuenta = URLEncoder.encode(datosCuenta);
         Modulo1sResource instance = new Modulo1sResource();
@@ -59,6 +58,10 @@ public class PruebasModulo1 {
        
     }
     
+    /**
+     * Metodo para borrar un usuario despues de  
+     * finalizada una prueba
+     */
     @After
     public void DeleteUser() {
         try {
@@ -71,7 +74,7 @@ public class PruebasModulo1 {
             st.close();
             
         } catch (SQLException ex) {
-            System.out.println("No se pudo borrar");
+          
         }
             
     }
@@ -80,8 +83,6 @@ public class PruebasModulo1 {
     /**
      * Metodo para probar el correcto funcionanmiento de la función
      * registrarUsuario() del WebService Modulo1sResources
-     *
-     * @throws ClientErrorException
      */
     @Test
     public void testRegistrarUsuarioCorrecto() {
@@ -92,12 +93,18 @@ public class PruebasModulo1 {
         
     }
     
+     /**
+     * Metodo para probar el funcionanmiento incorrecto de la función
+     * registrarUsuario() del WebService Modulo1sResources
+     */
         @Test
     public void testRegistrarUsuarioIncorrecto() {
         System.out.println("ENTRE EN PRUEBA registrarUsuarioIncorrecto");
-        String datosCuenta = "{ \"u_usuario\" : \"mapg\" , \"u_nombre\" : \"Mariangel2\""
-                + ", \"u_apellido\" : \"Perez2\", \"u_correo\" : \"mariangel2@hotmail.com\", "
-                + "\"u_pregunta\" : \"Nombre de mi mama2\" , \"u_respuesta\" : \"/marisol2\", "
+        String datosCuenta = "{ \"u_usuario\" : \"mapg\" ,"
+                + " \"u_nombre\" : \"Mariangel2\", \"u_apellido\" : \"Perez2\","
+                + " \"u_correo\" : \"mariangel2@hotmail.com\", "
+                + "\"u_pregunta\" : \"Nombre de mi mama2\" ,"
+                + " \"u_respuesta\" : \"/marisol2\", "
                 + "\"u_password\" : \"1234567\" }";
         datosCuenta = URLEncoder.encode(datosCuenta);
         Modulo1sResource instance = new Modulo1sResource();
@@ -106,6 +113,11 @@ public class PruebasModulo1 {
         
     }
     
+     /**
+     * Metodo para probar el funcionanmiento de la función
+     * registrarUsuario() del WebService Modulo1sResources
+     * cuando se ingresan valores vacios 
+     */
     @Test
     public void testRegistrarUsuarioIncorrectoVacio() {
         System.out.println("ENTRE EN PRUEBA registrarUsuarioIncorrectoVacio");
@@ -121,8 +133,6 @@ public class PruebasModulo1 {
     /**
      * Metodo para probar el correcto funcionamiento de la función
      * recuperarClave() del WebService Modulo1sResources
-     *
-     * @throws ClientErrorException
      */
     @Test
     public void testRecuperarClaveCorrecto() {
@@ -140,7 +150,10 @@ public class PruebasModulo1 {
         
     }
     
-    
+     /**
+     * Metodo para probar el funcionamiento incorrecto de la función
+     * recuperarClave() del WebService Modulo1sResources
+     */
     
     
          @Test
@@ -156,6 +169,12 @@ public class PruebasModulo1 {
         Assert.assertEquals("ERROR",result);
         
     }
+    
+      /**
+     * Metodo para probar el funcionamiento de la función
+     * recuperarClave() del WebService Modulo1sResources
+     * cuando se ingresan valores vacios
+     */
     @Test
     public void testRecuperarClaveIncorrectoVacio() {
         System.out.println("ENTRE EN recuperarClaveIncorrectoVacio");
@@ -170,13 +189,12 @@ public class PruebasModulo1 {
     /**
      * Metodo para probar el correcto funcionamiento de la función
      * iniciarSesion() del WebService Modulo1sResources
-     *
-     * @throws ClientErrorException
      */
     @Test
     public void testIniciarSesion() {
         System.out.println("ENTRE EN iniciarSesion");
-        String datosUsuario = "{ \"u_usuario\" : \"mapg\" , \"u_password\" : \"123456\" }";
+        String datosUsuario = "{ \"u_usuario\" : \"mapg\" , \"u_password\" "
+                + ": \"123456\" }";
         datosUsuario = URLEncoder.encode(datosUsuario);
 
         Modulo1sResource instance = new Modulo1sResource();
@@ -187,24 +205,35 @@ public class PruebasModulo1 {
         JsonObject jsonObj = reader.readObject();
         reader.close();
 
-        Assert.assertEquals("mapg,123456",jsonObj.getString("u_usuario")+","+jsonObj.getString("u_password"));
+        Assert.assertEquals("mapg,123456",jsonObj.getString("u_usuario")+","
+                +jsonObj.getString("u_password"));
         
     }
+    
+     /**
+     * Metodo para probar el funcionamiento incorrecto de la función
+     * iniciarSesion() del WebService Modulo1sResources
+     */
     
     @Test
     public void testIniciarSesionIncorrecto() {
         System.out.println("ENTRE EN iniciarSesion");
-        String datosUsuario = "{ \"u_usuario\" : \"UsuarioX\" , \"u_password\" : \"123456\" }";
+        String datosUsuario = "{ \"u_usuario\" : \"UsuarioX\" , "
+                + "\"u_password\" : \"123456\" }";
         datosUsuario = URLEncoder.encode(datosUsuario);
 
         Modulo1sResource instance = new Modulo1sResource();
 
         String result = instance.iniciarSesion(datosUsuario);
         Assert.assertEquals("7", result);
-        //assertThat(result, either(containsString("\"u_usuario\"")).or(is("ERROR")).or(is("DATOSMAL")));
+       
         
     }
-    
+     /**
+     * Metodo para probar el funcionamiento de la función
+     * iniciarSesion() del WebService Modulo1sResources
+     * cuando se ingresan valores vacios
+     */
     @Test
     public void testIniciarSesionIncorrectoVacio() {
         System.out.println("ENTRE EN iniciarSesionVacio");
@@ -220,13 +249,12 @@ public class PruebasModulo1 {
     /**
      * Metodo para probar el correcto funcionamiento de la función
      * actualizarClave() del WebService Modulo1sResources
-     *
-     * @throws ClientErrorException
      */
     @Test
     public void testActualizarClave() {
         System.out.println("ENTRE EN actualizarClave");
-        String datosUsuario = "{ \"u_usuario\" : \"mapg\" , \"u_password\" : \"123456\" }";
+        String datosUsuario = "{ \"u_usuario\" : \"mapg\" , \"u_password\" "
+                + ": \"123456\" }";
         datosUsuario = URLEncoder.encode(datosUsuario);
 
         Modulo1sResource instance = new Modulo1sResource();
@@ -238,10 +266,15 @@ public class PruebasModulo1 {
 
     }
     
+     /**
+     * Metodo para probar el funcionamiento incorrecto de la función
+     * actualizarClave() del WebService Modulo1sResources
+     */
     @Test
     public void testActualizarClaveIncorrecto() {
         System.out.println("ENTRE EN actualizarClaveIncorrecto");
-        String datosUsuario = "{ \"u_usuario\" : \"UsuarioX\" , \"u_password\" : \"123456\" }";
+        String datosUsuario = "{ \"u_usuario\" : \"UsuarioX\" , \"u_password\""
+                + " : \"123456\" }";
         datosUsuario = URLEncoder.encode(datosUsuario);
 
         Modulo1sResource instance = new Modulo1sResource();
@@ -252,6 +285,12 @@ public class PruebasModulo1 {
  
 
     }
+    
+     /**
+     * Metodo para probar el funcionamiento de la función
+     * actualizarClave() del WebService Modulo1sResources
+     * cuando se ingresan valores vacios
+     */
     
     @Test
     public void testActualizarClaveIncorrectoVacio() {
@@ -273,9 +312,8 @@ public class PruebasModulo1 {
     /**
      * Metodo para probar el correcto funcionamiento de la función
      * verificarUsuario() del WebService Modulo1sResources
-     *
-     * @throws ClientErrorException
      */
+    
     @Test
     public void testVerificarUsuario() {
         System.out.println("ENTRE EN verificarUsuario");
@@ -289,6 +327,10 @@ public class PruebasModulo1 {
       
     }
     
+    /**
+     * Metodo para probar el funcionamiento incorrecto de la función
+     * verificarUsuario() del WebService Modulo1sResources
+     */
     @Test
     public void testVerificarUsuarioIncorrecto() {
         System.out.println("ENTRE EN verificarUsuarioIncorrecto");
@@ -300,6 +342,12 @@ public class PruebasModulo1 {
         Assert.assertEquals("3",result);
        
     }
+    
+    /**
+     * Metodo para probar el funcionamiento de la función
+     * verificarUsuario() del WebService Modulo1sResources
+     * cuando se ingresan valores vacios
+     */
     
      @Test
     public void testVerificarUsuarioIncorrectoVacio() {
