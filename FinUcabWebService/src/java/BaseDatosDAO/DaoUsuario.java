@@ -316,7 +316,7 @@ public class DaoUsuario extends DAO implements IDAOUsuario{
         Usuario obj = (Usuario) e;
         CallableStatement cstmt;
         try {
-            cstmt = conn.prepareCall("{ call update_usuario(?,?,?,?,?,?,?,?)}");
+            cstmt = conn.prepareCall(RegistroBaseDatos.ACTUALIZAR_USUARIO);
             cstmt.setInt(1, obj.getId());
             cstmt.setString(2, obj.getUsuario());
             cstmt.setString(3, obj.getNombre());

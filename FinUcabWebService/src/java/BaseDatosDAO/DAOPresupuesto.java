@@ -274,7 +274,7 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         JsonArray array = null;
         try {
             Statement st = Conexion.conectarADb().createStatement();
-            cstm =Conexion.conectarADb().prepareCall("{ call obtenerUltimosPresupuestos(?)}");
+            cstm =Conexion.conectarADb().prepareCall(RegistroBaseDatos.ESTADISTICA_PRESUPUESTO);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();

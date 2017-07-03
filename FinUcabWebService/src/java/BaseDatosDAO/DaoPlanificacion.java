@@ -2,6 +2,7 @@ package BaseDatosDAO;
 
 import Dominio.Entidad;
 import Dominio.ListaEntidad;
+import Registro.RegistroBaseDatos;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,7 +34,7 @@ public class DaoPlanificacion extends DAO {
         JsonArray array = null;
         try {
             Statement st = conn.createStatement();
-            cstm = conn.prepareCall("{ call obtenerUltimosPlanificaciones(?)}");
+            cstm = conn.prepareCall(RegistroBaseDatos.ESTADISTICA_PLANIFICACION);
             cstm.setInt(1, id);
             ResultSet rs = cstm.executeQuery();
             JsonObjectBuilder cuentaBuilder = Json.createObjectBuilder();
