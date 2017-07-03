@@ -138,7 +138,6 @@ public class Modulo4ClientTest {
         String resulta = instance.buscarCategoria(result);
         String modCategoria = "{ \"c_id\":"+ result+",\"c_usuario\" : 1, \"c_nombre\" : \"PruebaMod\",\"c_descripcion\" : 66,\"c_ingreso\" : true,\"c_estado\" : true }";
         String codmodCategoria = URLEncoder.encode(modCategoria);
-        System.out.println(codmodCategoria);
         String modificar = instance.modificarCategoria(codmodCategoria);
         
             assertEquals(modificar, "0");
@@ -199,4 +198,18 @@ public class Modulo4ClientTest {
         
        assertEquals(insertadosConc, compararConc);
      }
+    
+    /**
+     * Test of eliminarCategoriaFracaso method, of class Modulo4Client.
+     */
+    @Test
+    public void testEliminarCategoriaFracaso() {
+        System.out.println("Test Eliminar Categoria Fracaso");
+
+        Modulo4Client instance = new Modulo4Client();
+        String resulta = instance.eliminarCategoria("9999999");
+        assertEquals(resulta, "0");
+ 
+    
+    }
 }
