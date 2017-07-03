@@ -74,61 +74,6 @@ public class Modulo1sResource {
     }
 
     /**
-     * Retrieves representation of an instance of Services.Modulo1sResource
-     *
-     * @return an instance of javax.json.Json
-     */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/prueba")
-    public String getPruebaJson() {
-        //TODO return proper representation object
-        JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-        usuarioBuilder.add("Nombre", "Jose");
-        usuarioBuilder.add("Apellido", "Rodriguez");
-        usuarioBuilder.add("Usuario", "jose123");
-        JsonObject usuarioJsonObject = usuarioBuilder.build();
-        return usuarioJsonObject.toString();
-    }
-
-    @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("pruebaData")
-    public String getData(@QueryParam("objeto") String objeto) {
-        return "";
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/pruebaDB")
-    public String getPruebaDataBase() {
-        //TODO return proper representation object 
-        String respuesta = "";
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            //Se coloca el query
-            ResultSet rs = st.executeQuery("SELECT * FROM Usuario;");
-            while (rs.next()) {
-                //Creo el objeto Json!             
-                JsonObjectBuilder usuarioBuilder = Json.createObjectBuilder();
-                usuarioBuilder.add("Nombre", rs.getString(3));
-                usuarioBuilder.add("Apellido", rs.getString(4));
-                usuarioBuilder.add("Usuario", rs.getString(2));
-                JsonObject usuarioJsonObject = usuarioBuilder.build();
-                respuesta = usuarioJsonObject.toString();
-            }
-            rs.close();
-            st.close();
-
-            return respuesta;
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
-
-    /**
      * Metodo para validar un string
      * @param valor
      * @return boolean
