@@ -6,6 +6,11 @@ import java.io.Serializable;
  * Created by Jeffrey on 10/05/2017.
  */
 
+
+/**
+ * Creacion de la clase Pago
+ * @author Juan
+ */
 public class Pago  extends Entidad implements Serializable{
 
     private int categoria;
@@ -54,6 +59,14 @@ public class Pago  extends Entidad implements Serializable{
         this.nombreCategoria = nombreCategoria;
     }
 
+    
+    /**
+     * Constructor de pago 
+     * @param categoria
+     * @param descripcion
+     * @param total
+     * @param tipo 
+     */
     public Pago( int categoria, String descripcion, float total, String tipo) {
         this.categoria = categoria;
         this.descripcion = descripcion;
@@ -62,6 +75,15 @@ public class Pago  extends Entidad implements Serializable{
         
     }
     
+    
+    /**
+     * Constructor de Pago 
+     * @param id
+     * @param categoria
+     * @param descripcion
+     * @param total
+     * @param tipo 
+     */
     public Pago( int id, int categoria, String descripcion, float total, String tipo) {
         super(id);
         this.categoria = categoria;
@@ -71,6 +93,15 @@ public class Pago  extends Entidad implements Serializable{
         
     }
     
+    
+    /**
+     * Constructor de Pago
+     * @param categoria
+     * @param descripcion
+     * @param total
+     * @param tipo
+     * @param nombreCategoria 
+     */
     public Pago( int categoria, String descripcion, float total, String tipo, String nombreCategoria) {
         this.categoria = categoria;
         this.descripcion = descripcion;
@@ -80,6 +111,16 @@ public class Pago  extends Entidad implements Serializable{
         
     }
     
+    
+    /**
+     * Constructor de Pago
+     * @param id
+     * @param categoria
+     * @param descripcion
+     * @param total
+     * @param tipo
+     * @param nombreCategoria 
+     */
     public Pago( int id, int categoria, String descripcion, float total, String tipo, String nombreCategoria) {
         super(id);
         this.categoria = categoria;

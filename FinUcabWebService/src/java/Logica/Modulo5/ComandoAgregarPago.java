@@ -15,6 +15,12 @@ import Logica.Comando;
  *
  * @author Juan
  */
+
+
+/**
+ * Clase Comando Agregar Pago 
+ * @author Juan
+ */
 public class ComandoAgregarPago extends Comando {
 
     private Entidad pago;
@@ -23,6 +29,10 @@ public class ComandoAgregarPago extends Comando {
          this.pago=pago;
      }
 
+     /**
+      * metodo para ejecutar el Dao
+      * @throws FinUCABException 
+      */
     @Override
     public void ejecutar() throws FinUCABException {
         IDAOPago dao = SingletonDAOPago.getInstance();
