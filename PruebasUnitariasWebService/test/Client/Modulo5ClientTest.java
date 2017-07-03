@@ -114,6 +114,8 @@ public class Modulo5ClientTest {
      */
     @Test
     public void testVisualizarPago() {
+        String aux = null;
+        String aux2 = null;
         String datosPago ="{\"pg_monto\":123456789,\"pg_tipoTransaccion\":\"ingreso\",\"pg_categoria\":1, \"pg_nombre_categoria\":\"aca\",\"pg_descripcion\":\" TestPruebaAgregar\"}";
         
         datosPago = URLEncoder.encode(datosPago);
@@ -124,9 +126,19 @@ public class Modulo5ClientTest {
         datosPago1 = URLEncoder.encode(datosPago1);
         String result2 = instance.registrarPago(datosPago1);
         String resultVisualizar = instance.visualizarPago("1");
-        String ArrayCategoria[] = resultVisualizar.split(",");
-        String insertadosConc = result1+result2;
-        assertNotNull(insertadosConc);
+        String ArrayPago[] = resultVisualizar.split(",");
+        for (int i = 0; i <ArrayPago.length; i++ ){
+            String ArrayPagoAux1[] = ArrayPago[i].split(":");
+            if (result1.equals(ArrayPagoAux1[1])){
+                aux = ArrayPagoAux1[1];
+            }
+            if (result2.equals(ArrayPagoAux1[1])){
+                 aux2 = ArrayPagoAux1[1];
+            }
+        }
+        String actual = result1+result2;
+        String compararConc = aux +aux2;
+        assertEquals(actual, compararConc);
      }
     /**
      * Test Modificar pago fracaso
