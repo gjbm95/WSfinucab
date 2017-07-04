@@ -42,7 +42,7 @@ import javax.json.JsonObjectBuilder;
 public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
 
     private Connection conn = Conexion.conectarADb();
-
+   
     
     /**
      * Metodo encargado de registrar Tarjetas de Credito en la base de datos 
@@ -52,7 +52,8 @@ public class DaoTarjeta_Credito extends DAO implements IDAOTarjetaCredito {
      */
     @Override
     public Entidad agregar(Entidad e)throws AgregarFallidoException {
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();   
+        MapaModulo2 cache = MapaModulo2.obtenerInstancia(); 
+    
         Tarjeta_Credito obj = (Tarjeta_Credito) cache.getEntidad("TarjetaNueva");    
         CallableStatement cstmt;
         int idtarjeta = 0;

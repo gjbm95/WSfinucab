@@ -138,7 +138,7 @@ public class DaoCuenta_Bancaria extends DAO implements IDAOCuentaBancaria{
             cstmt.executeQuery();
             ResultSet rs = cstmt.getResultSet();
             rs.next();
-            idCuenta = rs.getInt(0);
+            idCuenta = id;
             Logger.getLogger(getClass().getName()).log(
             Level.FINER, "Eliminado Cuenta Bancaria de id: "+id);
             cstmt.close();

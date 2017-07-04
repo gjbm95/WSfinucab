@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.json.Json;
@@ -54,91 +55,22 @@ import static org.junit.Assert.*;
 *
  */
 public class PruebasModulo2 {
-
+    
+    private int idTarjeta; 
+    
+    
+    
     public PruebasModulo2() {
     }
 
     @BeforeClass
     public static void setUpClass() throws SQLException {
-        Connection con = Conexion.conectarADb();
-        Statement st = con.createStatement();
-        st.executeUpdate("INSERT INTO usuario(u_id,u_usuario,"
-                + "u_password,u_nombre,u_apellido,u_correo,u_pregunta,u_respuesta)"
-                + " VALUES (-1,'1PRUEBA','0000','nombreTest','apellidoTest',"
-                + "'c@test.com','preguntaTest','respuestaTest');");
 
-        st.executeUpdate("INSERT INTO cuenta_bancaria(ct_id,ct_tipocuenta,"
-                + "ct_numcuenta,ct_nombrebanco,ct_saldoactual,usuariou_id)"
-                + " VALUES (-1,'PRUEBA','P00000','nombreTest',15,-1);");
-
-        st.executeUpdate("INSERT INTO tarjeta_credito(tc_id,tc_tipo,"
-                + "tc_numero,tc_saldo,tc_fechavencimiento,usuariou_id)"
-                + " VALUES (-1,'PRUEBA','P0000',15,'2010-10-10',-1);");
-
-        st.executeUpdate("INSERT INTO planificacion("
-                + "             pa_nombre, pa_descripcion, pa_monto, pa_fechainicio, pa_fechafin, "
-                + "            pa_recurrente, pa_recurrencia, usuariou_id, categoriaca_id, pa_activo)"
-                + "    VALUES ( 'plan 1', 'plan 1', 250, to_date('21/11/1995','DD/MM/YYYY'), to_date('21/12/1995','DD/MM/YYYY'), "
-                + "            true, 'epe', -1, 1, true);");
-
-        st.executeUpdate("INSERT INTO planificacion("
-                + "             pa_nombre, pa_descripcion, pa_monto, pa_fechainicio, pa_fechafin,"
-                + "            pa_recurrente, pa_recurrencia, usuariou_id, categoriaca_id, pa_activo)"
-                + "    VALUES ( 'plan 2', 'plan 2', 22500, to_date('21/11/1995','DD/MM/YYYY'), to_date('21/12/1995','DD/MM/YYYY'), "
-                + "            true, 'epe', -1, 1, true);");
-
-        st.executeUpdate("INSERT INTO planificacion("
-                + "             pa_nombre, pa_descripcion, pa_monto, pa_fechainicio, pa_fechafin, "
-                + "            pa_recurrente, pa_recurrencia, usuariou_id, categoriaca_id, pa_activo)"
-                + "    VALUES ( 'plan 3', 'plan 3', 500, to_date('21/11/1995','DD/MM/YYYY'), to_date('21/12/1995','DD/MM/YYYY'), "
-                + "            true, 'epe', -1, 1, true);");
-
-        st.executeUpdate("INSERT INTO pago("
-                + "            pg_monto, pg_fecha, pg_descripcion, pg_tipotransaccion, "
-                + "            categoriaca_id, usuariou_id)"
-                + "    VALUES ( '2000', to_date('21/11/1995','DD/MM/YYYY'), 'pago2', 'ingreso', "
-                + "            1, -1);"
-                + "INSERT INTO pago("
-                + "             pg_monto, pg_fecha, pg_descripcion, pg_tipotransaccion, "
-                + "            categoriaca_id, usuariou_id)"
-                + "    VALUES ( '1633', to_date('21/11/1995','DD/MM/YYYY'), 'pago3', 'egreso', "
-                + "            1, -1);"
-                + "INSERT INTO pago("
-                + "             pg_monto, pg_fecha, pg_descripcion, pg_tipotransaccion, "
-                + "            categoriaca_id, usuariou_id)"
-                + "    VALUES ( '1000', to_date('21/11/1995','DD/MM/YYYY'), 'pago4', 'egreso', "
-                + "            1, -1);");
-
-        st.executeUpdate("INSERT INTO presupuesto("
-                + "             pr_nombre, pr_monto, pr_fecha, pr_clasificacion, pr_duracion, "
-                + "            usuariou_id, categoriaca_id)"
-                + "    VALUES ( 'pre2', 100, to_date('21/11/1996','DD/MM/YYYY'), 'oo', 5, "
-                + "            -1, 1);"
-                + "INSERT INTO presupuesto("
-                + "             pr_nombre, pr_monto, pr_fecha, pr_clasificacion, pr_duracion, "
-                + "            usuariou_id, categoriaca_id)"
-                + "    VALUES ( 'pre3', 300, to_date('21/11/1996','DD/MM/YYYY'), 'oo', 5, "
-                + "            -1, 1);"
-                + "INSERT INTO presupuesto("
-                + "             pr_nombre, pr_monto, pr_fecha, pr_clasificacion, pr_duracion, "
-                + "            usuariou_id, categoriaca_id)"
-                + "    VALUES ( 'pre4', 12500, to_date('21/11/1996','DD/MM/YYYY'), 'oo', 5, "
-                + "            -1, 1);");
-
-        con.close();
     }
 
     @AfterClass
     public static void tearDownClass() throws SQLException {
-        Connection con = Conexion.conectarADb();
-        Statement st = con.createStatement();
-        st.executeUpdate("DELETE FROM cuenta_bancaria WHERE ct_id = -1;");
-        st.executeUpdate("DELETE FROM tarjeta_credito WHERE tc_id = -1;");
-        st.executeUpdate("DELETE FROM presupuesto WHERE usuariou_id = -1;");
-        st.executeUpdate("DELETE FROM planificacion WHERE usuariou_id = -1;");
-        st.executeUpdate("DELETE FROM pago WHERE usuariou_id = -1;");
-        st.executeUpdate("DELETE FROM usuario WHERE u_id = -1;");
-        con.close();
+
     }
 
     @Before
@@ -158,7 +90,7 @@ public class PruebasModulo2 {
     public void actualizarCuentaTest() {
 
         try {
-            String decodifico = "{ \"u_id\" : \"-1\" , \"u_usuario\" : \"00gjbm\" ,"
+            String decodifico = "{ \"u_id\" : \"1\" , \"u_usuario\" : \"00gjbm\" ,"
                     + " \"u_nombre\" : \"Alejandro\""
                     + ", \"u_apellido\" : \"Negrin\", \"u_correo\" :"
                     + " \"aledavid21@hotmail.com\", "
@@ -384,368 +316,176 @@ public class PruebasModulo2 {
         assertNotNull(cache.getEntidad("prueba"));
     }
 
+    
     /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de agregar
-     * Tarjeta de credito (Obtener Datos)
+     * Prueba encargada de verificar el funcionamiento del Agregar Cuentas
+     * Bancarias
+     * (Obtener Datos)
      */
     @Test
-    public void AgregarTDCDaoTest() {
-        Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "NUM1234", 1500, 0, 1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("TarjetaNueva", tdc);
-        DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        Tarjeta_Credito td;
+    public void agregaCuentaBancariaTest(){
+    
         try {
-            td = (Tarjeta_Credito) dao.agregar(tdc);
-            System.out.println("ID tDC" + tdc.getId());
-            assertTrue(td.getId() > 0);
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM tarjeta_credito "
-                    + "where tc_numero = 'NUM1234'");
-            assertTrue(rs.next());
-            assertEquals(rs.getString("tc_tipo"), "visa");
-            assertEquals(rs.getString("tc_numero"), "NUM1234");
-        } catch (AgregarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de agregar
-     * en caso de falla tarjeta de creditos (Obtener Datos)
-     */
-    @Test
-    public void AgregarTDCDaoTestFail() {
-        Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "P0000", 1500, -1, -1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("TarjetaNueva", tdc);
-        DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        Tarjeta_Credito td;
-        try {
-            td = (Tarjeta_Credito) dao.agregar(tdc);
-            System.out.println("ID tDC" + tdc.getId());
-            assertEquals(0, tdc.getId());
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM tarjeta_credito "
-                    + "where tc_numero = 'NUM1234'");
-            con.close();
-            assertFalse(rs.next());
-        } catch (SQLException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (AgregarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de
-     * Modificar Tarjeta de Credito (Obtener Datos)
-     */
-    @Test
-    public void ModificarTDCDaoTest() {
-        Entidad tdc = new Tarjeta_Credito("visa", "2010-10-10", "NUM1234", 1500, -1, -1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("TarjetaNueva", tdc);
-        DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        Tarjeta_Credito td;
-        try {
-            td = (Tarjeta_Credito) dao.modificar(tdc);
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM tarjeta_credito "
-                    + "where tc_id = -1'");
-            assertTrue(rs.next());
-            assertEquals(rs.getString("tc_tipo"), "visa");
-            assertEquals(rs.getString("tc_numero"), "NUM1234");
-            assertEquals(rs.getString("tc_saldo"), 1500);
-        } catch (SQLException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ModificarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de
-     * modificar en caso de falla tarjeta de creditos (Obtener Datos)
-     */
-    @Test
-    public void ModificarTDCDaoTestFail() {
-        Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "P0000", 1500, -2, -1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("TarjetaNueva", tdc);
-        DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-        Tarjeta_Credito td;
-        try {
-            td = (Tarjeta_Credito) dao.agregar(tdc);
-        } catch (AgregarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de eliminar
-     * tarjeta de credito (Obtener Datos)
-     */
-    @Test
-    public void EliminarTDCDaoTest() throws SQLException {
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            st.executeUpdate("INSERT INTO tarjeta_credito(tc_id,tc_tipo,"
-                    + "tc_numero,tc_saldo,tc_fechavencimiento,usuariou_id)"
-                    + " VALUES (-2,'PRUEBA2','P20000',15,'2010-10-10',-1);");
-
-            ResultSet rs = st.executeQuery("Select * from tarjeta_credito where tc_id = -2");
-            assertTrue(rs.next());
-
-            DaoTarjeta_Credito dao = FabricaDAO.instanciasDaoTarjeta_Credito();
-
-            int result = dao.eliminar(rs.getInt("tc_id"));
-            assertEquals(1, result);
-
-            rs = st.executeQuery("Select * from tarjeta_credito where tc_id = -2");
-            assertFalse(rs.next());
-        } catch (EliminarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de eliminar
-     * cuanta bancaria en caso de fallo (Obtener Datos)
-     */
-    @Test
-    public void EliminarTDCDaoTestFail() throws SQLException {
-        ResultSet rs;
-        Statement st;
-        try {
-
-            DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-
-            int result = dao.eliminar(-2);
-            assertEquals(0, result);
-
-        } catch (EliminarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de agregar
-     * cuenta bancaria (Obtener Datos)
-     */
-    @Test
-    public void AgregarCuentaBancariaDaoTest() {
-        Entidad cuenta = new Cuenta_Bancaria("corriente", "PR1234", "NOMBRE PRUEBA", 1500, 0, 1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("CuentaNueva", cuenta);
-        DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        Cuenta_Bancaria ba;
-        try {
-            ba = (Cuenta_Bancaria) dao.agregar(cuenta);
-            System.out.println("ID " + cuenta.getId());
-            assertTrue(ba.getId() > 0);
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM cuenta_bancaria "
-                    + "where ct_numcuenta = 'PR1234'");
-            con.close();
-            assertTrue(rs.next());
-            assertEquals(rs.getString("ct_nombrebanco"), "NOMBRE PRUEBA");
-            assertEquals(rs.getString("ct_tipocuenta"), "corriente");
-            assertEquals(rs.getString("ct_nombrebanco"), "PR1234");
-            assertEquals(rs.getString("ct_numcuenta"), "NOMBRE PRUEBA");
-
-        } catch (AgregarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de probar el funcionamiento de la funcion de agregar en
-     * caso de error cuenta bancaria (Obtener Datos)
-     */
-    @Test
-    public void AgregarCuentaBancariaDaoTestFail() {
-        Entidad cuenta = new Cuenta_Bancaria("corriente", "PR1234", "NOMBRE PRUEBA", 1500, 0, 1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("CuentaNueva", cuenta);
-        DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        Cuenta_Bancaria ba;
-        try {
-            ba = (Cuenta_Bancaria) dao.agregar(cuenta);
-            assertEquals(0, ba.getId());
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM cuenta_bancaria "
-                    + "where ct_numcuenta = 'PR1234'");
-            con.close();
-            assertFalse(rs.next());
+            String resultado ="";
+            Entidad cuenta = new Cuenta_Bancaria("corriente", "PR1234", "NOMBRE PRUEBA", 1500, 0, 1);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaNueva", cuenta);
+            Comando command = FabricaComando.instanciarComandoAgregarCuenta((Cuenta_Bancaria) cuenta);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarCuentas(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("PR1234"));        
         } catch (FinUCABException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+     
     /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de
-     * Modificar Tarjeta de Credito (Obtener Datos)
+     * Prueba encargada de verificar el funcionamiento del Modificar Cuentas
+     * Bancarias
+     * (Obtener Datos)
      */
     @Test
-    public void ModificarCuentaDaoTest() {
-        Entidad cuenta = new Cuenta_Bancaria("corriente", "PR1234", "NOMBRE PRUEBA", 1500, -1, -1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("CuentaModificada", cuenta);
-        DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        Cuenta_Bancaria ba;
+    public void modificarCuentaBancariaTest(){
         try {
-            ba = (Cuenta_Bancaria) dao.modificar(cuenta);
-            Connection con = Conexion.conectarADb();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM cuenta_bancaria "
-                    + "where ct_id = -1'");
-            assertTrue(rs.next());
-            assertEquals(rs.getString("ct_tipocuenta"), "corriente");
-            assertEquals(rs.getString("ct_numcuenta"), "PR1234");
-            assertEquals(rs.getString("ct_nombrebanco"), 1500);
-            assertEquals(rs.getString("ct_saldoactual"), 1500);
+            Entidad cuenta = new Cuenta_Bancaria("corriente", "CASA", "NOMBRE PRUEBA", 1500, 1, 1);
+            String resultado=""; 
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaModificada",cuenta);
+            Comando command = FabricaComando.instanciarComandoActualizarCuenta((Cuenta_Bancaria) cuenta);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarCuentas(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            System.out.println(resultado);
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("CASA"));     
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ModificarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
     }
 
+    
     /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de
-     * modificar en caso de falla tarjeta de creditos (Obtener Datos)
+     * Prueba encargada de verificar el funcionamiento del Mostrar Cuentas
+     * Bancarias
+     * (Obtener Datos)
      */
-    @Test
-    public void ModificarCuentaDaoTestFail() {
-        Cuenta_Bancaria cuenta = new Cuenta_Bancaria("corriente", "PR1234", "NOMBRE PRUEBA", 1500, 0, 1);
-        MapaModulo2 cache = MapaModulo2.obtenerInstancia();
-        cache.setEntidad("CuentaModificada", cuenta);
-        DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        Cuenta_Bancaria ba;
-        try {
-            ba = (Cuenta_Bancaria) dao.modificar(cuenta);
-        } catch (ModificarFallidoException ex) {
+    @Test 
+    public void mostrarCuentasBancarias (){
+      try {
+            String resultado ="";
+            Entidad cuenta = new Cuenta_Bancaria("corriente", "HOLA", "NOMBRE PRUEBA", 1500, 0, 1);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("CuentaNueva", cuenta);
+            Comando command = FabricaComando.instanciarComandoAgregarCuenta((Cuenta_Bancaria) cuenta);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarCuentas(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("HOLA"));        
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
+    
+    
+    } 
+    
     /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de eliminar
-     * cuanta bancaria (Obtener Datos)
+     * Prueba encargada de verificar el funcionamiento del Agregar TDC
+     * (Obtener Datos)
      */
     @Test
-    public void EliminarCuentaDaoTest() throws SQLException {
-        try {
-            Connection conn = Conexion.conectarADb();
-            Statement st = conn.createStatement();
-            st.executeUpdate("INSERT INTO cuenta_bancaria(ct_id,ct_tipocuenta,"
-                    + "ct_numcuenta,ct_nombrebanco,ct_saldoactual,usuariou_id)"
-                    + " VALUES (-2,'PRUEBA','P200000','nombreTest',15,-1);");
-
-            ResultSet rs = st.executeQuery("Select * from cuenta_bancaria where ct_id = -2");
-            assertTrue(rs.next());
-
-            DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-
-            int result = dao.eliminar(rs.getInt("ct_id"));
-            assertEquals(1, result);
-
-            rs = st.executeQuery("Select * from cuenta_bancaria where ct_id = -2");
-            assertFalse(rs.next());
-        } catch (EliminarFallidoException ex) {
-            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la funcion de eliminar
-     * cuanta bancaria en caso de fallo (Obtener Datos)
-     */
-    @Test
-    public void EliminarCuentaDaoTestFail() throws SQLException {
-        ResultSet rs;
-        Statement st;
-        try {
-            Connection conn = Conexion.conectarADb();
-            st = conn.createStatement();
-            DaoCuenta_Bancaria dao = FabricaDAO.instanciasDaoCuenta_Bancaria();
-            int result = dao.eliminar(-2);
-            assertEquals(0, result);
-
-        } catch (EliminarFallidoException ex) {
+    public void agregarTDCTest(){
+         try {
+            String resultado ="";
+            Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "NUM1234", 1500, 0, 1);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaNueva", tdc);
+            Comando command = FabricaComando.instanciarComandoAgregarTDC((Tarjeta_Credito)tdc);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarTDC(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("NUM1234"));        
+        } catch (FinUCABException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    
     /**
-     * Prueba encargada de verificar el funcionamiento de consultar todas las
-     * cuentas bancarias de un usuario
+     * Prueba encargada de verificar el funcionamiento del Modificar TDC
+     * (Obtener Datos)
+     */
+     @Test
+    public void modificarTDCTest(){
+        try {
+            Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "CASA", 1500, 1, 1);
+            String resultado=""; 
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaModificada",tdc);
+            Comando command = FabricaComando.instanciarComandoActualizarTDC((Tarjeta_Credito) tdc);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarTDC(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            System.out.println(resultado);
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("CASA"));     
+            
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    }
+    
+    /**
+     * Prueba encargada de verificar el funcionamiento del Mostrar TDC
+     * (Obtener Datos)
      */
     @Test
-    public void ConsultarCuentaTest() {
-
-        DaoCuenta_Bancaria ba = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        String jsonCuentas = ba.getCuentasXUsuario(-1);
-        Modulo2sResource m2 = new Modulo2sResource();
-        assertNotEquals(jsonCuentas, "");
-
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de consultar todas las
-     * Tarjetas de credito de un usuario
-     */
-    @Test
-    public void ConsultarTDCTest() {
-
-        DaoTarjeta_Credito ba = FabricaDAO.instanciasDaoTarjeta_Credito();
-        String jsonTarjetas = ba.getTarjetasXUsuario(-1);
-        Modulo2sResource m2 = new Modulo2sResource();
-        assertNotEquals(jsonTarjetas, "");
-
-    }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la función para
-     * obtener el saldo de las tarjetas de un usuario
-     */
-    @Test
-    public void getSaldoTDCTest() {
-
-        DaoTarjeta_Credito ba = FabricaDAO.instanciasDaoTarjeta_Credito();
-        String saldo = ba.getSaldoTotal(-1);
-        assertEquals("15", saldo);
+    public void mostrarTDCTest(){
+        try {
+            String resultado ="";
+            Entidad tdc = new Tarjeta_Credito("visa", "10-10-2010", "MOSTRANDO", 1500,0, 1);
+            MapaModulo2 cache = MapaModulo2.obtenerInstancia();
+            cache.setEntidad("TarjetaNueva", tdc);
+            Comando command = FabricaComando.instanciarComandoAgregarTDC((Tarjeta_Credito) tdc);
+            command.ejecutar();
+            Comando command2 = FabricaComando.instanciarComandoConsultarTDC(1);
+            command2.ejecutar();
+            SimpleResponse simple = (SimpleResponse) command2.getResponse();
+            resultado = simple.getDescripcion();
+            Conexion.conectarADb().close();
+            assertTrue(resultado.contains("MOSTRANDO"));        
+        } catch (FinUCABException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PruebasModulo2.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
-
-    /**
-     * Prueba encargada de verificar el funcionamiento de la función para
-     * obtener el saldo de las cuentas de un usuario
-     */
-    @Test
-    public void getSaldoCuentaTest() {
-
-        DaoCuenta_Bancaria ba = FabricaDAO.instanciasDaoCuenta_Bancaria();
-        String saldo = ba.getSaldoTotal(-1);
-        assertEquals("15", saldo);
-
-    }
-
-  
 
 }
