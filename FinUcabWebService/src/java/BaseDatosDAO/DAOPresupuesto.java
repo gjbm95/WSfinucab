@@ -45,6 +45,12 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
     final static org.apache.logging.log4j.Logger log = LogManager.getLogger();
     
+    /**
+     * Metodo encargado de agregar un presupuesto en base de datos
+     * @param e
+     * @return el estado del insert y el id del presupuesto
+     * @throws AgregarPresupuestoException 
+     */
     @Override
     public Entidad agregar(Entidad e) throws AgregarPresupuestoException {
 
@@ -89,6 +95,12 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
         return FabricaEntidad.obtenerSimpleResponse(respuesta, idPresupuesto);
     }
 
+    /**
+     * Metodo encargado de modificar un presupuesto en base de datos
+     * @param e
+     * @return el presupuesto modificado
+     * @throws ModificarPresupuestoException 
+     */
     @Override
     public Entidad modificar(Entidad e) throws ModificarPresupuestoException {
 
@@ -121,10 +133,19 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             log.error("Error modificando presupuesto: "+ex.getMessage());
             respuesta = 2;
             throw FabricaExcepcion.instanciarModificarPresupuestoException(998, ex.getMessage());
+        } catch (NullPointerException ex) {
+            log.error("Error modificando presupuesto, hay un valor nulo " + ex.getMessage());
+            throw FabricaExcepcion.instanciarModificarPresupuestoException(5, ex.getMessage());
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
+    /**
+     * Metodo encargado de consultar un presupuesto en base de datos por su id
+     * @param id
+     * @return la entidad presupuesto
+     * @throws ConsultarPresupuestoException 
+     */
     @Override
     public Entidad consultar(int id) throws ConsultarPresupuestoException {
         Entidad presupuesto = FabricaIdentityMap.obtenerIdentityMap().getEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
@@ -149,18 +170,27 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             } catch (SQLException e){
                 log.error("Error consultando presupuesto: "+e.getMessage());
                 throw FabricaExcepcion.instanciarConsultarPresupuestoException(998, e.getMessage());
+            } catch (NullPointerException e){
+                log.error("Error consultando presupuestos, hay un valor nulo "+e.getMessage());
+                throw FabricaExcepcion.instanciarConsultarPresupuestoException(5, e.getMessage());
             }
         }
         return presupuesto;
     }
 
+    /**
+     * Metodo encargado de listar todos los presupuestos de un usuario en base de datos
+     * @param idUsuario
+     * @return un objeto ListaEntidad con todos los presupuestos de un usuario
+     * @throws ListarPresupuestoException 
+     */
     @Override
     public ListaEntidad consultarTodos(int idUsuario) throws ListarPresupuestoException {
 
-        ListaEntidad listaEntidad;// = FabricaIdentityMap.obtenerIdentityMap().getListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO);
+        ListaEntidad listaEntidad = FabricaIdentityMap.obtenerIdentityMap().getListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO);
                                   
 
-       /* if (listaEntidad.getLista().isEmpty()) */{
+        if (listaEntidad.getLista().isEmpty()) {
 
             try {
                 ArrayList<Entidad> listaPresupuestos = new ArrayList<>();
@@ -182,15 +212,24 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
 
                 listaEntidad = FabricaEntidad.obtenerListaEntidad(listaPresupuestos);
                 FabricaIdentityMap.obtenerIdentityMap().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
-                //FabricaIdentityMap.obtenerIdentityMap().getInstance().setListaEntidad(RegistroIdentityMap.LISTA_PRESUPUESTO, listaEntidad);
+               
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
                 throw FabricaExcepcion.instanciarListarPresupuestoException(998, e.getMessage());
+            } catch (NullPointerException e){
+                log.error("Error listando presupuestos, hay un valor nulo "+e.getMessage());
+                throw FabricaExcepcion.instanciarListarPresupuestoException(5, e.getMessage());
             }
         }
         return listaEntidad;
     }
 
+    /**
+     * Metodo encargado de verificar si un nombre de presupuesto ya existe en base de datos
+     * @param nombre
+     * @return 1 si encuentra el nombre, 0 en caso contrario
+     * @throws VerificarNombreException 
+     */
     @Override
     public Entidad verificarNombre(String nombre) throws VerificarNombreException{
         int respuesta = 0;
@@ -205,14 +244,23 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             respuesta = rs.getInt("verificarnombre");
             ps.close();
             Desconectar(conn);
-        } catch (SQLException e){
-            log.error("Error verificando nombre: "+e.getMessage());
+        } catch (SQLException e) {
+            log.error("Error verificando nombre: " + e.getMessage());
             respuesta = 2;
             throw FabricaExcepcion.instanciarVerificarNombreException(998, e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Error verificando nombre, hay un valor nulo " + e.getMessage());
+            throw FabricaExcepcion.instanciarVerificarNombreException(5, e.getMessage());
         }
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
+    /**
+     * Metodo encargado de eliminar un presupuesto 
+     * @param id
+     * @return 1 en caso de haberlo eliminado
+     * @throws EliminarPresupuestoException 
+     */
     @Override
     public Entidad eliminarPresupuesto(int id) throws EliminarPresupuestoException {
         
@@ -236,14 +284,23 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             Desconectar(conn);
             FabricaIdentityMap.obtenerIdentityMap().rmEntidadEnLista(RegistroIdentityMap.LISTA_PRESUPUESTO, id);
         } catch (SQLException e) {
-            log.error("Error eliminando presupuestos: "+e.getMessage());
+            log.error("Error eliminando presupuestos: " + e.getMessage());
             respuesta = 2;
             throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(998, e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Error eliminando presupuesto, hay un valor nulo " + e.getMessage());
+            throw FabricaExcepcion.instanciarEliminarPresupuestoExeption(5, e.getMessage());
         }
        
         return FabricaEntidad.obtenerSimpleResponse(respuesta);
     }
 
+    /**
+     * Metodo encargado de exportar una lista de presupuestos de un usuario
+     * @param idUsuario
+     * @return la lista del presupuesto a exportar
+     * @throws FinUCABException 
+     */
     @Override
     public ListaEntidad exportar(int idUsuario) throws FinUCABException {
             ListaEntidad listaEntidad = null;
@@ -271,10 +328,18 @@ public class DAOPresupuesto extends DAO implements IDAOPresupuesto {
             } catch (SQLException e) {
                 log.error("Error listando presupuestos: "+e.getMessage());
                 throw FabricaExcepcion.instanciarExportarPresupuestoException(998, e.getMessage());
+            } catch (NullPointerException e){
+                log.error("Error exportando presupuestos, hay un valor nulo "+e.getMessage());
+                throw FabricaExcepcion.instanciarExportarPresupuestoException(5, e.getMessage());
             }
         return listaEntidad;
     }
         
+    /**
+     * Metodo encargado de obtener los ultimos presupuestos por usuario
+     * @param id
+     * @return un array de json con los presupuestos
+     */
     public JsonArray getUltimosPresupuestos(int id) {
         CallableStatement cstm;
         JsonArray array = null;

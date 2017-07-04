@@ -108,12 +108,34 @@ public class FabricaEntidad {
        return new SimpleResponse(descripcion);
     } 
     
-    
+    /**
+     * Metodo encargado de instanciar un presupuesto con la fabrica
+     * @param nombre
+     * @param monto
+     * @param clasificacion
+     * @param duracion
+     * @param usuario
+     * @param categoria
+     * @param tipo
+     * @return 
+     */
     public static Presupuesto obtenerPresupuesto(String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria, String tipo) {
 
         return new Presupuesto(nombre, monto, clasificacion, duracion, usuario, categoria);
     }
     
+    /**
+     * Metodo encargado de instanciar un presupuesto con id con la fabrica
+     * @param id
+     * @param nombre
+     * @param monto
+     * @param clasificacion
+     * @param duracion
+     * @param usuario
+     * @param categoria
+     * @param tipo
+     * @return 
+     */
     public static Presupuesto obtenerPresupuesto(int id, String nombre, Double monto, String clasificacion, Integer duracion, Integer usuario, String categoria, String tipo){
         return new Presupuesto(id, nombre, monto, clasificacion, duracion, usuario, categoria);
     }

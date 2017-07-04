@@ -20,10 +20,18 @@ public class ComandoAgregarPresupuesto extends Comando{
 
     private Entidad presupuesto;
 
+    /**
+     * Constructor de comando agregar presupuesto
+     * @param presupuesto 
+     */
     public ComandoAgregarPresupuesto(Entidad presupuesto) {
         this.presupuesto = presupuesto;
     }
     
+    /**
+     * Metodo que instancia el dao de presupuesto para agregar un presupuesto
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException {
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();

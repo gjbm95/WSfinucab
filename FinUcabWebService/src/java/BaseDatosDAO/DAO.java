@@ -6,7 +6,6 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAO;
-import BaseDatosDAO.Model.ExceptionDB;
 import Dominio.Entidad;
 import Registro.RegistroBaseDatos;
 import java.sql.Connection;

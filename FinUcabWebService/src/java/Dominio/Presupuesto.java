@@ -6,7 +6,6 @@ package Dominio;
  *Esta clase se encarga de la declaracion de los datos entrantes y salientes de la aplicacion que va
  *relacionado con los presupuestos
  **/
-
 public class Presupuesto extends Entidad{
     private String _nombre;
     private Double _monto;

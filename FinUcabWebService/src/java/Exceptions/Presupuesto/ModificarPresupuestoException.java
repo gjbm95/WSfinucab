@@ -14,10 +14,19 @@ import Logica.Modulo5.ModificarPagoException;
  */
 public class ModificarPresupuestoException extends FinUCABException{
     
+    /**
+     * Constructor de la excepcion modificar presupuesto
+     * @param code 
+     */
     public ModificarPresupuestoException(int code){
         super(code,ModificarPresupuestoException.class);
     }
     
+    /**
+     * Constructor de la excepcion modificar presupuesto
+     * @param code
+     * @param message 
+     */
     public ModificarPresupuestoException(int code, String message){
         super(code, message,ModificarPresupuestoException.class);
     }

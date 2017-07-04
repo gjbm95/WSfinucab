@@ -13,10 +13,19 @@ import Exceptions.FinUCABException;
  */
 public class ConsultarPresupuestoException extends FinUCABException{
     
+    /**
+     * Constructor de la excepcion de consultar presupuesto
+     * @param code 
+     */
         public ConsultarPresupuestoException(int code){
         super(code,ConsultarPresupuestoException.class);
     }
     
+        /**
+         * Constructor de la excepcion de consultar presupuesto
+         * @param code
+         * @param message 
+         */
     public ConsultarPresupuestoException(int code, String message){
         super(code, message,ConsultarPresupuestoException.class);
     }

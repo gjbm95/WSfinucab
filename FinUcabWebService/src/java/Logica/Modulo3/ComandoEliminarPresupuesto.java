@@ -18,11 +18,18 @@ public class ComandoEliminarPresupuesto extends Comando {
     
     private int idPresupuesto;
 
+    /**
+     * Constructor de comando eliminar presupuesto
+     * @param idPresupuesto 
+     */
     public ComandoEliminarPresupuesto(int idPresupuesto) {
         this.idPresupuesto = idPresupuesto;
     }
     
-    
+    /**
+     * Metodo que instancia el dao presupuesto para eliminar un presupuesto
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException {
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();

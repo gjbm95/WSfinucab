@@ -18,10 +18,18 @@ public class ComandoListarPresupuestos extends Comando {
 
     private int idUsuario; 
 
+    /**
+     * Constructor de comando listar presupuesto
+     * @param idUsuario 
+     */
     public ComandoListarPresupuestos(int idUsuario) {
         this.idUsuario = idUsuario;
     }
-            
+        
+    /**
+     * Metodo encargado de instanciar el dao presupuesto para crear la lista de presupuestos
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException{
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();

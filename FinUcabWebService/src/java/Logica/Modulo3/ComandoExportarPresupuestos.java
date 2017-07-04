@@ -18,10 +18,18 @@ public class ComandoExportarPresupuestos extends Comando {
 
     private int idUsuario;
 
+    /**
+     * Constructor de comando exportar presupuesto
+     * @param idUsuario 
+     */
     public ComandoExportarPresupuestos(int idUsuario) {
         this.idUsuario = idUsuario;
     }
     
+    /**
+     * Metodo encargado de instanciar el dao presupuesto para exportar la lista de presupuestos
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException {
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();

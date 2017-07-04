@@ -20,10 +20,18 @@ public class ComandoModificarPresupuesto extends Comando{
     
     private Entidad presupuesto;
 
+    /**
+     * Constructor de comando modificar presupuesto
+     * @param idUsuario 
+     */
     public ComandoModificarPresupuesto(Entidad presupuesto) {
         this.presupuesto = presupuesto;
     }
 
+    /**
+     * Metodo encargado de instanciar el dao presupuesto para modificar un presupuesto
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException{
         

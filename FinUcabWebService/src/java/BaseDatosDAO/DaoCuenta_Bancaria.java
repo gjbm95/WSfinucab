@@ -1,7 +1,6 @@
 package BaseDatosDAO;
 
 import BaseDatosDAO.Interfaces.IDAOCuentaBancaria;
-import BaseDatosDAO.Model.ExceptionDB;
 import Dominio.Cuenta_Bancaria;
 import Dominio.Entidad;
 import Dominio.FabricaEntidad;

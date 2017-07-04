@@ -173,37 +173,72 @@ public class FabricaComando {
         return new ComandoConsultarEstadisticasHome(id);
     }
 
-     
+     /**
+      * Metodo encargado de instanciar el comando para agregar un presupuesto
+      * @param e
+      * @return la instancia del comando 
+      */
     public static ComandoAgregarPresupuesto 
         instanciarComandoAgregarPresupuesto(Entidad e) {
         return new ComandoAgregarPresupuesto(e);
     }
 
+        /**
+         * Metodo encargado de instanciar el comando para modificar un presupuesto
+         * @param e
+         * @return la instancia del comando 
+         */
     public static ComandoModificarPresupuesto 
         instanciarComandoModificarPresupuesto(Entidad e) {
         return new ComandoModificarPresupuesto(e);
     }
      
-    public static ComandoListarPresupuestos 
-        instanciarComandoListarPresupuestos(int idUsuario) {
+      /**
+      * Metodo encargado de instanciar el comando para listar los presupuestos de
+      * un usuario
+      * @param idUsuario
+      * @return la instancia del comando
+      */
+    public static ComandoListarPresupuestos
+            instanciarComandoListarPresupuestos(int idUsuario) {
         return new ComandoListarPresupuestos(idUsuario);
     }
 
+        /**
+         * Metodo encargado de instanciar el comando para obtener un presupuesto
+         * @param idPresupuesto
+         * @return la instancia del comando 
+         */
     public static ComandoObtenerPresupuesto 
         instanciarComandoObtenerPresupuesto(int idPresupuesto) {
         return new ComandoObtenerPresupuesto(idPresupuesto);
     }
     
+        /**
+         * Metodo encargado de instanciar el comando para eliminar un presupuesto
+         * @param idPresupuesto
+         * @return la instancia del comando 
+         */
     public static ComandoEliminarPresupuesto
         instanciarComandoEliminarPresupuesto(int idPresupuesto){
         return new ComandoEliminarPresupuesto(idPresupuesto);
     }
     
+        /**
+         * Metodo encargado de instanciar el comando para verificar un nombre
+         * @param nombrePresupuesto
+         * @return la instancia del comando 
+         */
     public static ComandoVerificarNombre 
         instanciarComandoVerificarNombre(String nombrePresupuesto){
         return new ComandoVerificarNombre(nombrePresupuesto);
     }
-        
+     
+        /**
+         * Metodo encargado de instanciar el comando para exportar presupuestos
+         * @param idUsuario
+         * @return la instancia del comando
+         */
     public static ComandoExportarPresupuestos instanciarComandoExportarPresupuesto(int idUsuario){
         return new ComandoExportarPresupuestos(idUsuario);
     }

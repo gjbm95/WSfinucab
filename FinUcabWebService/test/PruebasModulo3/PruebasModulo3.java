@@ -8,7 +8,6 @@ package PruebasModulo3;
 import BaseDatosDAO.DAOPresupuesto;
 import BaseDatosDAO.FabricaDAO;
 import Dominio.Entidad;
-import Dominio.FabricaEntidad;
 import Dominio.ListaEntidad;
 import Dominio.Presupuesto;
 import Dominio.SimpleResponse;

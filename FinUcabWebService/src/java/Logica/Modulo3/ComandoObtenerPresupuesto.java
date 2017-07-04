@@ -18,10 +18,18 @@ public class ComandoObtenerPresupuesto extends Comando {
 
     private int idPresupuesto;
 
+    /**
+     * Constructor de comando obtener presupuesto
+     * @param idUsuario 
+     */
     public ComandoObtenerPresupuesto(int idPresupuesto) {
         this.idPresupuesto = idPresupuesto;
     }
         
+    /**
+     * Metodo encargado de instanciar el dao presupuesto para obtener un presupuesto
+     * @throws FinUCABException 
+     */
     @Override
     public void ejecutar() throws FinUCABException{
         IDAOPresupuesto dao = FabricaDAO.instanciasDAOPresupuesto();
