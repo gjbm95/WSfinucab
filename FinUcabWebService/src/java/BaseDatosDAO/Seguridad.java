@@ -42,54 +42,7 @@ public static Seguridad obtenerInstancia(){
   return instancia; 
 }
     
-/**
- * Metodo encarga del encriptado de datos.
- * @param sinCifrar Cadena sin encriptar
- * @return Cadena encriptada
- * @throws Exception 
- */    
-private byte[] cifra(String sinCifrar) throws Exception {
-	final byte[] bytes = sinCifrar.getBytes("UTF-8");
-	final Cipher aes = obtieneCipher(true);
-	final byte[] cifrado = aes.doFinal(bytes);
-	return cifrado;
-}    
 
-
-/**
- * Metodo encarga del desencriptado de datos.
- * @param sinCifrar Cadena encriptada
- * @return Cadena sin encriptar.
- * @throws Exception 
- */    
-private String descifra(byte[] cifrado) throws Exception {
-	final Cipher aes = obtieneCipher(false);
-	final byte[] bytes = aes.doFinal(cifrado);
-	final String sinCifrar = new String(bytes, "UTF-8");
-	return sinCifrar;
-}
-
-
-/**
- * Metodo que define como se va manejar el cifrado de las cadenas.  
- * @param paraCifrar Indica si esta en modo de desencriptacion o en encriptacion
- * @return De vuelve la manera en como se presenta AES.
- * @throws Exception 
- */
-private Cipher obtieneCipher(boolean paraCifrar) throws Exception {
-    final String frase = "";
-    final MessageDigest digest = MessageDigest.getInstance("SHA");
-    digest.update(frase.getBytes("UTF-8"));
-    final SecretKeySpec key = new SecretKeySpec(digest.digest(), 0, 16, "AES");
-
-    final Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
-    if (paraCifrar) {
-            aes.init(Cipher.ENCRYPT_MODE, key);
-    } else {
-            aes.init(Cipher.DECRYPT_MODE, key);
-    }
-    return aes;
-}  
 
 
 /**
@@ -137,39 +90,6 @@ public String obtenerServerDB(){
   String [] data = this.obtenerDatos().split("%");
   return data[2];  
 }
-
-/**
- * Genera un archivo temporal con los datos encriptados de la base de datos. 
- * @return Devuelve un objeto tipo File
- */
-private File obtenerArchivo(){
-    File tempFile;
-    try {
-         
-        InputStream in = Seguridad.class.getClassLoader()
-                .getResourceAsStream("/Recursos/datosconexion.txt");
-        if (in == null) {
-            return null;
-        }
-        
-     tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
-     tempFile.deleteOnExit();
-
-        try (FileOutputStream out = new FileOutputStream(tempFile)) {
-            //copy stream
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
-        }
-        return tempFile;
-        
-    }catch(Exception e){
-      
-    }
-       return null;
-    }
 
 
     /**

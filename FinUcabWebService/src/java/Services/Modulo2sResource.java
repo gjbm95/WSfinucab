@@ -524,7 +524,7 @@ public class Modulo2sResource {
      * @param decodifico String con estructura json
      * @return JsonObject del string
      */
-    private JsonObject stringToJSON(String decodifico) 
+    public JsonObject stringToJSON(String decodifico) 
             throws ConversionFallidaException{
         if (decodifico.length()==0){
            ConversionFallidaException ex = 
@@ -544,7 +544,7 @@ public class Modulo2sResource {
      *  @param tdcJSON Objeto Json con los datos de la tarjeta 
      *  @return tdc Objeto de tipo Tarjeta_Credito
      */
-    private Tarjeta_Credito jsonToTarjetaM (JsonObject tdcJSON)throws NullPointerException{
+    public Tarjeta_Credito jsonToTarjetaM (JsonObject tdcJSON)throws NullPointerException{
         Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
         tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
         Float.parseFloat(tdcJSON.getString("tc_saldo")),
@@ -559,7 +559,7 @@ public class Modulo2sResource {
      *  @param cuentaJSON Objeto Json con los datos de la Cuenta Bancaria 
      *  @return cuenta Objeto de tipo Cuenta_Bancaria
      * */
-    private Cuenta_Bancaria jsonToCuentaM (JsonObject cuentaJSON)throws NullPointerException{
+    public Cuenta_Bancaria jsonToCuentaM (JsonObject cuentaJSON)throws NullPointerException{
         Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
         (cuentaJSON.getString("ct_tipocuenta"),
         cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
@@ -574,7 +574,7 @@ public class Modulo2sResource {
      *  @param tdcJSON Objeto Json con los datos de la tarjeta 
      *  @return tdc Objeto de tipo Tarjeta_Credito
      */
-    private Tarjeta_Credito jsonToTarjeta (JsonObject tdcJSON)throws NullPointerException{
+    public Tarjeta_Credito jsonToTarjeta (JsonObject tdcJSON)throws NullPointerException{
         Tarjeta_Credito tdc = new Tarjeta_Credito(tdcJSON.getString("tc_tipo"),
         tdcJSON.getString("tc_fechavencimiento"), tdcJSON.getString("tc_numero"),
         Float.parseFloat(tdcJSON.getString("tc_saldo")),
@@ -588,7 +588,7 @@ public class Modulo2sResource {
      *  @param cuentaJSON Objeto Json con los datos de la Cuenta Bancaria 
      *  @return cuenta Objeto de tipo Cuenta_Bancaria
      * */
-    private Cuenta_Bancaria jsonToCuenta (JsonObject cuentaJSON) throws NullPointerException{
+    public Cuenta_Bancaria jsonToCuenta (JsonObject cuentaJSON) throws NullPointerException{
         Cuenta_Bancaria cuenta = FabricaEntidad.obtenerCuentaBancaria
         (cuentaJSON.getString("ct_tipocuenta"),
         cuentaJSON.getString("ct_numcuenta"), cuentaJSON.getString("ct_nombrebanco"),
