@@ -11,6 +11,11 @@ import Exceptions.FinUCABException;
  *
  * @author Ramon
  */
+
+/**
+ * Clase para la excepcion de modificar pago
+ * @author Juan
+ */
 public class ModificarPagoException extends FinUCABException {
     
     public ModificarPagoException(int code){

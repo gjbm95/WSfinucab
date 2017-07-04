@@ -5,6 +5,16 @@
  */
 package PruebasModulo5;
 
+import BaseDatosDAO.DAOCategoria;
+import BaseDatosDAO.DAOPago;
+import BaseDatosDAO.FabricaDAO;
+import Dominio.Categoria;
+import Dominio.Entidad;
+import Dominio.FabricaEntidad;
+import Dominio.Pago;
+import Dominio.SimpleResponse;
+import Logica.Modulo5.AgregarPagoException;
+import Logica.Modulo5.ConsultarPagoException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,12 +46,5 @@ public class PruebasModulo5 {
     @After
     public void tearDown() {
     }
-
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
-
+    
 }
